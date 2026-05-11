@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedPal Provider Onboarding (Mockup)</title>
+  <link rel="icon" href="https://medpal.app/favicon.ico" />
+  <style>
+    :root {
+      --orange-start: #EE8A45;
+      --orange-end: #EB5A3D;
+      --orange-bg: linear-gradient(135deg, #EE8A45 0%, #EB5A3D 100%);
+      --orange-50: #fff7ed;
+      --orange-100: #ffedd5;
+      --orange-300: #fdba74;
+      --orange-500: #f97316;
+      --orange-600: #ea580c;
+      --teal-500: #14b8a6;
+      --teal-600: #0d9488;
+      --bg-card: #ffffff;
+      --surface: #f7f8fa;
+      --border: #e5e7eb;
+      --border-strong: #d1d5db;
+      --text: #111827;
+      --text-soft: #4b5563;
+      --text-muted: #6b7280;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+      --radius: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; min-height: 100vh;
+      background: var(--orange-bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px; line-height: 1.5;
+    }
+
+    /* Mockup nav */
+    #mockup-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(0,0,0,0.85); color: #fff;
+      padding: 8px 16px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+      font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(6px);
+    }
+    #mockup-nav .label { opacity: 0.65; margin-right: 6px; font-weight: 500; }
+    #mockup-nav button {
+      background: transparent; color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 4px; padding: 4px 10px;
+      font-size: 11px; cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    #mockup-nav button:hover { background: rgba(255,255,255,0.1); }
+    #mockup-nav button.active { background: var(--orange-500); border-color: var(--orange-500); }
+
+    /* App chrome */
+    .app-shell { max-width: 1024px; margin: 0 auto; padding: 16px 24px 60px; }
+
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0 24px;
+    }
+    .app-header .logo-block { display: flex; align-items: center; gap: 12px; }
+    .app-header .logo {
+      width: 56px; height: 56px;
+      background: rgba(255,255,255,0.18); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .app-header .brand-text { color: #fff; }
+    .app-header .brand-text .product { font-size: 18px; font-weight: 700; }
+    .app-header .brand-text .tag { font-size: 12px; opacity: 0.85; }
+    .app-header .actions { display: flex; gap: 8px; align-items: center; }
+    .app-header button {
+      background: #fff; color: var(--orange-600);
+      border: 1px solid #fff; padding: 6px 14px;
+      border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .app-header .ghost {
+      background: transparent; color: #fff; border-color: rgba(255,255,255,0.5);
+    }
+
+    /* Step pills */
+    .step-pills {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 0 0 16px;
+    }
+    .step-pill {
+      flex: 1 1 0; min-width: 80px; padding: 8px 6px;
+      background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.85);
+      border-radius: 8px; text-align: center;
+      font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+      line-height: 1.25;
+      border-top: 2px solid rgba(255,255,255,0.4);
+      transition: background 0.15s;
+    }
+    .step-pill.active {
+      background: #fff; color: var(--orange-600);
+      border-top-color: #fff;
+    }
+    .step-pill.done {
+      background: rgba(255,255,255,0.55); color: var(--orange-700, #c2410c);
+      border-top-color: rgba(255,255,255,0.7);
+    }
+    .step-pill .step-num { display: block; font-size: 8px; opacity: 0.75; margin-bottom: 2px; }
+    .step-pill .step-name { display: block; }
+
+    /* Card */
+    .card {
+      background: var(--bg-card); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.4);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 24px; background: #fafbfc;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-header .step-count { font-size: 12px; color: var(--text-muted); }
+    .card-header .step-name {
+      background: var(--orange-bg); color: #fff;
+      padding: 6px 14px; border-radius: 999px;
+      font-size: 13px; font-weight: 600;
+    }
+    .card-body { padding: 32px 32px 24px; }
+    .card-footer {
+      padding: 16px 32px; background: #fafbfc;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* Form bits */
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .field label .req { color: var(--danger); margin-left: 2px; }
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field input[type="number"],
+    .field input[type="date"],
+    .field input[type="password"],
+    .field select,
+    .field textarea {
+      padding: 10px 12px; border: 2px solid var(--border-strong);
+      border-radius: 6px; font-size: 14px; font-family: inherit;
+      background: #fff; color: var(--text); transition: border-color 0.15s;
+      width: 100%;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus { outline: none; border-color: var(--orange-500); }
+    .field input::placeholder, .field textarea::placeholder { color: #9ca3af; }
+    .field .hint { font-size: 12px; color: var(--text-muted); }
+    .field textarea { resize: vertical; min-height: 96px; }
+
+    .checkbox-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px; border: 1px solid var(--border-strong);
+      border-radius: 6px; cursor: pointer; font-size: 13px;
+      background: #fff;
+    }
+    .checkbox-row input { margin: 0; }
+    .switch-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .switch-row:last-child { border-bottom: none; }
+    .switch {
+      width: 38px; height: 22px; background: var(--border-strong);
+      border-radius: 999px; position: relative; cursor: pointer; flex-shrink: 0;
+    }
+    .switch::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px; background: #fff; border-radius: 50%;
+      transition: left 0.15s;
+    }
+    .switch.on { background: var(--orange-500); }
+    .switch.on::after { left: 18px; }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 20px; border-radius: 999px; font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit; border: 1px solid transparent;
+      transition: opacity 0.15s, transform 0.05s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--orange-bg); color: #fff; }
+    .btn-primary:hover { opacity: 0.95; }
+    .btn-secondary { background: #fff; color: var(--text); border-color: var(--border-strong); }
+    .btn-ghost { background: transparent; color: var(--text-soft); }
+    .btn-teal { background: var(--teal-500); color: #fff; border-color: var(--teal-500); padding: 6px 14px; font-size: 13px; }
+    .btn-teal:hover { background: var(--teal-600); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Chips */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 6px 14px; border-radius: 999px;
+      border: 1px solid var(--border-strong); background: #fff;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .chip:hover { background: var(--surface); }
+    .chip.selected {
+      background: var(--orange-bg); color: #fff; border-color: transparent;
+    }
+    .chip.suggestion-chip {
+      border-style: dashed; color: var(--orange-600); border-color: var(--orange-300);
+    }
+    .chip.suggestion-chip:hover { background: var(--orange-50); }
+
+    /* Misc */
+    .h1 { font-size: 24px; font-weight: 700; text-align: center; margin: 0 0 24px; color: var(--text); }
+    .h2 { font-size: 18px; font-weight: 700; margin: 0 0 12px; color: var(--text); }
+    .section { margin-bottom: 28px; }
+    .info-banner {
+      background: var(--orange-50); border-left: 4px solid var(--orange-500);
+      padding: 12px 16px; border-radius: 6px; font-size: 13px; color: var(--text-soft);
+      margin-bottom: 20px;
+    }
+    .label-strong { font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+    .row { display: flex; gap: 12px; align-items: center; }
+    .muted { color: var(--text-muted); font-size: 13px; }
+    .error-msg { color: var(--danger); font-size: 13px; margin-top: 6px; }
+    .success-msg { color: var(--success); font-size: 13px; margin-top: 6px; }
+    .red { color: var(--danger); }
+    .small { font-size: 12px; }
+
+    /* Upload box */
+    .upload-box {
+      border: 2px dashed var(--border-strong); border-radius: 8px;
+      padding: 28px 20px; text-align: center; background: var(--surface);
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .upload-box:hover { border-color: var(--orange-500); background: var(--orange-50); }
+    .upload-box .icon { font-size: 32px; margin-bottom: 8px; opacity: 0.6; }
+    .upload-box .title { font-weight: 600; margin-bottom: 4px; }
+    .upload-box .sub { font-size: 12px; color: var(--text-muted); }
+
+    /* Video preview */
+    .video-box {
+      border-radius: 12px; background: #1f1f1f;
+      aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center;
+      color: #aaa; font-size: 14px; position: relative;
+      box-shadow: var(--shadow-md);
+    }
+    .video-box::after {
+      content: ""; position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--danger); border: 4px solid #fff;
+    }
+
+    /* Screens */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* Login screen */
+    .login-shell {
+      min-height: calc(100vh - 56px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      background: #fff; border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
+      padding: 32px;
+    }
+    .login-card h1 { font-size: 22px; margin: 0 0 4px; }
+    .login-card .sub { color: var(--text-muted); margin: 0 0 24px; font-size: 14px; }
+    .login-card .forgot { font-size: 12px; color: var(--orange-600); text-decoration: none; }
+
+    /* Success screen */
+    .success-shell {
+      min-height: calc(100vh - 56px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .success-card {
+      background: #fff; border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg); width: 100%; max-width: 540px;
+      padding: 48px 32px; text-align: center;
+    }
+    .success-icon {
+      width: 80px; height: 80px; margin: 0 auto 24px;
+      background: #dcfce7; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; color: var(--success);
+    }
+
+    @media (max-width: 720px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .step-pill { min-width: 70px; font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============ MOCKUP NAV ============ -->
+<nav id="mockup-nav">
+  <span class="label">SCREEN:</span>
+  <button data-screen="login" class="active">0. Login</button>
+  <button data-screen="step1">1. Personal Info</button>
+  <button data-screen="step2">2. Credentials</button>
+  <button data-screen="step3">3. Mailing Address</button>
+  <button data-screen="step4">4. About Me</button>
+  <button data-screen="step5">5. State Licenses</button>
+  <button data-screen="step6">6. Diplomas</button>
+  <button data-screen="step7">7. Cert. of Insurance</button>
+  <button data-screen="step8">8. Verification Video</button>
+  <button data-screen="step9">9. Charges</button>
+  <button data-screen="step10">10. Emergency Contact</button>
+  <button data-screen="step11">11. Specialty</button>
+  <button data-screen="done">12. Submitted</button>
+</nav>
+
+<!-- ============ SCREEN 0: LOGIN ============ -->
+<div class="screen active" id="screen-login">
+  <div class="login-shell">
+    <div class="login-card">
+      <h1>Provider Login</h1>
+      <p class="sub">Enter your credentials to access your account</p>
+
+      <div class="field">
+        <label for="login-email">Email <span class="req">*</span></label>
+        <input id="login-email" type="email" value="dr.kennedy@medpal.com" />
+      </div>
+
+      <div class="field">
+        <label for="login-pass">Password <span class="req">*</span></label>
+        <input id="login-pass" type="password" value="••••••••••" />
+        <a class="forgot" href="#" onclick="event.preventDefault()">Forgot password?</a>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="showScreen('step1')">Sign in</button>
+
+      <p style="text-align: center; margin: 20px 0 0; font-size: 13px; color: var(--text-muted);">
+        Don't have an account? <a href="#" style="color: var(--orange-600); text-decoration: none; font-weight: 600;" onclick="event.preventDefault()">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ONBOARDING SHELL (steps 1-11) ============ -->
+<div class="screen" id="screen-step1">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block">
+        <div class="logo">🏥</div>
+        <div class="brand-text">
+          <div class="product">MedPal Provider Onboarding</div>
+          <div class="tag">Join MedPal</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="ghost"><span>💬</span> Help</button>
+        <button>Logout</button>
+      </div>
+    </header>
+
+    <div class="step-pills" id="pills-step1">
+      <!-- pills injected by JS -->
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 1 of 11</div>
+        <div class="step-name">Personal Information</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Personal Information</h2>
+        <div class="info-banner">Tell us about yourself. This information appears on your provider profile.</div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Title <span class="req">*</span></label>
+            <select><option>Dr.</option><option>Mr.</option><option>Ms.</option><option>Prof.</option></select>
+          </div>
+          <div class="field">
+            <label>Date of Birth <span class="req">*</span></label>
+            <input type="date" value="1978-06-14" />
+          </div>
+          <div class="field">
+            <label>First Name <span class="req">*</span></label>
+            <input type="text" value="Sarah" />
+          </div>
+          <div class="field">
+            <label>Last Name <span class="req">*</span></label>
+            <input type="text" value="Kennedy" />
+          </div>
+          <div class="field">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" value="dr.kennedy@medpal.com" />
+          </div>
+          <div class="field">
+            <label>Phone <span class="req">*</span></label>
+            <input type="tel" value="+1 (415) 555-0142" />
+          </div>
+          <div class="field">
+            <label>Gender <span class="req">*</span></label>
+            <select><option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option></select>
+          </div>
+          <div class="field">
+            <label>Pronouns</label>
+            <input type="text" value="she/her" />
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" disabled>Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step2')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-step2">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step2"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 2 of 11</div>
+        <div class="step-name">Personal Information</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Credentials</h2>
+        <div class="info-banner">Your degree, license, and NPI determine how patients see your specialty.</div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Degree <span class="req">*</span></label>
+            <select><option>MD</option><option>DO</option><option>NP</option><option>PA</option><option>LCSW</option><option>PhD</option></select>
+          </div>
+          <div class="field">
+            <label>Degree Short Name <span class="req">*</span></label>
+            <input type="text" value="MD" />
+          </div>
+          <div class="field">
+            <label>Other Degree (if applicable)</label>
+            <input type="text" placeholder="e.g., FACP" />
+          </div>
+          <div class="field">
+            <label>Medical School <span class="req">*</span></label>
+            <input type="text" value="UCSF School of Medicine" />
+          </div>
+          <div class="field">
+            <label>Graduation Year <span class="req">*</span></label>
+            <input type="number" value="2008" />
+          </div>
+          <div class="field">
+            <label>NPI Number <span class="req">*</span></label>
+            <input type="text" value="1841738492" />
+          </div>
+          <div class="field full">
+            <label>Roles <span class="req">*</span></label>
+            <div class="chip-row">
+              <div class="chip selected">Provider</div>
+              <div class="chip">Advocate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step1')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step3')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-step3">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step3"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 3 of 11</div>
+        <div class="step-name">Mailing Address</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Mailing Address</h2>
+        <div class="info-banner">Where official documents and tax forms should be sent. This is your primary practice address.</div>
+
+        <div class="field-grid">
+          <div class="field full">
+            <label>Street Address <span class="req">*</span></label>
+            <input type="text" value="2150 Webster Street, Suite 400" placeholder="Start typing for autocomplete..." />
+            <span class="hint">🔍 Powered by Google Places autocomplete</span>
+          </div>
+          <div class="field">
+            <label>City <span class="req">*</span></label>
+            <input type="text" value="San Francisco" />
+          </div>
+          <div class="field">
+            <label>State <span class="req">*</span></label>
+            <select><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
+          </div>
+          <div class="field">
+            <label>ZIP Code <span class="req">*</span></label>
+            <input type="text" value="94115" />
+          </div>
+          <div class="field">
+            <label>Country <span class="req">*</span></label>
+            <input type="text" value="United States" />
+          </div>
+          <div class="field full">
+            <div class="checkbox-row">
+              <input type="checkbox" checked /> Use this as my business address as well
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step2')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step4')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 4: ABOUT ME (with Polish bio) ============ -->
+<div class="screen" id="screen-step4">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step4"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 4 of 11</div>
+        <div class="step-name">About Me</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">About Me</h2>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+          <div style="position: relative;">
+            <div style="width: 128px; height: 128px; border-radius: 50%; background: var(--orange-50); border: 4px solid var(--orange-300); display: flex; align-items: center; justify-content: center; font-size: 56px; color: var(--orange-600);">👩‍⚕️</div>
+            <button style="position: absolute; right: -4px; top: -4px; width: 40px; height: 40px; border-radius: 50%; background: var(--teal-500); color: #fff; border: none; cursor: pointer; font-size: 22px;">+</button>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>Short Bio <span class="req">*</span> <span class="muted">(50-500 characters)</span></label>
+          <textarea>Board-certified internal medicine physician with 16 years of experience. Special interest in cardiovascular risk reduction, preventive medicine, and chronic disease management. Welcoming patients of all backgrounds.</textarea>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
+            <span class="muted">231/500</span>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn btn-ghost btn-sm">Undo</button>
+              <button class="btn btn-teal">Polish ✨</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field full" style="margin-top: 16px;">
+          <label>Role <span class="req">*</span></label>
+          <div class="chip-row">
+            <div class="chip selected">Provider</div>
+            <div class="chip">Advocate</div>
+            <div class="chip">Both</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step3')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step5')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 5: STATE LICENSES (Upload Documents) ============ -->
+<div class="screen" id="screen-step5">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step5"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 5 of 11</div>
+        <div class="step-name">Upload Documents</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">State Licenses</h2>
+        <div class="info-banner">Add each state you're licensed to practice in. Patients will only see you when they search from a state on your list.</div>
+
+        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; background: #fff;">
+          <div class="field-grid">
+            <div class="field">
+              <label>State <span class="req">*</span></label>
+              <select><option>California</option><option>New York</option></select>
+            </div>
+            <div class="field">
+              <label>License Number <span class="req">*</span></label>
+              <input type="text" value="A87234" />
+            </div>
+            <div class="field">
+              <label>Issue Date <span class="req">*</span></label>
+              <input type="date" value="2009-08-12" />
+            </div>
+            <div class="field">
+              <label>Expiration Date <span class="req">*</span></label>
+              <input type="date" value="2027-08-12" />
+            </div>
+            <div class="field full">
+              <div class="checkbox-row">
+                <input type="checkbox" checked /> Same as Form address
+              </div>
+              <span class="hint">License address auto-populated from your mailing address (state matches).</span>
+            </div>
+            <div class="field full">
+              <label>License Document Upload <span class="req">*</span></label>
+              <div class="upload-box">
+                <div class="icon">📄</div>
+                <div class="title">CA-license-2025.pdf</div>
+                <div class="sub">Uploaded · 1.2 MB · Click to replace</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-secondary btn-sm">+ Add another state</button>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step4')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step6')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 6: DIPLOMAS ============ -->
+<div class="screen" id="screen-step6">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step6"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 6 of 11</div>
+        <div class="step-name">Upload Documents</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Diplomas &amp; Certifications</h2>
+        <div class="info-banner">Upload your medical school diploma and any board certifications. Patients see these on your profile.</div>
+
+        <div class="section">
+          <label class="label-strong">Medical School Diploma <span class="red">*</span></label>
+          <div class="upload-box">
+            <div class="icon">🎓</div>
+            <div class="title">UCSF-MD-diploma.pdf</div>
+            <div class="sub">Uploaded · 2.4 MB · Click to replace</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <label class="label-strong">Board Certifications</label>
+          <div class="upload-box">
+            <div class="icon">📜</div>
+            <div class="title">ABIM-Internal-Medicine-2010.pdf</div>
+            <div class="sub">Uploaded · 480 KB · Click to replace</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="margin-top: 10px;">+ Add another certification</button>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step5')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step7')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 7: CERTIFICATE OF INSURANCE ============ -->
+<div class="screen" id="screen-step7">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step7"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 7 of 11</div>
+        <div class="step-name">Certificate of Insurance</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Certificate of Insurance</h2>
+        <div class="info-banner">Upload your current professional liability (malpractice) certificate. Must be valid for the full year ahead.</div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Carrier <span class="req">*</span></label>
+            <input type="text" value="The Doctors Company" />
+          </div>
+          <div class="field">
+            <label>Policy Number <span class="req">*</span></label>
+            <input type="text" value="TDC-984-2025-0142" />
+          </div>
+          <div class="field">
+            <label>Effective Date <span class="req">*</span></label>
+            <input type="date" value="2026-01-01" />
+          </div>
+          <div class="field">
+            <label>Expiration Date <span class="req">*</span></label>
+            <input type="date" value="2026-12-31" />
+          </div>
+          <div class="field full">
+            <label>Certificate Upload <span class="req">*</span></label>
+            <div class="upload-box">
+              <div class="icon">🛡️</div>
+              <div class="title">TDC-COI-2026.pdf</div>
+              <div class="sub">Uploaded · 1.8 MB · Click to replace</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step6')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step8')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 8: VERIFICATION VIDEO ============ -->
+<div class="screen" id="screen-step8">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step8"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 8 of 11</div>
+        <div class="step-name">Verification Video</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Verification Video</h2>
+        <div class="info-banner">Record a short selfie video (15-30 seconds) holding your government-issued ID next to your face. We use this to verify identity before approving your profile.</div>
+
+        <div class="video-box">Camera preview will appear here</div>
+
+        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
+          <button class="btn btn-secondary">Re-record</button>
+          <button class="btn btn-primary">▶ Play recorded video</button>
+        </div>
+
+        <div style="margin-top: 20px; padding: 12px 16px; background: #f0fdf4; border-left: 4px solid var(--success); border-radius: 6px; font-size: 13px;">
+          ✓ Video recorded — 22 seconds · 18.4 MB
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step7')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step9')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 9: CHARGES INFORMATION ============ -->
+<div class="screen" id="screen-step9">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step9"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 9 of 11</div>
+        <div class="step-name">Charges Information</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Charges Information</h2>
+        <div class="info-banner">Set what you charge for each session type. You can update these anytime from the provider portal.</div>
+
+        <h3 class="h2">Session rates</h3>
+        <div class="field-grid">
+          <div class="field">
+            <label>Video call (15 min) <span class="req">*</span></label>
+            <input type="text" value="$ 75.00" />
+          </div>
+          <div class="field">
+            <label>Video call — advocate rate</label>
+            <input type="text" value="$ 50.00" />
+          </div>
+          <div class="field">
+            <label>Voice call (15 min) <span class="req">*</span></label>
+            <input type="text" value="$ 60.00" />
+          </div>
+          <div class="field">
+            <label>Voice call — advocate rate</label>
+            <input type="text" value="$ 40.00" />
+          </div>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <div class="label-strong">Available for in-person visits</div>
+            <span class="muted">Patients near your office can book a visit.</span>
+          </div>
+          <div class="switch on"></div>
+        </div>
+
+        <div class="field-grid" style="margin-top: 16px;">
+          <div class="field">
+            <label>In-person visit rate <span class="req">*</span></label>
+            <input type="text" value="$ 150.00" />
+          </div>
+          <div class="field">
+            <label>In-person — advocate rate</label>
+            <input type="text" value="$ 100.00" />
+          </div>
+          <div class="field">
+            <label>Travel distance (miles)</label>
+            <input type="number" value="15" />
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step8')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step10')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 10: EMERGENCY CONTACT (in-person only) ============ -->
+<div class="screen" id="screen-step10">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step10"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 10 of 11</div>
+        <div class="step-name">Emergency Contact</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Emergency Contact</h2>
+        <div class="info-banner">Only required if you offer in-person visits. We use this to reach someone in case of an emergency during a visit.</div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" value="Marcus Kennedy" />
+          </div>
+          <div class="field">
+            <label>Relationship <span class="req">*</span></label>
+            <select><option>Spouse / Partner</option><option>Parent</option><option>Sibling</option><option>Friend</option><option>Other</option></select>
+          </div>
+          <div class="field">
+            <label>Phone <span class="req">*</span></label>
+            <input type="tel" value="+1 (415) 555-0198" />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" value="marcus@kennedy.example" />
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step9')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step11')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 11: SELECT SPECIALTY (with new suggestion chips) ============ -->
+<div class="screen" id="screen-step11">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-step11"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 11 of 11</div>
+        <div class="step-name">Select Specialty</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Select Specialty</h2>
+
+        <div class="section">
+          <label class="label-strong">Medical Specialties <span class="red">*</span></label>
+          <div class="chip-row">
+            <div class="chip">Cardiology</div>
+            <div class="chip">Chiropractic</div>
+            <div class="chip">Critical care</div>
+            <div class="chip">Dentist</div>
+            <div class="chip">Dermatology</div>
+            <div class="chip">Emergency Medicine</div>
+            <div class="chip">Gastroenterology</div>
+            <div class="chip">Gynecology</div>
+            <div class="chip selected">Internal Medicine</div>
+            <div class="chip">Neurology</div>
+            <div class="chip">Neurosurgeon</div>
+            <div class="chip">Nurse</div>
+            <div class="chip">Oncology</div>
+            <div class="chip">Orthopedics</div>
+            <div class="chip">Otolaryngology</div>
+            <div class="chip">Pain management</div>
+            <div class="chip">Pediatrics</div>
+            <div class="chip">Physical Therapy</div>
+            <div class="chip">Psychiatry</div>
+            <div class="chip">Psychologist</div>
+            <div class="chip">Pulmonology</div>
+            <div class="chip">Radiologist</div>
+            <div class="chip">Sports Medicine</div>
+            <div class="chip">Surgery</div>
+            <div class="chip">Urology</div>
+            <div class="chip">Wound care</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <label class="label-strong">Add Custom Specialty</label>
+          <div class="row">
+            <input type="text" value="injury care" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-strong); border-radius: 6px; font-size: 14px;" />
+            <button class="btn btn-secondary">Send</button>
+          </div>
+          <div class="error-msg" style="margin-top: 8px;">Not a recognized medical specialty. Please try again.</div>
+
+          <div style="margin-top: 14px;">
+            <p style="font-size: 13px; color: var(--text-soft); margin: 0 0 8px;">Did you mean:</p>
+            <div class="chip-row">
+              <button class="chip suggestion-chip">Orthopedics</button>
+              <button class="chip suggestion-chip">Sports Medicine</button>
+              <button class="chip suggestion-chip">Trauma Surgery</button>
+              <button class="chip suggestion-chip">Emergency Medicine</button>
+              <button class="chip suggestion-chip">Physical Therapy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <label class="label-strong">Specialty Tags <span class="muted">(optional)</span></label>
+          <div class="row">
+            <input type="text" value="chest pain" placeholder="Search clinical tags (conditions, symptoms, treatments)" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-strong); border-radius: 6px; font-size: 14px;" />
+            <button class="btn btn-secondary">Send</button>
+          </div>
+          <div class="chip-row" style="margin-top: 12px;">
+            <div class="chip selected">Hypertension</div>
+            <div class="chip selected">Coronary artery disease</div>
+            <div class="chip">Cardiac arrhythmias</div>
+            <div class="chip">Heart failure</div>
+            <div class="chip">Lipid management</div>
+            <div class="chip">Anginal pain</div>
+            <div class="chip">Stress testing</div>
+            <div class="chip">EKG interpretation</div>
+            <div class="chip">Echocardiography</div>
+            <div class="chip">Preventive cardiology</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step10')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('done')">Submit Application ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN DONE: SUBMITTED ============ -->
+<div class="screen" id="screen-done">
+  <div class="success-shell">
+    <div class="success-card">
+      <div class="success-icon">✓</div>
+      <h1 style="font-size: 28px; margin: 0 0 12px;">Application Submitted!</h1>
+      <p style="font-size: 16px; color: var(--text-soft); margin: 0 0 24px;">
+        Thanks for applying to join MedPal. Our verification team will review your application within 1–2 business days. You'll receive an email at <strong>dr.kennedy@medpal.com</strong> when there's an update.
+      </p>
+
+      <div style="background: var(--orange-50); border-radius: 10px; padding: 20px; text-align: left; margin: 0 0 24px;">
+        <div style="font-weight: 600; margin-bottom: 8px;">What happens next</div>
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; color: var(--text-soft); line-height: 1.7;">
+          <li>We verify your license, NPI, and uploaded documents.</li>
+          <li>You'll get a call or email if anything looks unclear.</li>
+          <li>Once approved, you'll get instructions to set up payments via our merchant partner.</li>
+          <li>After payments are connected, your profile goes live and patients can find you.</li>
+        </ol>
+      </div>
+
+      <button class="btn btn-primary" onclick="showScreen('login')">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ MOCKUP NAV BEHAVIOR ============
+  const STEPS = [
+    { id: 'step1',  name: 'Personal Information' },
+    { id: 'step2',  name: 'Personal Information' },
+    { id: 'step3',  name: 'Mailing Address' },
+    { id: 'step4',  name: 'About Me' },
+    { id: 'step5',  name: 'Upload Documents' },
+    { id: 'step6',  name: 'Upload Documents' },
+    { id: 'step7',  name: 'Certificate of Insurance' },
+    { id: 'step8',  name: 'Verification Video' },
+    { id: 'step9',  name: 'Charges Information' },
+    { id: 'step10', name: 'Emergency Contact' },
+    { id: 'step11', name: 'Select Specialty' },
+  ];
+
+  function renderPillsInto(containerId, activeStepId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = '';
+    const activeIdx = STEPS.findIndex(s => s.id === activeStepId);
+    STEPS.forEach((s, idx) => {
+      const pill = document.createElement('div');
+      pill.className = 'step-pill' + (idx === activeIdx ? ' active' : idx < activeIdx ? ' done' : '');
+      pill.innerHTML = '<span class="step-num">STEP ' + (idx + 1) + '</span><span class="step-name">' + s.name + '</span>';
+      el.appendChild(pill);
+    });
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('screen-' + id);
+    if (target) target.classList.add('active');
+
+    document.querySelectorAll('#mockup-nav button').forEach(b => {
+      b.classList.toggle('active', b.dataset.screen === id);
+    });
+
+    // If this is a step screen, render pills with this step active
+    if (id.startsWith('step')) {
+      renderPillsInto('pills-' + id, id);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  // Wire up the mockup nav buttons
+  document.querySelectorAll('#mockup-nav button').forEach(btn => {
+    btn.addEventListener('click', () => showScreen(btn.dataset.screen));
+  });
+
+  // Pre-render pills for all step screens so they're correct when revealed
+  STEPS.forEach(s => renderPillsInto('pills-' + s.id, s.id));
+</script>
+
+</body>
+</html>
