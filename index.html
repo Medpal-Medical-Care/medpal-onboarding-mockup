@@ -218,20 +218,16 @@
     }
 
     .app-header {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
       padding: var(--space-2) 0 var(--space-3);
-    }
-    .app-header .logo-block {
-      display: flex;
-      align-items: center;
       gap: var(--space-4);
     }
     .app-header .logo {
+      justify-self: start;
       display: flex;
       align-items: center;
-      justify-content: center;
     }
     .app-header .logo img {
       height: 40px;
@@ -240,6 +236,7 @@
       filter: brightness(0) invert(1);
     }
     .app-header .brand-text {
+      justify-self: center;
       color: var(--gray-0);
       font-family: var(--font-display);
       font-size: var(--text-lg);
@@ -247,6 +244,7 @@
       letter-spacing: -0.01em;
     }
     .app-header .actions {
+      justify-self: end;
       display: flex;
       gap: var(--space-2);
       align-items: center;
@@ -390,6 +388,19 @@
       text-transform: uppercase;
       letter-spacing: var(--tracking-wide);
     }
+    .card-header .required-hint {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .card-header .required-hint .req {
+      color: var(--gray-400);
+      font-size: 16px;
+      line-height: 1;
+      font-weight: var(--fw-bold);
+    }
     .card-header .save-state {
       display: inline-flex;
       align-items: center;
@@ -517,6 +528,52 @@
       font-family: inherit;
     }
     .btn-link:hover { text-decoration: underline; }
+
+    /* Compact plus-icon add button */
+    .btn-add-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px var(--space-3) 6px var(--space-2);
+      background: var(--gray-0);
+      border: 1.5px solid var(--brand-300);
+      border-radius: var(--r-pill);
+      color: var(--brand-700);
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out),
+        box-shadow var(--dur-fast) var(--ease-out);
+    }
+    .btn-add-mini:hover {
+      background: var(--brand-50);
+      border-color: var(--brand-500);
+      color: var(--brand-800);
+      box-shadow: var(--shadow-xs);
+    }
+    .btn-add-mini:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .btn-add-mini .plus-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--brand-500);
+      color: var(--gray-0);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-add-mini .plus-circle svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 3;
+    }
 
     /* Add-row button - solid brand-tinted "add another" CTA */
     .btn-add {
@@ -658,6 +715,29 @@
       resize: vertical;
       min-height: 120px;
       line-height: var(--lh-snug);
+    }
+
+    /* Locked country code with flag (read-only display) */
+    .locked-country {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 10px var(--space-3);
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--r-md);
+      background: var(--gray-50);
+      color: var(--gray-700);
+      font-size: var(--text-md);
+      font-weight: var(--fw-medium);
+    }
+    .locked-country .flag {
+      width: 22px;
+      height: 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: block;
     }
 
     .input-with-icon {
@@ -896,14 +976,47 @@
       color: var(--brand-700);
     }
 
-    /* Uploaded file pill (existing file shown) */
+    /* Uploaded file card with preview area (used after upload completes) */
     .upload-file {
+      display: flex;
+      flex-direction: column;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--r-md);
+      background: var(--gray-0);
+      overflow: hidden;
+    }
+    .upload-file .file-preview {
+      flex: 1;
+      min-height: 200px;
+      background: linear-gradient(180deg, var(--brand-50) 0%, var(--gray-50) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-700);
+      position: relative;
+    }
+    .upload-file .file-preview .doc-thumb {
+      width: 132px;
+      height: 168px;
+      background: var(--gray-0);
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-700);
+    }
+    .upload-file .file-preview .doc-thumb svg {
+      width: 48px;
+      height: 48px;
+    }
+    .upload-file .file-meta-row {
       display: flex;
       align-items: center;
       gap: var(--space-3);
       padding: var(--space-3) var(--space-4);
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--r-md);
+      border-top: 1px solid var(--gray-200);
       background: var(--gray-0);
     }
     .upload-file .file-icon {
@@ -938,7 +1051,7 @@
       font-size: var(--text-base);
       cursor: pointer;
       font-family: inherit;
-      padding: 4px var(--space-2);
+      padding: 6px var(--space-3);
       border-radius: var(--r-sm);
     }
     .upload-file .file-action:hover { background: var(--brand-50); }
@@ -1157,6 +1270,56 @@
       border-color: var(--gray-400);
     }
     .oauth-btn svg { width: 18px; height: 18px; }
+
+    /* App Store / Google Play badges */
+    .store-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--gray-900);
+      color: var(--gray-0);
+      border: 1px solid var(--gray-900);
+      border-radius: var(--r-md);
+      padding: 8px var(--space-4);
+      text-decoration: none;
+      font-family: var(--font-display);
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        transform var(--dur-fast) var(--ease-out);
+    }
+    .store-btn:hover {
+      background: var(--gray-800);
+      text-decoration: none;
+    }
+    .store-btn:active { transform: scale(0.98); }
+    .store-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    .store-btn .store-label small {
+      display: block;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.85;
+      font-weight: var(--fw-medium);
+      line-height: 1.1;
+    }
+    .store-btn .store-label strong {
+      display: block;
+      font-size: var(--text-md);
+      font-weight: var(--fw-bold);
+      line-height: 1.15;
+    }
 
     /* ============================================================
        15. SUCCESS SHELL (done)
@@ -1473,8 +1636,13 @@
 
     /* Step 7 - COI attestation */
     .attestation-shell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       padding: var(--space-10) var(--space-4);
+      min-height: 480px;
     }
     .attestation-shell .card-title,
     .attestation-shell .card-subtitle {
@@ -1680,6 +1848,23 @@
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
       <circle cx="12" cy="10" r="3"/>
     </symbol>
+    <symbol id="i-apple-store" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+    </symbol>
+    <symbol id="i-google-play" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3.609 1.814 13.792 12 3.609 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .61-.92zM14.5 12.707l2.582 2.582-10.74 6.198 8.158-8.78zm3.42-3.42 3.354 1.935a1 1 0 0 1 0 1.557l-3.354 1.935L15.208 12l2.713-2.713zm-3.42-3.421L6.34 1.5l10.74 6.197L14.5 11.293z"/>
+    </symbol>
+    <symbol id="i-flag-us" viewBox="0 0 24 16" preserveAspectRatio="none">
+      <rect width="24" height="16" fill="#FFFFFF"/>
+      <rect width="24" height="1.23" y="0" fill="#B22234"/>
+      <rect width="24" height="1.23" y="2.46" fill="#B22234"/>
+      <rect width="24" height="1.23" y="4.92" fill="#B22234"/>
+      <rect width="24" height="1.23" y="7.38" fill="#B22234"/>
+      <rect width="24" height="1.23" y="9.84" fill="#B22234"/>
+      <rect width="24" height="1.23" y="12.30" fill="#B22234"/>
+      <rect width="24" height="1.23" y="14.76" fill="#B22234"/>
+      <rect width="9.6" height="8.6" fill="#3C3B6E"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -1733,16 +1918,16 @@
 
       <button class="btn btn-primary btn-lg" onclick="showScreen('step1')">Sign in</button>
 
-      <div class="oauth-divider">or continue with</div>
-      <div class="oauth-row">
-        <button class="oauth-btn" type="button">
-          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.592.102-1.167.282-1.706V4.962H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
-          Google
-        </button>
-        <button class="oauth-btn" type="button">
-          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#000" d="M15.05 13.93c-.34.79-.5 1.14-.94 1.84-.61.97-1.46 2.18-2.52 2.19-.94.01-1.18-.61-2.46-.6-1.28.01-1.55.61-2.49.6-1.06-.01-1.87-1.1-2.48-2.07C1.42 13.16 1.24 9.84 2.78 8.07c1.09-1.26 2.81-2 4.42-2 1.65 0 2.69.91 4.05.91 1.32 0 2.13-.91 4.04-.91 1.45 0 2.99.79 4.08 2.16-3.59 1.97-3.01 7.11-4.32 5.7zM12.05 4.27c.7-.9 1.23-2.17 1.04-3.47-1.15.08-2.49.81-3.27 1.77-.71.87-1.29 2.16-1.07 3.41 1.25.04 2.55-.71 3.3-1.71z"/></svg>
-          Apple
-        </button>
+      <div class="oauth-divider">or get the app</div>
+      <div class="store-row">
+        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Download on the App Store">
+          <svg aria-hidden="true"><use href="#i-apple-store"/></svg>
+          <span class="store-label"><small>Download on the</small><strong>App Store</strong></span>
+        </a>
+        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Get it on Google Play">
+          <svg aria-hidden="true"><use href="#i-google-play"/></svg>
+          <span class="store-label"><small>Get it on</small><strong>Google Play</strong></span>
+        </a>
       </div>
 
       <div class="auth-foot">
@@ -1786,16 +1971,16 @@
 
       <p class="legal">By continuing you agree to MedPal's <a href="#" onclick="event.preventDefault()">Terms</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>.</p>
 
-      <div class="oauth-divider">or sign up with</div>
-      <div class="oauth-row">
-        <button class="oauth-btn" type="button">
-          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.592.102-1.167.282-1.706V4.962H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
-          Google
-        </button>
-        <button class="oauth-btn" type="button">
-          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#000" d="M15.05 13.93c-.34.79-.5 1.14-.94 1.84-.61.97-1.46 2.18-2.52 2.19-.94.01-1.18-.61-2.46-.6-1.28.01-1.55.61-2.49.6-1.06-.01-1.87-1.1-2.48-2.07C1.42 13.16 1.24 9.84 2.78 8.07c1.09-1.26 2.81-2 4.42-2 1.65 0 2.69.91 4.05.91 1.32 0 2.13-.91 4.04-.91 1.45 0 2.99.79 4.08 2.16-3.59 1.97-3.01 7.11-4.32 5.7zM12.05 4.27c.7-.9 1.23-2.17 1.04-3.47-1.15.08-2.49.81-3.27 1.77-.71.87-1.29 2.16-1.07 3.41 1.25.04 2.55-.71 3.3-1.71z"/></svg>
-          Apple
-        </button>
+      <div class="oauth-divider">or get the app</div>
+      <div class="store-row">
+        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Download on the App Store">
+          <svg aria-hidden="true"><use href="#i-apple-store"/></svg>
+          <span class="store-label"><small>Download on the</small><strong>App Store</strong></span>
+        </a>
+        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Get it on Google Play">
+          <svg aria-hidden="true"><use href="#i-google-play"/></svg>
+          <span class="store-label"><small>Get it on</small><strong>Google Play</strong></span>
+        </a>
       </div>
 
       <div class="auth-foot">
@@ -1813,10 +1998,8 @@
 <section class="screen" id="screen-step1">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block">
-        <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-        <div class="brand-text">MedPal Provider</div>
-      </div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -1828,6 +2011,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 1 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -1855,13 +2039,12 @@
             </div>
           </div>
           <div class="field">
-            <label for="p-phone-country">Country code <span class="req">*</span></label>
-            <select id="p-phone-country">
-              <option>+1 (US)</option>
-              <option>+1 (CA)</option>
-              <option>+44 (UK)</option>
-              <option>+61 (AU)</option>
-            </select>
+            <label>Country code <span class="req">*</span></label>
+            <div class="locked-country" aria-label="Country code +1 (US)">
+              <svg class="flag" aria-hidden="true"><use href="#i-flag-us"/></svg>
+              +1
+            </div>
+            <span class="hint">US numbers only.</span>
           </div>
           <div class="field">
             <label for="p-phone">Phone <span class="req">*</span></label>
@@ -1881,7 +2064,8 @@
 <section class="screen" id="screen-step2">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -1891,6 +2075,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 2 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -1950,7 +2135,8 @@
 <section class="screen" id="screen-step3">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -1960,6 +2146,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 3 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2009,7 +2196,8 @@
 <section class="screen" id="screen-step4">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2019,6 +2207,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 4 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2055,8 +2244,8 @@
             <div class="bio-meta">
               <span class="char-count">231 / 500</span>
               <div class="bio-actions">
-                <button class="btn btn-ghost btn-sm" type="button">Undo</button>
-                <button class="btn btn-primary btn-sm" type="button">
+                <button id="bio-undo" class="btn btn-ghost btn-sm" type="button" style="display: none;">Undo</button>
+                <button id="bio-polish" class="btn btn-primary btn-sm" type="button" onclick="onBioPolish()">
                   <svg class="icon"><use href="#i-sparkles"/></svg> Polish
                 </button>
               </div>
@@ -2076,7 +2265,8 @@
 <section class="screen" id="screen-step5">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2086,6 +2276,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 5 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2127,12 +2318,12 @@
               <input id="l-exp" type="date" />
             </div>
             <div class="field full">
-              <label>License document <span class="req">*</span></label>
+              <label>License documents <span class="req">*</span></label>
               <div class="upload" style="padding: var(--space-3);">
                 <svg class="upload-icon"><use href="#i-upload"/></svg>
-                <div class="upload-hint">PDF, PNG, JPG · max 10 MB</div>
+                <div class="upload-hint">Upload one or more files. PDF, JPG, PNG, DOC, DOCX. Max 5 MB each.</div>
                 <div class="upload-actions">
-                  <button type="button"><svg class="icon"><use href="#i-upload"/></svg> Choose file</button>
+                  <button type="button"><svg class="icon"><use href="#i-upload"/></svg> Choose files</button>
                 </div>
               </div>
             </div>
@@ -2146,14 +2337,16 @@
                 <input type="text" placeholder="Start typing an address…" />
               </div>
             </div>
-            <button class="btn-add" type="button">
-              <svg class="icon"><use href="#i-plus"/></svg> Add another address
+            <button class="btn-add-mini" type="button">
+              <span class="plus-circle"><svg class="icon"><use href="#i-plus"/></svg></span>
+              Add another address
             </button>
           </div>
         </div>
 
-        <button class="btn-add" type="button" style="margin-top: var(--space-3);">
-          <svg class="icon"><use href="#i-plus"/></svg> Add another state
+        <button class="btn-add-mini" type="button" style="margin-top: var(--space-3);">
+          <span class="plus-circle"><svg class="icon"><use href="#i-plus"/></svg></span>
+          Add another state
         </button>
       </div>
       <div class="card-footer">
@@ -2168,7 +2361,8 @@
 <section class="screen" id="screen-step6">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2178,17 +2372,22 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 6 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Diplomas &amp; certifications</h2>
+        <h2 class="card-title">Diplomas</h2>
         <p class="card-subtitle">Upload your medical school diploma and any board certifications. These appear on your profile.</p>
 
+        <label class="section-label" style="margin-bottom: var(--space-3);">Documents <span class="req">*</span> <span class="muted">(2 of 100)</span></label>
+
         <div class="field-grid">
-          <div class="field">
-            <label>Medical school diploma <span class="req">*</span></label>
-            <div class="upload-file">
-              <div class="file-icon"><svg class="icon icon-lg"><use href="#i-graduation-cap"/></svg></div>
+          <div class="upload-file">
+            <div class="file-preview">
+              <div class="doc-thumb"><svg class="icon"><use href="#i-graduation-cap"/></svg></div>
+            </div>
+            <div class="file-meta-row">
+              <div class="file-icon"><svg class="icon"><use href="#i-file-text"/></svg></div>
               <div class="file-meta">
                 <div class="file-name">UCSF-MD-diploma.pdf</div>
                 <div class="file-sub">2.4 MB · uploaded just now</div>
@@ -2196,20 +2395,27 @@
               <button class="file-action" type="button">Replace</button>
             </div>
           </div>
-          <div class="field">
-            <label>Board certifications</label>
-            <div class="upload-file">
-              <div class="file-icon"><svg class="icon icon-lg"><use href="#i-award"/></svg></div>
+          <div class="upload-file">
+            <div class="file-preview">
+              <div class="doc-thumb"><svg class="icon"><use href="#i-award"/></svg></div>
+            </div>
+            <div class="file-meta-row">
+              <div class="file-icon"><svg class="icon"><use href="#i-file-text"/></svg></div>
               <div class="file-meta">
                 <div class="file-name">ABIM-Internal-Medicine-2010.pdf</div>
-                <div class="file-sub">480 KB</div>
+                <div class="file-sub">480 KB · uploaded just now</div>
               </div>
               <button class="file-action" type="button">Replace</button>
             </div>
-            <button class="btn-add" type="button" style="margin-top: var(--space-2);">
-              <svg class="icon"><use href="#i-plus"/></svg> Add certification
-            </button>
           </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-4); gap: var(--space-3); flex-wrap: wrap;">
+          <button class="btn-add-mini" type="button">
+            <span class="plus-circle"><svg class="icon"><use href="#i-plus"/></svg></span>
+            Add another document
+          </button>
+          <span class="hint">PDF, JPG, PNG, DOC, DOCX. Max 5 MB each. Up to 100 files.</span>
         </div>
       </div>
       <div class="card-footer">
@@ -2224,7 +2430,8 @@
 <section class="screen" id="screen-step7">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2234,6 +2441,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 7 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body attestation-shell">
@@ -2267,7 +2475,8 @@
 <section class="screen" id="screen-step8">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2277,6 +2486,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 8 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2295,7 +2505,7 @@
           <div>
             <div class="banner success">
               <svg class="icon"><use href="#i-check-circle"/></svg>
-              <div>Video recorded · 22 seconds · 18.4 MB</div>
+              <div>Video recorded · 10 seconds · 8.2 MB</div>
             </div>
             <div style="font-size: var(--text-md); font-weight: var(--fw-semi); color: var(--gray-900); margin-top: var(--space-3);">Tips for a good recording</div>
             <ul style="margin: var(--space-2) 0 0; padding-left: var(--space-5); font-size: var(--text-md); color: var(--gray-600); line-height: var(--lh-loose);">
@@ -2318,7 +2528,8 @@
 <section class="screen" id="screen-step9">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2328,6 +2539,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 9 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2397,7 +2609,8 @@
 <section class="screen" id="screen-stepid">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2407,6 +2620,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 10 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2474,7 +2688,8 @@
 <section class="screen" id="screen-step10">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2484,6 +2699,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 11 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2500,10 +2716,11 @@
             <input id="ec-last" type="text" value="Kennedy" />
           </div>
           <div class="field">
-            <label for="ec-country">Country code <span class="req">*</span></label>
-            <select id="ec-country">
-              <option>+1 (US)</option>
-            </select>
+            <label>Country code <span class="req">*</span></label>
+            <div class="locked-country" aria-label="Country code +1 (US)">
+              <svg class="flag" aria-hidden="true"><use href="#i-flag-us"/></svg>
+              +1
+            </div>
           </div>
           <div class="field">
             <label for="ec-phone">Phone <span class="req">*</span></label>
@@ -2523,7 +2740,8 @@
 <section class="screen" id="screen-step11">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+      <div class="brand-text">MedPal Provider</div>
       <div class="actions">
         <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
         <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
@@ -2533,6 +2751,7 @@
     <div class="card">
       <div class="card-header">
         <span class="eyebrow">Step 12 of 12</span>
+        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
         <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
@@ -2695,6 +2914,12 @@
 
   function goNext(fromId) { showScreen(nextStepId(fromId)); }
   function goPrev(fromId) { const p = prevStepId(fromId); if (p) showScreen(p); }
+
+  // Bio polish - reveal Undo only after a polish has happened
+  function onBioPolish() {
+    const undo = document.getElementById('bio-undo');
+    if (undo) undo.style.display = '';
+  }
 
   // COI attestation - once chosen, locked (matches live behavior)
   function setCoiState(state) {
