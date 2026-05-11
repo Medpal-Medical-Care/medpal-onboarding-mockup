@@ -110,43 +110,92 @@
       background: transparent; color: #fff; border-color: rgba(255,255,255,0.5);
     }
 
-    /* Step pills — 12 pills fit on a single row by tightening the
-       per-pill min-width and font size. nowrap prevents the last
-       pill (Specialty) from rolling under the others. */
+    /* Step pills — styled like the tabs on a row of medical-records
+       file folders. Bottoms align flush with the top edge of the
+       white card (negative margin-bottom). Inactive pills are shorter
+       + lower contrast, "filed back" behind the active one. The
+       active pill is taller and pulled forward — its bottom edge
+       blends into the card body so the card looks like the inside
+       of the selected folder. */
     .step-pills {
-      display: flex; flex-wrap: nowrap; gap: 4px;
-      padding: 0 0 12px; width: 100%;
+      display: flex; flex-wrap: nowrap; gap: 3px;
+      width: 100%;
+      align-items: flex-end;        /* bottoms align — tab feel */
+      margin-bottom: -1px;          /* tabs meet the card top edge */
+      padding: 0;
+      position: relative; z-index: 2;
     }
     .step-pill {
-      flex: 1 1 0; min-width: 0; padding: 6px 4px;
-      background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.85);
-      border-radius: 6px; text-align: center;
-      font-size: 8.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;
+      flex: 1 1 0; min-width: 0;
+      padding: 7px 5px 9px;
+      background: rgba(255,255,255,0.22); color: rgba(255,255,255,0.92);
+      /* Folder tab shape: rounded top only, flat bottom that meets the card. */
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+      font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
       line-height: 1.2;
       border: none;
-      border-top: 2px solid rgba(255,255,255,0.4);
+      /* Subtle top-edge highlight so each tab reads as a separate piece of card stock. */
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.35),
+        inset -1px 0 0 rgba(0,0,0,0.04),
+        0 -1px 2px rgba(0,0,0,0.06);
       cursor: pointer; font-family: inherit;
-      transition: background 0.15s, transform 0.05s;
+      /* Animate going from inactive -> active (lift up) and back
+         (settle down) so switching tabs feels like sliding a folder
+         out and back into the cabinet. */
+      transition:
+        padding 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
       overflow: hidden;
+      position: relative;
     }
-    .step-pill .step-name { overflow: hidden; }
+    .step-pill:active { transform: translateY(1px); }
+    .step-pill .step-num { display: block; font-size: 8px; opacity: 0.75; margin-bottom: 2px; font-weight: 600; }
+    /* Reserve 2 lines worth of vertical space for the label so single-
+       line labels (e.g. "About Me") don't render a shorter tab than the
+       2-line ones. Tabs with genuinely 3-line labels (e.g. "Certificate
+       of Insurance") still wrap and grow naturally beyond this min. */
+    .step-pill .step-name { display: block; overflow: hidden; min-height: 2.2em; }
     .step-pill:hover { background: rgba(255,255,255,0.32); }
-    .step-pill:active { transform: scale(0.97); }
     .step-pill:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+    /* Already-visited tabs: slightly brighter than untouched, to read
+       like folders that have been pulled out before. */
+    .step-pill.done {
+      background: rgba(255,255,255,0.45);
+      color: rgba(160, 60, 30, 0.85);
+    }
+
+    /* Selected folder: taller (sticks up), white card stock, joined
+       seamlessly to the card body below via the -1px margin on the
+       container + this matching white fill. Slight raised shadow on
+       the top/sides only — no bottom shadow because that edge melts
+       into the card. */
     .step-pill.active {
       background: #fff; color: var(--orange-600);
-      border-top-color: #fff;
+      padding: 14px 6px 14px;       /* taller — sticks up like a pulled tab */
+      box-shadow:
+        0 -3px 8px rgba(0,0,0,0.08),
+        -2px 0 6px rgba(0,0,0,0.04),
+        2px 0 6px rgba(0,0,0,0.04);
+      z-index: 3;
     }
-    .step-pill.done {
-      background: rgba(255,255,255,0.55); color: var(--orange-700, #c2410c);
-      border-top-color: rgba(255,255,255,0.7);
-    }
-    .step-pill .step-num { display: block; font-size: 8px; opacity: 0.75; margin-bottom: 2px; }
-    .step-pill .step-name { display: block; }
+    .step-pill.active .step-num { opacity: 0.55; color: var(--text-muted); }
 
-    /* Card */
+    /* So the active tab visually melts into the card top, kill the
+       card's top-left + top-right rounded corners where they meet
+       the active tab. (Skipped — radius is small and looks fine.) */
+
+    /* Card — top corners are square so the row of folder tabs above
+       meets the card edge cleanly (rounded top corners would expose
+       a visible gap below the active tab where the curve cuts in). */
     .card {
-      background: var(--bg-card); border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
       box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.4);
       overflow: hidden;
     }
@@ -169,9 +218,12 @@
     }
 
     /* Form bits */
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+    .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .field-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 0; }
     .field.full { grid-column: 1 / -1; }
+    .field.span2 { grid-column: span 2; }
     .field label { font-size: 13px; font-weight: 600; color: var(--text); }
     .field label .req { color: var(--danger); margin-left: 2px; }
     .field input[type="text"],
@@ -679,33 +731,38 @@
         <div class="step-name">About Me</div>
       </div>
       <div class="card-body">
-        <h2 class="h1">About Me</h2>
+        <h2 class="h1" style="margin-bottom: 12px;">About Me</h2>
 
-        <div style="display: flex; justify-content: center; margin-bottom: 24px;">
-          <div style="position: relative;">
-            <div style="width: 128px; height: 128px; border-radius: 50%; background: var(--orange-50); border: 4px solid var(--orange-300); display: flex; align-items: center; justify-content: center; font-size: 56px; color: var(--orange-600);">👩‍⚕️</div>
-            <button style="position: absolute; right: -4px; top: -4px; width: 40px; height: 40px; border-radius: 50%; background: var(--teal-500); color: #fff; border: none; cursor: pointer; font-size: 22px;">+</button>
-          </div>
-        </div>
-
-        <div class="field full">
-          <label>Short Bio <span class="req">*</span> <span class="muted">(50-500 characters)</span></label>
-          <textarea>Board-certified internal medicine physician with 16 years of experience. Special interest in cardiovascular risk reduction, preventive medicine, and chronic disease management. Welcoming patients of all backgrounds.</textarea>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
-            <span class="muted">231/500</span>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <button class="btn btn-ghost btn-sm">Undo</button>
-              <button class="btn btn-teal">Polish ✨</button>
+        <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <!-- LEFT: avatar + role -->
+          <div>
+            <div style="display: flex; justify-content: center;">
+              <div style="position: relative;">
+                <div style="width: 132px; height: 132px; border-radius: 50%; background: var(--orange-50); border: 4px solid var(--orange-300); display: flex; align-items: center; justify-content: center; font-size: 58px; color: var(--orange-600);">👩‍⚕️</div>
+                <button style="position: absolute; right: -2px; bottom: 4px; width: 36px; height: 36px; border-radius: 50%; background: var(--teal-500); color: #fff; border: 2px solid #fff; cursor: pointer; font-size: 18px; line-height: 1;">+</button>
+              </div>
+            </div>
+            <div class="field" style="margin-top: 14px;">
+              <label>Role <span class="req">*</span></label>
+              <div class="chip-row" style="justify-content: center;">
+                <div class="chip selected">Provider</div>
+                <div class="chip">Advocate</div>
+                <div class="chip">Both</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field full" style="margin-top: 16px;">
-          <label>Role <span class="req">*</span></label>
-          <div class="chip-row">
-            <div class="chip selected">Provider</div>
-            <div class="chip">Advocate</div>
-            <div class="chip">Both</div>
+          <!-- RIGHT: bio -->
+          <div class="field full" style="margin: 0;">
+            <label>Short Bio <span class="req">*</span> <span class="muted">(50-500 characters)</span></label>
+            <textarea style="min-height: 168px;">Board-certified internal medicine physician with 16 years of experience. Special interest in cardiovascular risk reduction, preventive medicine, and chronic disease management. Welcoming patients of all backgrounds.</textarea>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
+              <span class="muted">231/500</span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="btn btn-ghost btn-sm">Undo</button>
+                <button class="btn btn-teal">Polish ✨</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -731,11 +788,11 @@
         <div class="step-name">Upload Documents</div>
       </div>
       <div class="card-body">
-        <h2 class="h1">State Licenses</h2>
-        <div class="info-banner">Add each state you're licensed to practice in. Patients will only see you when they search from a state on your list.</div>
+        <h2 class="h1" style="margin-bottom: 10px;">State Licenses</h2>
+        <div class="info-banner" style="padding: 7px 12px; margin-bottom: 10px;">Add each state you're licensed to practice in. Patients will only see you when they search from a state on your list.</div>
 
-        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; background: #fff;">
-          <div class="field-grid">
+        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; background: #fff;">
+          <div class="field-grid cols-4">
             <div class="field">
               <label>State <span class="req">*</span></label>
               <select><option>California</option><option>New York</option></select>
@@ -752,18 +809,24 @@
               <label>Expiration Date <span class="req">*</span></label>
               <input type="date" value="2027-08-12" />
             </div>
-            <div class="field full">
-              <div class="checkbox-row">
+          </div>
+
+          <div class="field-grid" style="margin-top: 10px; align-items: start;">
+            <div class="field">
+              <label>License Address</label>
+              <div class="checkbox-row" style="padding: 7px 10px;">
                 <input type="checkbox" checked /> Same as Form address
               </div>
-              <span class="hint">License address auto-populated from your mailing address (state matches).</span>
+              <span class="hint">Auto-populated from your mailing address (state matches).</span>
             </div>
-            <div class="field full">
-              <label>License Document Upload <span class="req">*</span></label>
-              <div class="upload-box">
-                <div class="icon">📄</div>
-                <div class="title">CA-license-2025.pdf</div>
-                <div class="sub">Uploaded · 1.2 MB · Click to replace</div>
+            <div class="field">
+              <label>License Document <span class="req">*</span></label>
+              <div class="upload-box" style="padding: 12px; text-align: left; display: flex; align-items: center; gap: 10px;">
+                <div class="icon" style="font-size: 22px; margin: 0;">📄</div>
+                <div>
+                  <div class="title" style="margin: 0;">CA-license-2025.pdf</div>
+                  <div class="sub">1.2 MB · Click to replace</div>
+                </div>
               </div>
             </div>
           </div>
@@ -793,26 +856,31 @@
         <div class="step-name">Upload Documents</div>
       </div>
       <div class="card-body">
-        <h2 class="h1">Diplomas &amp; Certifications</h2>
-        <div class="info-banner">Upload your medical school diploma and any board certifications. Patients see these on your profile.</div>
+        <h2 class="h1" style="margin-bottom: 12px;">Diplomas &amp; Certifications</h2>
+        <div class="info-banner" style="padding: 7px 12px; margin-bottom: 12px;">Upload your medical school diploma and any board certifications. Patients see these on your profile.</div>
 
-        <div class="section">
-          <label class="label-strong">Medical School Diploma <span class="red">*</span></label>
-          <div class="upload-box">
-            <div class="icon">🎓</div>
-            <div class="title">UCSF-MD-diploma.pdf</div>
-            <div class="sub">Uploaded · 2.4 MB · Click to replace</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label class="label-strong" style="margin-bottom: 6px;">Medical School Diploma <span class="red">*</span></label>
+            <div class="upload-box" style="padding: 12px; text-align: left; display: flex; align-items: center; gap: 10px;">
+              <div class="icon" style="font-size: 22px; margin: 0;">🎓</div>
+              <div>
+                <div class="title" style="margin: 0;">UCSF-MD-diploma.pdf</div>
+                <div class="sub">2.4 MB · Click to replace</div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="section">
-          <label class="label-strong">Board Certifications</label>
-          <div class="upload-box">
-            <div class="icon">📜</div>
-            <div class="title">ABIM-Internal-Medicine-2010.pdf</div>
-            <div class="sub">Uploaded · 480 KB · Click to replace</div>
+          <div>
+            <label class="label-strong" style="margin-bottom: 6px;">Board Certifications</label>
+            <div class="upload-box" style="padding: 12px; text-align: left; display: flex; align-items: center; gap: 10px;">
+              <div class="icon" style="font-size: 22px; margin: 0;">📜</div>
+              <div>
+                <div class="title" style="margin: 0;">ABIM-Internal-Medicine-2010.pdf</div>
+                <div class="sub">480 KB · Click to replace</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="margin-top: 8px;">+ Add another certification</button>
           </div>
-          <button class="btn btn-secondary btn-sm" style="margin-top: 10px;">+ Add another certification</button>
         </div>
       </div>
       <div class="card-footer">
@@ -889,18 +957,34 @@
         <div class="step-name">Verification Video</div>
       </div>
       <div class="card-body">
-        <h2 class="h1">Verification Video</h2>
-        <div class="info-banner">Record a short selfie video (15-30 seconds) holding your government-issued ID next to your face. We use this to verify identity before approving your profile.</div>
+        <h2 class="h1" style="margin-bottom: 12px;">Verification Video</h2>
 
-        <div class="video-box">Camera preview will appear here</div>
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start;">
+          <!-- LEFT: video preview -->
+          <div>
+            <div class="video-box" style="max-width: 100%;">Camera preview will appear here</div>
+            <div style="display: flex; justify-content: center; gap: 8px; margin-top: 10px;">
+              <button class="btn btn-secondary btn-sm">Re-record</button>
+              <button class="btn btn-primary btn-sm">▶ Play recording</button>
+            </div>
+          </div>
 
-        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
-          <button class="btn btn-secondary">Re-record</button>
-          <button class="btn btn-primary">▶ Play recorded video</button>
-        </div>
+          <!-- RIGHT: instructions + status -->
+          <div>
+            <div class="info-banner" style="padding: 10px 14px; margin-bottom: 12px;">
+              Record a short selfie video (15-30 seconds) holding your government-issued ID next to your face. We use this for identity verification before approving your profile.
+            </div>
 
-        <div style="margin-top: 20px; padding: 12px 16px; background: #f0fdf4; border-left: 4px solid var(--success); border-radius: 6px; font-size: 13px;">
-          ✓ Video recorded — 22 seconds · 18.4 MB
+            <div style="padding: 12px 16px; background: #f0fdf4; border-left: 4px solid var(--success); border-radius: 6px; font-size: 13px;">
+              ✓ Video recorded — 22 seconds · 18.4 MB
+            </div>
+
+            <ul style="margin: 14px 0 0; padding-left: 20px; font-size: 13px; color: var(--text-soft); line-height: 1.7;">
+              <li>Good lighting on your face</li>
+              <li>ID clearly visible next to your face</li>
+              <li>Speak your full name and today's date</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="card-footer">
