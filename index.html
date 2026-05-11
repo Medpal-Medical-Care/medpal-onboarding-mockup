@@ -41,14 +41,14 @@
     }
     * { box-sizing: border-box; }
     html {
-      /* Lock the page to viewport height — the card body handles its
-         own internal scroll if content overflows. This keeps the
-         chrome (header / step pills / card header / card footer)
-         always visible regardless of how tall the form content is. */
-      height: 100vh; overflow: hidden;
+      /* Reserve scrollbar gutter so screens with different content
+         heights don't shift the layout horizontally when the scrollbar
+         appears/disappears. */
+      scrollbar-gutter: stable;
+      overflow-y: scroll; /* fallback for browsers without scrollbar-gutter */
     }
     html, body {
-      margin: 0; padding: 0;
+      margin: 0; padding: 0; min-height: 100vh;
       background: var(--orange-bg);
       color: var(--text);
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -79,20 +79,12 @@
     #mockup-nav button:hover { background: rgba(255,255,255,0.1); }
     #mockup-nav button.active { background: var(--orange-500); border-color: var(--orange-500); }
 
-    /* App chrome — fills the available height (mockup-nav is sticky
-       at top; this column owns the rest). Children flex; the card
-       takes whatever's left after header + pills. */
-    .app-shell {
-      max-width: 1280px; margin: 0 auto;
-      padding: 8px 24px 16px;
-      display: flex; flex-direction: column;
-      height: calc(100vh - 36px); /* 36px ≈ mockup-nav height */
-    }
+    /* App chrome */
+    .app-shell { max-width: 1024px; margin: 0 auto; padding: 8px 24px 16px; }
 
     .app-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 8px 0 12px;
-      flex-shrink: 0;
     }
     .app-header .logo-block { display: flex; align-items: center; gap: 20px; }
     .app-header .logo {
@@ -152,21 +144,16 @@
     .step-pill .step-num { display: block; font-size: 8px; opacity: 0.75; margin-bottom: 2px; }
     .step-pill .step-name { display: block; }
 
-    /* Card — fixed-height column. Header and footer stay pinned; body
-       scrolls internally if content overflows. The page itself never
-       scrolls. */
+    /* Card */
     .card {
       background: var(--bg-card); border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.4);
       overflow: hidden;
-      display: flex; flex-direction: column;
-      flex: 1 1 auto; min-height: 0;
     }
     .card-header {
-      padding: 12px 24px; background: #fafbfc;
+      padding: 14px 24px; background: #fafbfc;
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      flex-shrink: 0;
     }
     .card-header .step-count { font-size: 12px; color: var(--text-muted); }
     .card-header .step-name {
@@ -174,24 +161,17 @@
       padding: 6px 14px; border-radius: 999px;
       font-size: 13px; font-weight: 600;
     }
-    .card-body {
-      padding: 22px 32px 20px; overflow-y: auto;
-      flex: 1 1 auto; min-height: 0;
-    }
+    .card-body { padding: 32px 32px 24px; }
     .card-footer {
-      padding: 12px 32px; background: #fafbfc;
+      padding: 16px 32px; background: #fafbfc;
       border-top: 1px solid var(--border);
       display: flex; justify-content: space-between; align-items: center;
-      flex-shrink: 0;
     }
 
-    /* Form bits — 3 columns by default at desktop so forms are wide
-       and short. Collapse to 2 at 1100px, 1 at 720px. */
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px 18px; }
-    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+    /* Form bits */
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
     .field.full { grid-column: 1 / -1; }
-    .field.span2 { grid-column: span 2; }
-    @media (max-width: 1100px) { .field-grid { grid-template-columns: 1fr 1fr; } .field.span2 { grid-column: 1 / -1; } }
     .field label { font-size: 13px; font-weight: 600; color: var(--text); }
     .field label .req { color: var(--danger); margin-left: 2px; }
     .field input[type="text"],
@@ -276,17 +256,17 @@
       font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       letter-spacing: -0.01em;
     }
-    .h1 { font-size: 22px; font-weight: 700; text-align: center; margin: 0 0 16px; color: var(--text); letter-spacing: -0.015em; }
-    .h2 { font-size: 17px; font-weight: 700; margin: 0 0 10px; color: var(--text); }
+    .h1 { font-size: 26px; font-weight: 700; text-align: center; margin: 0 0 28px; color: var(--text); letter-spacing: -0.015em; }
+    .h2 { font-size: 19px; font-weight: 700; margin: 0 0 14px; color: var(--text); }
     /* Buttons + chrome strings stay in the display family for personality */
     .btn, .app-header .brand-text .product, .card-header .step-name, .step-pill {
       font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    .section { margin-bottom: 18px; }
+    .section { margin-bottom: 28px; }
     .info-banner {
       background: var(--orange-50); border-left: 4px solid var(--orange-500);
-      padding: 9px 14px; border-radius: 6px; font-size: 13px; color: var(--text-soft);
-      margin-bottom: 14px;
+      padding: 12px 16px; border-radius: 6px; font-size: 13px; color: var(--text-soft);
+      margin-bottom: 20px;
     }
     .label-strong { font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
     .row { display: flex; gap: 12px; align-items: center; }
