@@ -7,225 +7,600 @@
   <link rel="icon" href="https://medpal.app/favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Health-tech pairing: Plus Jakarta Sans (modern geometric headings, conveys
-       trust + warmth) + Inter (neutral, highly readable body — same family the
-       live medpal-onboarding-web uses via next/font/google). -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* ============================================================
+       1. TOKENS
+       ============================================================ */
     :root {
-      --orange-start: #EE8A45;
-      --orange-end: #EB5A3D;
-      --orange-bg: linear-gradient(135deg, #EE8A45 0%, #EB5A3D 100%);
-      --orange-50: #fff7ed;
-      --orange-100: #ffedd5;
-      --orange-300: #fdba74;
-      --orange-500: #f97316;
-      --orange-600: #ea580c;
-      --teal-500: #14b8a6;
-      --teal-600: #0d9488;
-      --bg-card: #ffffff;
-      --surface: #f7f8fa;
-      --border: #e5e7eb;
-      --border-strong: #d1d5db;
-      --text: #111827;
-      --text-soft: #4b5563;
-      --text-muted: #6b7280;
-      --danger: #dc2626;
-      --success: #16a34a;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-      --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-      --radius: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
+      /* Brand */
+      --brand-50:  #FFF4ED;
+      --brand-100: #FFE4D1;
+      --brand-200: #FFCDA8;
+      --brand-300: #FDB07C;
+      --brand-400: #F58851;
+      --brand-500: #EE8A45;
+      --brand-600: #EB5A3D;
+      --brand-700: #C9421F;
+      --brand-800: #9F2F12;
+      --brand-gradient: linear-gradient(135deg, #EE8A45 0%, #EB5A3D 100%);
+
+      /* Neutral - slate */
+      --gray-0:   #FFFFFF;
+      --gray-50:  #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+
+      /* Semantic */
+      --success-50:  #ECFDF5;
+      --success-500: #10B981;
+      --success-700: #047857;
+      --warning-50:  #FFFBEB;
+      --warning-500: #F59E0B;
+      --warning-700: #B45309;
+      --danger-50:   #FEF2F2;
+      --danger-500:  #EF4444;
+      --danger-700:  #B91C1C;
+      --info-50:     #EFF6FF;
+      --info-500:    #3B82F6;
+      --info-700:    #1D4ED8;
+
+      /* Type */
+      --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --font-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --text-xs:   11px;
+      --text-sm:   12px;
+      --text-base: 13px;
+      --text-md:   14px;
+      --text-lg:   16px;
+      --text-xl:   18px;
+      --text-2xl:  22px;
+      --text-3xl:  28px;
+      --lh-tight:  1.2;
+      --lh-snug:   1.35;
+      --lh-normal: 1.5;
+      --lh-loose:  1.65;
+      --fw-medium: 500;
+      --fw-semi:   600;
+      --fw-bold:   700;
+      --tracking-tight:  -0.02em;
+      --tracking-normal: 0;
+      --tracking-wide:   0.04em;
+
+      /* Space (4px scale) */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-5:  20px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      /* Radius */
+      --r-sm:   6px;
+      --r-md:   8px;
+      --r-lg:   12px;
+      --r-xl:   16px;
+      --r-pill: 999px;
+
+      /* Shadow */
+      --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
+      --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+      --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
+      --shadow-lg: 0 12px 32px -8px rgba(15,23,42,0.18);
+      --ring-brand:  0 0 0 3px rgba(238,138,69,0.25);
+      --ring-danger: 0 0 0 3px rgba(239,68,68,0.20);
+
+      /* Motion */
+      --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --dur-fast: 120ms;
+      --dur-base: 180ms;
+      --dur-slow: 280ms;
     }
-    * { box-sizing: border-box; }
+
+    /* ============================================================
+       2. RESET + BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
     html {
-      /* Reserve scrollbar gutter so screens with different content
-         heights don't shift the layout horizontally when the scrollbar
-         appears/disappears. */
       scrollbar-gutter: stable;
-      overflow-y: scroll; /* fallback for browsers without scrollbar-gutter */
+      overflow-y: scroll;
     }
     html, body {
-      margin: 0; padding: 0; min-height: 100vh;
-      background: var(--orange-bg);
-      color: var(--text);
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-feature-settings: "cv11", "ss01", "ss03"; /* Inter stylistic sets — better numerals + lowercase L */
-      font-size: 15px; line-height: 1.55;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--brand-gradient);
+      color: var(--gray-900);
+      font-family: var(--font-body);
+      font-feature-settings: "cv11", "ss01", "ss03";
+      font-size: var(--text-md);
+      line-height: var(--lh-normal);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
     }
+    img, svg { display: block; max-width: 100%; }
+    button { font-family: inherit; }
+    a { color: var(--brand-700); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    /* Mockup nav */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      letter-spacing: var(--tracking-tight);
+      margin: 0;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .icon-lg { width: 20px; height: 20px; }
+    .icon-xl { width: 24px; height: 24px; }
+    .icon-2xl { width: 32px; height: 32px; }
+    .icon-3xl { width: 48px; height: 48px; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* ============================================================
+       3. MOCKUP NAV (dev chrome - not part of real app)
+       ============================================================ */
     #mockup-nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(0,0,0,0.85); color: #fff;
-      padding: 8px 16px;
-      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
-      font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(6px);
+      background: rgba(15,23,42,0.92);
+      color: var(--gray-0);
+      padding: var(--space-2) var(--space-4);
+      display: flex; flex-wrap: wrap; align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-sm);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
     }
-    #mockup-nav .label { opacity: 0.65; margin-right: 6px; font-weight: 500; }
+    #mockup-nav .label {
+      opacity: 0.55;
+      margin-right: var(--space-2);
+      font-weight: var(--fw-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-size: var(--text-xs);
+    }
     #mockup-nav button {
-      background: transparent; color: #fff;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 4px; padding: 4px 10px;
-      font-size: 11px; cursor: pointer; font-family: inherit;
-      transition: background 0.15s;
+      background: transparent;
+      color: var(--gray-0);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--r-sm);
+      padding: 3px var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--fw-medium);
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out),
+                  border-color var(--dur-fast) var(--ease-out);
     }
-    #mockup-nav button:hover { background: rgba(255,255,255,0.1); }
-    #mockup-nav button.active { background: var(--orange-500); border-color: var(--orange-500); }
+    #mockup-nav button:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.30);
+    }
+    #mockup-nav button.active {
+      background: var(--brand-500);
+      border-color: var(--brand-500);
+    }
 
-    /* App chrome */
-    .app-shell { max-width: 1024px; margin: 0 auto; padding: 8px 24px 16px; }
+    /* ============================================================
+       4. LAYOUT PRIMITIVES
+       ============================================================ */
+    .app-shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--space-2) var(--space-6) var(--space-4);
+    }
 
     .app-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-2) 0 var(--space-3);
     }
-    .app-header .logo-block { display: flex; align-items: center; gap: 20px; }
+    .app-header .logo-block {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
     .app-header .logo {
-      display: flex; align-items: center; justify-content: center;
-      /* No background, no rounded container — render the wordmark
-         directly on the orange gradient just like the live site. */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .app-header .logo img {
-      height: 44px; width: auto; object-fit: contain;
-      filter: brightness(0) invert(1); /* white-on-orange */
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
     }
-    .app-header .brand-text { color: #fff; }
-    .app-header .brand-text .product { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
-    .app-header .brand-text .tag { font-size: 12px; opacity: 0.9; font-weight: 500; }
-    .app-header .actions { display: flex; gap: 8px; align-items: center; }
-    .app-header button {
-      background: #fff; color: var(--orange-600);
-      border: 1px solid #fff; padding: 6px 14px;
-      border-radius: 6px; font-size: 13px; font-weight: 600;
-      cursor: pointer; font-family: inherit;
+    .app-header .brand-text {
+      color: var(--gray-0);
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: var(--fw-bold);
+      letter-spacing: -0.01em;
     }
-    .app-header .ghost {
-      background: transparent; color: #fff; border-color: rgba(255,255,255,0.5);
+    .app-header .actions {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
     }
 
-    /* Step pills — styled like the tabs on a row of medical-records
-       file folders. Bottoms align flush with the top edge of the
-       white card (negative margin-bottom). Inactive pills are shorter
-       + lower contrast, "filed back" behind the active one. The
-       active pill is taller and pulled forward — its bottom edge
-       blends into the card body so the card looks like the inside
-       of the selected folder. */
+    /* Header button - ghost on gradient */
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: transparent;
+      color: var(--gray-0);
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: var(--r-md);
+      padding: 7px var(--space-3);
+      font-size: var(--text-base);
+      font-weight: var(--fw-semi);
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out),
+                  border-color var(--dur-fast) var(--ease-out);
+    }
+    .header-btn:hover {
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.50);
+    }
+    .header-btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.30);
+    }
+    .header-btn.icon-only {
+      padding: 7px;
+      width: 32px; height: 32px;
+      justify-content: center;
+    }
+
+    /* ============================================================
+       5. STEP PILLS (folder-tab nav)
+       ============================================================ */
     .step-pills {
-      display: flex; flex-wrap: nowrap; gap: 3px;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 3px;
       width: 100%;
-      align-items: flex-end;        /* bottoms align — tab feel */
-      margin-bottom: -1px;          /* tabs meet the card top edge */
-      padding: 0;
-      position: relative; z-index: 2;
+      align-items: flex-end;
+      margin-bottom: -1px;
+      position: relative;
+      z-index: 2;
     }
     .step-pill {
-      flex: 1 1 0; min-width: 0;
-      padding: 7px 5px 9px;
-      background: rgba(255,255,255,0.22); color: rgba(255,255,255,0.92);
-      /* Folder tab shape: rounded top only, flat bottom that meets the card. */
-      border-radius: 10px 10px 0 0;
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 8px 4px 10px;
+      background: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.92);
+      border-radius: 8px 8px 0 0;
       text-align: center;
-      font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-      line-height: 1.2;
+      font-family: var(--font-display);
+      font-size: 9px;
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      line-height: var(--lh-tight);
       border: none;
-      /* Subtle top-edge highlight so each tab reads as a separate piece of card stock. */
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.30),
         inset -1px 0 0 rgba(0,0,0,0.04),
         0 -1px 2px rgba(0,0,0,0.06);
-      cursor: pointer; font-family: inherit;
-      /* Animate going from inactive -> active (lift up) and back
-         (settle down) so switching tabs feels like sliding a folder
-         out and back into the cabinet. */
+      cursor: pointer;
       transition:
-        padding 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-        background 0.22s ease,
-        color 0.22s ease,
-        box-shadow 0.22s ease,
-        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+        padding var(--dur-slow) var(--ease-out),
+        background var(--dur-base) var(--ease-out),
+        color var(--dur-base) var(--ease-out),
+        box-shadow var(--dur-base) var(--ease-out),
+        transform var(--dur-base) var(--ease-out);
       overflow: hidden;
       position: relative;
     }
-    .step-pill:active { transform: translateY(1px); }
-    .step-pill .step-num { display: block; font-size: 8px; opacity: 0.75; margin-bottom: 2px; font-weight: 600; }
-    /* Reserve 2 lines worth of vertical space for the label so single-
-       line labels (e.g. "About Me") don't render a shorter tab than the
-       2-line ones. Tabs with genuinely 3-line labels (e.g. "Certificate
-       of Insurance") still wrap and grow naturally beyond this min. */
-    .step-pill .step-name { display: block; overflow: hidden; min-height: 2.2em; }
-    .step-pill:hover { background: rgba(255,255,255,0.32); }
-    .step-pill:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-
-    /* Already-visited tabs: slightly brighter than untouched, to read
-       like folders that have been pulled out before. */
-    .step-pill.done {
-      background: rgba(255,255,255,0.45);
-      color: rgba(160, 60, 30, 0.85);
+    .step-pill .step-num {
+      display: block;
+      font-size: 9px;
+      opacity: 0.7;
+      margin-bottom: 2px;
+      font-weight: var(--fw-semi);
     }
-
-    /* Selected folder: taller (sticks up), white card stock, joined
-       seamlessly to the card body below via the -1px margin on the
-       container + this matching white fill. Slight raised shadow on
-       the top/sides only — no bottom shadow because that edge melts
-       into the card. */
+    .step-pill .step-name {
+      display: block;
+      overflow: hidden;
+      min-height: 2.2em;
+    }
+    .step-pill:hover {
+      background: rgba(255,255,255,0.28);
+    }
+    .step-pill:focus-visible {
+      outline: none;
+      box-shadow:
+        inset 0 0 0 2px var(--gray-0),
+        0 -1px 2px rgba(0,0,0,0.06);
+    }
+    .step-pill:active { transform: translateY(1px); }
+    .step-pill.done {
+      background: rgba(255,255,255,0.42);
+      color: var(--brand-800);
+    }
     .step-pill.active {
-      background: #fff; color: var(--orange-600);
-      padding: 14px 6px 14px;       /* taller — sticks up like a pulled tab */
+      background: var(--gray-0);
+      color: var(--gray-900);
+      padding: 14px 6px 14px;
       box-shadow:
         0 -3px 8px rgba(0,0,0,0.08),
         -2px 0 6px rgba(0,0,0,0.04),
         2px 0 6px rgba(0,0,0,0.04);
       z-index: 3;
     }
-    .step-pill.active .step-num { opacity: 0.55; color: var(--text-muted); }
+    .step-pill.active .step-num {
+      color: var(--gray-500);
+      opacity: 0.85;
+    }
 
-    /* So the active tab visually melts into the card top, kill the
-       card's top-left + top-right rounded corners where they meet
-       the active tab. (Skipped — radius is small and looks fine.) */
-
-    /* Card — top corners are square so the row of folder tabs above
-       meets the card edge cleanly (rounded top corners would expose
-       a visible gap below the active tab where the curve cuts in). */
+    /* ============================================================
+       6. CARD
+       ============================================================ */
     .card {
-      background: var(--bg-card);
-      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-      box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.4);
+      background: var(--gray-0);
+      border-radius: 0 0 var(--r-lg) var(--r-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.40);
       overflow: hidden;
     }
     .card-header {
-      padding: 14px 24px; background: #fafbfc;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-3) var(--space-8);
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .card-header .step-count { font-size: 12px; color: var(--text-muted); }
-    .card-header .step-name {
-      background: var(--orange-bg); color: #fff;
-      padding: 6px 14px; border-radius: 999px;
-      font-size: 13px; font-weight: 600;
+    .card-header .eyebrow {
+      font-size: var(--text-xs);
+      font-weight: var(--fw-semi);
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
     }
-    .card-body { padding: 32px 32px 24px; }
+    .card-header .save-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+    }
+    .card-header .save-state .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success-500);
+    }
+    .card-body {
+      padding: var(--space-8);
+      min-height: 480px;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--tracking-tight);
+      color: var(--gray-900);
+      margin: 0;
+    }
+    .card-subtitle {
+      font-size: var(--text-md);
+      color: var(--gray-600);
+      margin: var(--space-1) 0 var(--space-6);
+      line-height: var(--lh-snug);
+    }
     .card-footer {
-      padding: 16px 32px; background: #fafbfc;
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
+      padding: var(--space-4) var(--space-8);
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
     }
 
-    /* Form bits */
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+    /* ============================================================
+       7. BUTTONS
+       ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-md);
+      padding: 10px var(--space-5);
+      border-radius: var(--r-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out),
+        transform var(--dur-fast) var(--ease-out),
+        box-shadow var(--dur-fast) var(--ease-out),
+        opacity var(--dur-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-primary {
+      background: var(--brand-gradient);
+      color: var(--gray-0);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-primary:hover:not(:disabled) {
+      box-shadow: var(--shadow-md);
+    }
+    .btn-secondary {
+      background: var(--gray-0);
+      color: var(--gray-700);
+      border-color: var(--gray-300);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray-600);
+    }
+    .btn-ghost:hover:not(:disabled) {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+    .btn-danger {
+      background: var(--danger-500);
+      color: var(--gray-0);
+    }
+    .btn-danger:hover:not(:disabled) {
+      background: var(--danger-700);
+    }
+    .btn-sm {
+      font-size: var(--text-base);
+      padding: 6px var(--space-3);
+      border-radius: var(--r-sm);
+    }
+    .btn-lg {
+      font-size: var(--text-md);
+      padding: var(--space-3) var(--space-6);
+      width: 100%;
+    }
+    .btn-link {
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: var(--brand-700);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-md);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-link:hover { text-decoration: underline; }
+
+    /* Add-row button - solid brand-tinted "add another" CTA */
+    .btn-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      background: var(--brand-50);
+      border: 1.5px solid var(--brand-300);
+      border-radius: var(--r-md);
+      color: var(--brand-700);
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-md);
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out),
+        box-shadow var(--dur-fast) var(--ease-out);
+      box-shadow: var(--shadow-xs);
+    }
+    .btn-add:hover {
+      background: var(--brand-100);
+      border-color: var(--brand-500);
+      color: var(--brand-800);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-add:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .btn-add:active { transform: scale(0.995); }
+
+    /* ============================================================
+       8. FIELDS / INPUTS
+       ============================================================ */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    .field-grid.cols-1 { grid-template-columns: 1fr; }
     .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
     .field-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-    .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 0; }
-    .field.full { grid-column: 1 / -1; }
-    .field.span2 { grid-column: span 2; }
-    .field label { font-size: 13px; font-weight: 600; color: var(--text); }
-    .field label .req { color: var(--danger); margin-left: 2px; }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field.full   { grid-column: 1 / -1; }
+    .field.span2  { grid-column: span 2; }
+
+    .field label {
+      font-size: var(--text-base);
+      font-weight: var(--fw-semi);
+      color: var(--gray-800);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .field .req {
+      color: var(--gray-400);
+      font-size: 18px;
+      line-height: 1;
+      transform: translateY(-1px);
+    }
+    .field .hint {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+      line-height: var(--lh-snug);
+    }
+    .field-error {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--text-sm);
+      color: var(--danger-700);
+      margin-top: 2px;
+    }
+
+    .input,
     .field input[type="text"],
     .field input[type="email"],
     .field input[type="tel"],
@@ -234,752 +609,1696 @@
     .field input[type="password"],
     .field select,
     .field textarea {
-      padding: 10px 12px; border: 2px solid var(--border-strong);
-      border-radius: 6px; font-size: 14px; font-family: inherit;
-      background: #fff; color: var(--text); transition: border-color 0.15s;
       width: 100%;
+      padding: 10px var(--space-3);
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--r-md);
+      font-size: var(--text-md);
+      font-family: var(--font-body);
+      background: var(--gray-0);
+      color: var(--gray-900);
+      transition:
+        border-color var(--dur-fast) var(--ease-out),
+        box-shadow var(--dur-fast) var(--ease-out);
     }
+    .field input::placeholder,
+    .field textarea::placeholder,
+    .input::placeholder { color: var(--gray-400); }
+    .field input:hover,
+    .field select:hover,
+    .field textarea:hover,
+    .input:hover { border-color: var(--gray-400); }
     .field input:focus,
     .field select:focus,
-    .field textarea:focus { outline: none; border-color: var(--orange-500); }
-    .field input::placeholder, .field textarea::placeholder { color: #9ca3af; }
-    .field .hint { font-size: 12px; color: var(--text-muted); }
-    .field textarea { resize: vertical; min-height: 96px; }
+    .field textarea:focus,
+    .input:focus {
+      outline: none;
+      border-color: var(--brand-500);
+      box-shadow: var(--ring-brand);
+    }
+    .field input:disabled,
+    .field select:disabled,
+    .field textarea:disabled {
+      background: var(--gray-50);
+      color: var(--gray-500);
+      cursor: not-allowed;
+    }
+    .field.has-error input,
+    .field.has-error select,
+    .field.has-error textarea,
+    .input.has-error {
+      border-color: var(--danger-500);
+    }
+    .field.has-error input:focus,
+    .field.has-error select:focus,
+    .field.has-error textarea:focus {
+      box-shadow: var(--ring-danger);
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: var(--lh-snug);
+    }
 
-    .checkbox-row {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 12px; border: 1px solid var(--border-strong);
-      border-radius: 6px; cursor: pointer; font-size: 13px;
-      background: #fff;
-    }
-    .checkbox-row input { margin: 0; }
-    .switch-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 0; border-bottom: 1px solid var(--border);
-    }
-    .switch-row:last-child { border-bottom: none; }
-    .switch {
-      width: 38px; height: 22px; background: var(--border-strong);
-      border-radius: 999px; position: relative; cursor: pointer; flex-shrink: 0;
-    }
-    .switch::after {
-      content: ""; position: absolute; top: 2px; left: 2px;
-      width: 18px; height: 18px; background: #fff; border-radius: 50%;
-      transition: left 0.15s;
-    }
-    .switch.on { background: var(--orange-500); }
-    .switch.on::after { left: 18px; }
-
-    /* Buttons */
-    .btn {
-      padding: 10px 20px; border-radius: 999px; font-size: 14px; font-weight: 600;
-      cursor: pointer; font-family: inherit; border: 1px solid transparent;
-      transition: opacity 0.15s, transform 0.05s;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--orange-bg); color: #fff; }
-    .btn-primary:hover { opacity: 0.95; }
-    .btn-secondary { background: #fff; color: var(--text); border-color: var(--border-strong); }
-    .btn-ghost { background: transparent; color: var(--text-soft); }
-    .btn-teal { background: var(--teal-500); color: #fff; border-color: var(--teal-500); padding: 6px 14px; font-size: 13px; }
-    .btn-teal:hover { background: var(--teal-600); }
-    .btn-sm { padding: 6px 12px; font-size: 12px; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Chips */
-    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip {
-      padding: 6px 14px; border-radius: 999px;
-      border: 1px solid var(--border-strong); background: #fff;
-      font-size: 13px; font-weight: 500; cursor: pointer;
-      transition: background 0.15s;
-    }
-    .chip:hover { background: var(--surface); }
-    .chip.selected {
-      background: var(--orange-bg); color: #fff; border-color: transparent;
-    }
-    .chip.suggestion-chip {
-      border-style: dashed; color: var(--orange-600); border-color: var(--orange-300);
-    }
-    .chip.suggestion-chip:hover { background: var(--orange-50); }
-
-    /* Display headings use Plus Jakarta Sans (geometric + warm — health-tech feel) */
-    h1, h2, h3, h4, .h1, .h2, .h3, .display {
-      font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      letter-spacing: -0.01em;
-    }
-    .h1 { font-size: 26px; font-weight: 700; text-align: center; margin: 0 0 28px; color: var(--text); letter-spacing: -0.015em; }
-    .h2 { font-size: 19px; font-weight: 700; margin: 0 0 14px; color: var(--text); }
-    /* Buttons + chrome strings stay in the display family for personality */
-    .btn, .app-header .brand-text .product, .card-header .step-name, .step-pill {
-      font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    .section { margin-bottom: 28px; }
-    .info-banner {
-      background: var(--orange-50); border-left: 4px solid var(--orange-500);
-      padding: 12px 16px; border-radius: 6px; font-size: 13px; color: var(--text-soft);
-      margin-bottom: 20px;
-    }
-    .label-strong { font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
-    .row { display: flex; gap: 12px; align-items: center; }
-    .muted { color: var(--text-muted); font-size: 13px; }
-    .error-msg { color: var(--danger); font-size: 13px; margin-top: 6px; }
-    .success-msg { color: var(--success); font-size: 13px; margin-top: 6px; }
-    .red { color: var(--danger); }
-    .small { font-size: 12px; }
-
-    /* === ID upload (front/back) — matches nybsj-intake-mockup pattern === */
-    .upload-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 520px) { .upload-grid { grid-template-columns: 1fr; } }
-    .upload-card {
+    .input-with-icon {
       position: relative;
-      border: 1.5px dashed var(--border-strong);
-      border-radius: var(--radius);
-      padding: 16px;
-      text-align: center;
-      background: var(--surface);
-      transition: border-color 0.15s ease, background 0.15s ease;
     }
-    .upload-card:hover { border-color: var(--orange-500); background: #fff; }
-    .upload-card .upload-icon {
-      font-size: 24px; line-height: 1; color: var(--text-muted);
-      margin-bottom: 6px;
+    .input-with-icon > .icon {
+      position: absolute;
+      left: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-400);
+      pointer-events: none;
     }
-    .upload-card .upload-title {
-      font-size: 14px; font-weight: 600; color: var(--text);
+    .input-with-icon > input {
+      padding-left: 36px;
+    }
+
+    /* ============================================================
+       9. CHIPS
+       ============================================================ */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px var(--space-3);
+      border-radius: var(--r-pill);
+      border: 1px solid var(--gray-300);
+      background: var(--gray-0);
+      color: var(--gray-700);
+      font-size: var(--text-base);
+      font-weight: var(--fw-medium);
+      cursor: pointer;
+      font-family: inherit;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out);
+    }
+    .chip:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+    }
+    .chip:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .chip.selected {
+      background: var(--brand-gradient);
+      color: var(--gray-0);
+      border-color: transparent;
+    }
+    .chip.suggestion {
+      border-style: dashed;
+      border-color: var(--brand-300);
+      color: var(--brand-700);
+      background: var(--gray-0);
+    }
+    .chip.suggestion:hover {
+      background: var(--brand-50);
+      border-color: var(--brand-500);
+    }
+    .chip .chip-x {
+      width: 14px; height: 14px;
+      opacity: 0.85;
+    }
+    .chip.selected .chip-x { color: var(--gray-0); }
+
+    .chip-group {
+      margin-top: var(--space-4);
+    }
+    .chip-group:first-child { margin-top: 0; }
+    .chip-group .group-label {
+      font-size: var(--text-xs);
+      font-weight: var(--fw-bold);
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: var(--space-2);
+    }
+
+    /* ============================================================
+       10. BANNERS
+       ============================================================ */
+    .banner {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--r-md);
+      font-size: var(--text-md);
+      line-height: var(--lh-snug);
+      margin-bottom: var(--space-5);
+    }
+    .banner .icon { margin-top: 2px; }
+    .banner.info {
+      background: var(--info-50);
+      color: var(--info-700);
+    }
+    .banner.success {
+      background: var(--success-50);
+      color: var(--success-700);
+    }
+    .banner.warning {
+      background: var(--warning-50);
+      color: var(--warning-700);
+    }
+    .banner.danger {
+      background: var(--danger-50);
+      color: var(--danger-700);
+    }
+
+    /* ============================================================
+       11. SWITCH
+       ============================================================ */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-md);
+    }
+    .switch-row .switch-label .label-strong {
+      font-size: var(--text-md);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      display: block;
       margin-bottom: 2px;
     }
-    .upload-card .upload-hint {
-      font-size: 12px; color: var(--text-muted);
-      margin-bottom: 12px;
+    .switch-row .switch-label .label-hint {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+      line-height: var(--lh-snug);
     }
-    .upload-actions { display: flex; gap: 8px; justify-content: center; }
+    .switch {
+      width: 38px; height: 22px;
+      background: var(--gray-300);
+      border-radius: var(--r-pill);
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background var(--dur-base) var(--ease-out);
+      border: none;
+      padding: 0;
+    }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 18px; height: 18px;
+      background: var(--gray-0);
+      border-radius: 50%;
+      box-shadow: var(--shadow-sm);
+      transition: left var(--dur-base) var(--ease-spring),
+                  transform var(--dur-base) var(--ease-spring);
+    }
+    .switch.on { background: var(--brand-500); }
+    .switch.on::after { left: 18px; transform: scale(1.04); }
+    .switch:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+
+    /* ============================================================
+       12. UPLOAD
+       ============================================================ */
+    .upload {
+      border: 1.5px dashed var(--gray-300);
+      border-radius: var(--r-md);
+      padding: var(--space-4);
+      text-align: center;
+      background: var(--gray-50);
+      transition:
+        border-color var(--dur-fast) var(--ease-out),
+        background var(--dur-fast) var(--ease-out);
+      cursor: pointer;
+      position: relative;
+    }
+    .upload:hover {
+      border-color: var(--brand-400);
+      background: var(--gray-0);
+    }
+    .upload .upload-icon {
+      width: 28px; height: 28px;
+      stroke: var(--gray-400);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin: 0 auto var(--space-2);
+    }
+    .upload .upload-title {
+      font-size: var(--text-md);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
+    .upload .upload-hint {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+      margin-bottom: var(--space-3);
+    }
+    .upload-actions {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: center;
+    }
     .upload-actions button {
-      font-size: 12px; padding: 7px 14px;
-      border: 1px solid var(--border-strong); border-radius: 6px;
-      background: #fff; color: var(--text); cursor: pointer; font-family: inherit;
-      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--text-base);
+      padding: 6px var(--space-3);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--r-sm);
+      background: var(--gray-0);
+      color: var(--gray-700);
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: var(--fw-medium);
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out);
     }
     .upload-actions button:hover {
-      background: var(--orange-50); border-color: var(--orange-500); color: var(--orange-600);
+      background: var(--brand-50);
+      border-color: var(--brand-500);
+      color: var(--brand-700);
     }
-    .upload-card.has-preview {
-      padding: 0; border-style: solid; border-color: var(--orange-500); background: #fff;
-      overflow: hidden;
+
+    /* Uploaded file pill (existing file shown) */
+    .upload-file {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--r-md);
+      background: var(--gray-0);
     }
-    .upload-card.has-preview .upload-icon,
-    .upload-card.has-preview .upload-title,
-    .upload-card.has-preview .upload-hint,
-    .upload-card.has-preview .upload-actions { display: none; }
-    .upload-card.has-preview .upload-preview {
-      display: block; position: relative;
-      border-radius: var(--radius); overflow: hidden;
-    }
-    .upload-card.has-preview .upload-preview img {
-      width: 100%; height: auto; max-height: 220px; object-fit: cover; display: block;
-    }
-    .upload-clear {
-      position: absolute; top: 8px; right: 8px;
-      width: 28px; height: 28px;
-      background: rgba(0,0,0,0.7); color: #fff;
-      border: none; border-radius: 50%;
-      cursor: pointer; font-size: 18px; line-height: 1;
+    .upload-file .file-icon {
+      width: 36px; height: 36px;
+      flex-shrink: 0;
+      border-radius: var(--r-sm);
+      background: var(--brand-50);
+      color: var(--brand-700);
       display: flex; align-items: center; justify-content: center;
     }
-    /* simulated "captured" state mockup (no JS interactivity) */
-    .upload-card.captured {
-      padding: 0; border-style: solid; border-color: var(--orange-500); background: #fff;
-      min-height: 168px;
+    .upload-file .file-meta {
+      flex: 1;
+      min-width: 0;
     }
-    .upload-card.captured .upload-icon,
-    .upload-card.captured .upload-title,
-    .upload-card.captured .upload-hint,
-    .upload-card.captured .upload-actions { display: none; }
-    .upload-card.captured::before {
+    .upload-file .file-name {
+      font-size: var(--text-md);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .upload-file .file-sub {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+    }
+    .upload-file .file-action {
+      background: transparent;
+      border: none;
+      color: var(--brand-700);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-base);
+      cursor: pointer;
+      font-family: inherit;
+      padding: 4px var(--space-2);
+      border-radius: var(--r-sm);
+    }
+    .upload-file .file-action:hover { background: var(--brand-50); }
+
+    /* Captured-state card (ID front/back) */
+    .upload.captured {
+      padding: 0;
+      border-style: solid;
+      border-color: var(--brand-500);
+      background: var(--gray-0);
+      min-height: 168px;
+      overflow: hidden;
+    }
+    .upload.captured .upload-icon,
+    .upload.captured .upload-title,
+    .upload.captured .upload-hint,
+    .upload.captured .upload-actions { display: none; }
+    .upload.captured::before {
       content: "";
       display: block;
       width: 100%; height: 168px;
-      background: linear-gradient(135deg, #d4d4d8 0%, #a1a1aa 100%);
+      background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-400) 100%);
     }
-    .upload-card.captured::after {
-      content: "Captured ✓";
-      position: absolute; left: 12px; bottom: 12px;
-      background: rgba(0,0,0,0.7); color: #fff;
-      padding: 4px 10px; border-radius: 4px;
-      font-size: 12px; font-weight: 600;
+    .upload.captured .captured-badge {
+      position: absolute;
+      left: var(--space-3); bottom: var(--space-3);
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(15,23,42,0.78);
+      color: var(--gray-0);
+      padding: 4px var(--space-2);
+      border-radius: var(--r-sm);
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semi);
+    }
+    .upload-clear {
+      position: absolute;
+      top: var(--space-2); right: var(--space-2);
+      width: 28px; height: 28px;
+      background: rgba(15,23,42,0.70);
+      color: var(--gray-0);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .upload-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
     }
 
-    /* Upload box (existing single-file pattern) */
-    .upload-box {
-      border: 2px dashed var(--border-strong); border-radius: 8px;
-      padding: 28px 20px; text-align: center; background: var(--surface);
-      cursor: pointer; transition: border-color 0.15s, background 0.15s;
-    }
-    .upload-box:hover { border-color: var(--orange-500); background: var(--orange-50); }
-    .upload-box .icon { font-size: 32px; margin-bottom: 8px; opacity: 0.6; }
-    .upload-box .title { font-weight: 600; margin-bottom: 4px; }
-    .upload-box .sub { font-size: 12px; color: var(--text-muted); }
-
-    /* Video preview */
+    /* ============================================================
+       13. VIDEO PREVIEW
+       ============================================================ */
     .video-box {
-      border-radius: 12px; background: #1f1f1f;
-      aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center;
-      color: #aaa; font-size: 14px; position: relative;
+      border-radius: var(--r-lg);
+      background: var(--gray-900);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-400);
+      font-size: var(--text-md);
+      position: relative;
       box-shadow: var(--shadow-md);
     }
     .video-box::after {
-      content: ""; position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-      width: 56px; height: 56px; border-radius: 50%;
-      background: var(--danger); border: 4px solid #fff;
+      content: "";
+      position: absolute;
+      bottom: var(--space-4);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--danger-500);
+      border: 4px solid var(--gray-0);
     }
 
-    /* Screens */
-    .screen { display: none; }
-    .screen.active { display: block; }
-
-    /* Login screen */
-    .login-shell {
-      min-height: calc(100vh - 56px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
+    /* ============================================================
+       14. AUTH SHELL (login + signup)
+       ============================================================ */
+    .auth-shell {
+      min-height: calc(100vh - 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6) var(--space-4);
     }
-    .login-card {
-      background: #fff; border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
-      padding: 32px;
+    .auth-card {
+      background: var(--gray-0);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 440px;
+      padding: var(--space-8);
     }
-    .login-card h1 { font-family: "Plus Jakarta Sans", "Inter", sans-serif; font-size: 24px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.015em; }
-    .login-card .sub { color: var(--text-muted); margin: 0 0 24px; font-size: 14px; }
-    .login-card .forgot { font-size: 12px; color: var(--orange-600); text-decoration: none; }
+    .auth-card .auth-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .auth-card .auth-logo-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--r-lg);
+      background: var(--brand-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm), 0 0 0 1px rgba(255,255,255,0.4) inset;
+    }
+    .auth-card .auth-logo-badge img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    .auth-card .auth-brand .wordmark {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: var(--fw-semi);
+      color: var(--gray-500);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+    .auth-card h1 {
+      font-size: var(--text-3xl);
+      font-weight: var(--fw-bold);
+      margin: 0 0 var(--space-2);
+      color: var(--gray-900);
+      text-align: center;
+    }
+    .auth-card .auth-sub {
+      color: var(--gray-600);
+      margin: 0 0 var(--space-6);
+      font-size: var(--text-md);
+      text-align: center;
+    }
+    .auth-card .auth-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .auth-card .auth-foot {
+      text-align: center;
+      margin-top: var(--space-5);
+      font-size: var(--text-md);
+      color: var(--gray-600);
+    }
+    .auth-card .auth-foot a,
+    .auth-card .auth-foot .btn-link {
+      color: var(--brand-700);
+      font-weight: var(--fw-semi);
+    }
+    .auth-card .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2px;
+    }
+    .auth-card .forgot-row a {
+      font-size: var(--text-sm);
+      color: var(--brand-700);
+    }
+    .auth-card .legal {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+      text-align: center;
+      margin: var(--space-2) 0 0;
+      line-height: var(--lh-snug);
+    }
+    .auth-card .legal a { color: var(--gray-700); text-decoration: underline; }
 
-    /* Success screen */
+    .oauth-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: var(--gray-500);
+      font-size: var(--text-sm);
+      margin: var(--space-5) 0;
+    }
+    .oauth-divider::before,
+    .oauth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+    .oauth-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+    .oauth-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--r-md);
+      background: var(--gray-0);
+      color: var(--gray-800);
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-md);
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out);
+    }
+    .oauth-btn:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+    }
+    .oauth-btn svg { width: 18px; height: 18px; }
+
+    /* ============================================================
+       15. SUCCESS SHELL (done)
+       ============================================================ */
     .success-shell {
-      min-height: calc(100vh - 56px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
+      min-height: calc(100vh - 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6) var(--space-4);
     }
     .success-card {
-      background: #fff; border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg); width: 100%; max-width: 540px;
-      padding: 48px 32px; text-align: center;
+      background: var(--gray-0);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 560px;
+      padding: var(--space-10) var(--space-8);
+      text-align: center;
+    }
+    .success-card .success-icon-wrap {
+      width: 80px; height: 80px;
+      margin: 0 auto var(--space-5);
+      background: var(--success-50);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success-500);
     }
     .success-card h1 {
-      font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-      letter-spacing: -0.02em;
+      font-size: var(--text-3xl);
+      font-weight: var(--fw-bold);
+      margin: 0 0 var(--space-3);
+      color: var(--gray-900);
     }
-    .success-icon {
-      width: 80px; height: 80px; margin: 0 auto 24px;
-      background: #dcfce7; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 40px; color: var(--success);
+    .success-card .success-sub {
+      font-size: var(--text-md);
+      color: var(--gray-600);
+      margin: 0 0 var(--space-6);
+      line-height: var(--lh-snug);
+    }
+    .success-card .next-list {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-md);
+      padding: var(--space-5) var(--space-6);
+      text-align: left;
+      margin: 0 0 var(--space-6);
+    }
+    .success-card .next-list .next-title {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: var(--fw-bold);
+      color: var(--gray-900);
+      margin-bottom: var(--space-2);
+    }
+    .success-card .next-list ol {
+      margin: 0;
+      padding-left: var(--space-5);
+      font-size: var(--text-md);
+      color: var(--gray-700);
+      line-height: var(--lh-loose);
     }
 
-    @media (max-width: 720px) {
-      .field-grid { grid-template-columns: 1fr; }
-      .step-pill { min-width: 70px; font-size: 8px; }
+    /* ============================================================
+       16. SCREEN-SPECIFIC
+       ============================================================ */
+    /* Segmented control (iOS/macOS-style single-select) */
+    .segmented {
+      display: inline-flex;
+      width: 100%;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-md);
+      padding: 3px;
+      gap: 2px;
+    }
+    .segmented button {
+      flex: 1 1 0;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      padding: 7px 8px;
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: var(--fw-semi);
+      color: var(--gray-600);
+      border-radius: calc(var(--r-md) - 3px);
+      cursor: pointer;
+      transition:
+        background var(--dur-base) var(--ease-out),
+        color var(--dur-base) var(--ease-out),
+        box-shadow var(--dur-base) var(--ease-out);
+      white-space: nowrap;
+    }
+    .segmented button:hover { color: var(--gray-900); }
+    .segmented button:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .segmented button.selected {
+      background: var(--brand-gradient);
+      color: var(--gray-0);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Step 4 - About You: avatar/role left, bio right */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .avatar-wrap {
+      position: relative;
+      width: 132px;
+      height: 132px;
+      margin: 0 auto;
+    }
+    .avatar-frame {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--brand-50);
+      border: 3px solid var(--brand-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-700);
+      overflow: hidden;
+    }
+    .avatar-frame .avatar-glyph {
+      width: 64px; height: 64px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+    .avatar-actions {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: center;
+      margin-top: var(--space-3);
+    }
+    .avatar-actions button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px var(--space-3);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--r-sm);
+      background: var(--gray-0);
+      color: var(--gray-700);
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out);
+    }
+    .avatar-actions button:hover {
+      background: var(--brand-50);
+      border-color: var(--brand-500);
+      color: var(--brand-700);
+    }
+    .avatar-actions button:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .bio-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-2);
+      gap: var(--space-3);
+    }
+    .bio-meta .char-count {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+    }
+    .bio-meta .bio-actions {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+    }
+
+    /* Step 5 - State Licenses */
+    .license-card {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-3);
+      background: var(--gray-0);
+    }
+    .license-card .license-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+    .license-summary {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex: 1;
+      min-width: 0;
+    }
+    .license-summary .state-tag {
+      font-family: var(--font-display);
+      font-weight: var(--fw-bold);
+      font-size: var(--text-md);
+      color: var(--gray-900);
+    }
+    .license-summary .lic-num {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+    }
+    .license-summary .lic-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: var(--text-sm);
+      color: var(--success-700);
+      background: var(--success-50);
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+    }
+
+    /* Step 9 - Pricing sections */
+    .price-section {
+      margin-top: var(--space-5);
+    }
+    .price-section:first-child { margin-top: 0; }
+    .price-section .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+      gap: var(--space-3);
+    }
+    .price-section .section-head h3 {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: var(--fw-bold);
+      color: var(--gray-900);
+      margin: 0;
+    }
+    .price-section .section-head .section-hint {
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+    }
+
+    /* Step 12 - Specialty groups */
+    .specialty-group {
+      margin-bottom: var(--space-5);
+    }
+    .specialty-group:last-child { margin-bottom: 0; }
+    .group-heading {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: var(--fw-bold);
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: var(--space-2);
+    }
+    .group-heading::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+      margin-left: var(--space-2);
+    }
+    .section-label {
+      display: block;
+      font-size: var(--text-md);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      margin-bottom: var(--space-2);
+    }
+    .section-label .muted {
+      font-weight: var(--fw-medium);
+      color: var(--gray-500);
+    }
+    .send-row {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .send-row .input { flex: 1; }
+
+    /* Range slider */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--brand-500);
+      height: 4px;
+    }
+    .slider-value {
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      font-size: var(--text-md);
+      min-width: 64px;
+      text-align: right;
+    }
+
+    /* Step 7 - COI attestation */
+    .attestation-shell {
+      text-align: center;
+      padding: var(--space-10) var(--space-4);
+    }
+    .attestation-shell .card-title,
+    .attestation-shell .card-subtitle {
+      text-align: center;
+    }
+    .attestation-shell .card-subtitle {
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: var(--text-lg);
+      color: var(--gray-700);
+    }
+    .attestation-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 10px var(--space-5);
+      background: var(--success-50);
+      color: var(--success-700);
+      border: 1px solid var(--success-500);
+      border-radius: var(--r-pill);
+      font-family: var(--font-display);
+      font-weight: var(--fw-semi);
+      font-size: var(--text-md);
+      margin-top: var(--space-6);
+    }
+    .attestation-actions {
+      margin-top: var(--space-6);
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+    }
+
+    /* Step 8 - Video grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    /* ============================================================
+       17. SCREENS visibility
+       ============================================================ */
+    .screen { display: none; animation: fadeIn var(--dur-base) var(--ease-out); }
+    .screen.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ============================================================
+       18. RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1399px) {
+      .app-shell { max-width: 100%; padding: var(--space-2) var(--space-4) var(--space-4); }
+    }
+    @media (max-width: 768px) {
+      .field-grid,
+      .field-grid.cols-3,
+      .field-grid.cols-4 { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .video-grid { grid-template-columns: 1fr; }
+      .upload-grid { grid-template-columns: 1fr; }
+      .oauth-row { grid-template-columns: 1fr; }
+      .step-pills {
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .step-pills::-webkit-scrollbar { display: none; }
+      .step-pill { min-width: 88px; flex: 0 0 auto; }
+      .card-body, .card-footer, .card-header { padding-left: var(--space-4); padding-right: var(--space-4); }
+      .auth-card { padding: var(--space-6); }
+      .app-header .brand-text { display: none; }
+    }
+
+    /* ============================================================
+       19. REDUCED MOTION
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- ============ MOCKUP NAV ============ -->
-<nav id="mockup-nav">
-  <span class="label">SCREEN:</span>
-  <button data-screen="login" class="active">0. Login</button>
-  <button data-screen="step1">1. Personal Info</button>
-  <button data-screen="step2">2. Credentials</button>
-  <button data-screen="step3">3. Mailing Address</button>
-  <button data-screen="step4">4. About Me</button>
-  <button data-screen="step5">5. State Licenses</button>
-  <button data-screen="step6">6. Diplomas</button>
-  <button data-screen="step7">7. Cert. of Insurance</button>
-  <button data-screen="step8">8. Verification Video</button>
-  <button data-screen="step9">9. Charges</button>
-  <button data-screen="stepid">10. ID Documents</button>
-  <button data-screen="step10">11. Emergency Contact</button>
-  <button data-screen="step11">12. Specialty</button>
-  <button data-screen="done">13. Submitted</button>
+<!-- ============================================================
+     LUCIDE SVG SPRITE (subset)
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+    </symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+      <path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3-1.91 5.74a2 2 0 0 1-1.35 1.35L3 12l5.74 1.91a2 2 0 0 1 1.35 1.35L12 21l1.91-5.74a2 2 0 0 1 1.35-1.35L21 12l-5.74-1.91a2 2 0 0 1-1.35-1.35L12 3Z"/>
+      <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+    </symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+      <circle cx="12" cy="13" r="3"/>
+    </symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="9" y1="13" x2="15" y2="13"/>
+      <line x1="9" y1="17" x2="15" y2="17"/>
+    </symbol>
+    <symbol id="i-graduation-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/>
+    </symbol>
+    <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="6"/>
+      <polyline points="15.477 12.89 17 22 12 19 7 22 8.523 12.89"/>
+    </symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <path d="m9 12 2 2 4-4"/>
+    </symbol>
+    <symbol id="i-id-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <path d="M14 9h4M14 13h4M14 17h2"/>
+      <circle cx="8" cy="11" r="2"/>
+      <path d="M5 17c0-1.66 1.34-3 3-3s3 1.34 3 3"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </symbol>
+    <symbol id="i-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="15" y1="9" x2="9" y2="15"/>
+      <line x1="9" y1="9" x2="15" y2="15"/>
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="i-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="2" x2="12" y2="6"/>
+      <line x1="12" y1="18" x2="12" y2="22"/>
+      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+      <line x1="2" y1="12" x2="6" y2="12"/>
+      <line x1="18" y1="12" x2="22" y2="12"/>
+      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     MOCKUP NAV (dev chrome only)
+     ============================================================ -->
+<nav id="mockup-nav" aria-label="Mockup screen picker">
+  <span class="label">Screen</span>
+  <button data-screen="login" class="active">Login</button>
+  <button data-screen="signup">Signup</button>
+  <button data-screen="step1">1 · Personal</button>
+  <button data-screen="step2">2 · Credentials</button>
+  <button data-screen="step3">3 · Address</button>
+  <button data-screen="step4">4 · About You</button>
+  <button data-screen="step5">5 · Licenses</button>
+  <button data-screen="step6">6 · Diplomas</button>
+  <button data-screen="step7">7 · Insurance</button>
+  <button data-screen="step8">8 · Video</button>
+  <button data-screen="step9">9 · Pricing</button>
+  <button data-screen="stepid">10 · ID</button>
+  <button data-screen="step10">11 · Emergency</button>
+  <button data-screen="step11">12 · Specialty</button>
+  <button data-screen="done">Submitted</button>
 </nav>
 
-<!-- ============ SCREEN 0: LOGIN ============ -->
-<div class="screen active" id="screen-login">
-  <div class="login-shell">
-    <div class="login-card">
-      <h1>Provider Login</h1>
-      <p class="sub">Enter your credentials to access your account</p>
-
-      <div class="field">
-        <label for="login-email">Email <span class="req">*</span></label>
-        <input id="login-email" type="email" value="dr.kennedy@medpal.com" />
+<!-- ============================================================
+     SCREEN: LOGIN
+     ============================================================ -->
+<section class="screen active" id="screen-login" aria-labelledby="login-title">
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <span class="auth-logo-badge"><img src="provider-app-icon.png" alt="" /></span>
+        <span class="wordmark">MedPal Provider</span>
       </div>
 
-      <div class="field">
-        <label for="login-pass">Password <span class="req">*</span></label>
-        <input id="login-pass" type="password" value="••••••••••" />
-        <a class="forgot" href="#" onclick="event.preventDefault()">Forgot password?</a>
+      <h1 id="login-title">Welcome back</h1>
+      <p class="auth-sub">Sign in to manage your provider account.</p>
+
+      <div class="auth-stack">
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" value="dr.kennedy@medpal.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="login-pass">Password</label>
+          <input id="login-pass" type="password" value="••••••••••" autocomplete="current-password" />
+          <div class="forgot-row"><a href="#" onclick="event.preventDefault()">Forgot password?</a></div>
+        </div>
       </div>
 
-      <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="showScreen('step1')">Sign in</button>
+      <button class="btn btn-primary btn-lg" onclick="showScreen('step1')">Sign in</button>
 
-      <p style="text-align: center; margin: 20px 0 0; font-size: 13px; color: var(--text-muted);">
-        Don't have an account? <a href="#" style="color: var(--orange-600); text-decoration: none; font-weight: 600;" onclick="event.preventDefault()">Sign up</a>
-      </p>
+      <div class="oauth-divider">or continue with</div>
+      <div class="oauth-row">
+        <button class="oauth-btn" type="button">
+          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.592.102-1.167.282-1.706V4.962H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
+          Google
+        </button>
+        <button class="oauth-btn" type="button">
+          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#000" d="M15.05 13.93c-.34.79-.5 1.14-.94 1.84-.61.97-1.46 2.18-2.52 2.19-.94.01-1.18-.61-2.46-.6-1.28.01-1.55.61-2.49.6-1.06-.01-1.87-1.1-2.48-2.07C1.42 13.16 1.24 9.84 2.78 8.07c1.09-1.26 2.81-2 4.42-2 1.65 0 2.69.91 4.05.91 1.32 0 2.13-.91 4.04-.91 1.45 0 2.99.79 4.08 2.16-3.59 1.97-3.01 7.11-4.32 5.7zM12.05 4.27c.7-.9 1.23-2.17 1.04-3.47-1.15.08-2.49.81-3.27 1.77-.71.87-1.29 2.16-1.07 3.41 1.25.04 2.55-.71 3.3-1.71z"/></svg>
+          Apple
+        </button>
+      </div>
+
+      <div class="auth-foot">
+        Don't have an account? <button type="button" class="btn-link" onclick="showScreen('signup')">Create one</button>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ ONBOARDING SHELL (steps 1-11) ============ -->
-<div class="screen" id="screen-step1">
+<!-- ============================================================
+     SCREEN: SIGNUP
+     ============================================================ -->
+<section class="screen" id="screen-signup" aria-labelledby="signup-title">
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <span class="auth-logo-badge"><img src="provider-app-icon.png" alt="" /></span>
+        <span class="wordmark">MedPal Provider</span>
+      </div>
+
+      <h1 id="signup-title">Create your account</h1>
+      <p class="auth-sub">Start your application to join MedPal as a provider.</p>
+
+      <div class="auth-stack">
+        <div class="field">
+          <label for="signup-email">Work email</label>
+          <input id="signup-email" type="email" autocomplete="email" placeholder="you@practice.com" />
+          <span class="hint">We'll send a verification link to this address.</span>
+        </div>
+        <div class="field">
+          <label for="signup-pass">Password</label>
+          <input id="signup-pass" type="password" autocomplete="new-password" placeholder="At least 10 characters" />
+        </div>
+        <div class="field">
+          <label for="signup-pass2">Confirm password</label>
+          <input id="signup-pass2" type="password" autocomplete="new-password" placeholder="Repeat password" />
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" onclick="showScreen('step1')">Create account</button>
+
+      <p class="legal">By continuing you agree to MedPal's <a href="#" onclick="event.preventDefault()">Terms</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>.</p>
+
+      <div class="oauth-divider">or sign up with</div>
+      <div class="oauth-row">
+        <button class="oauth-btn" type="button">
+          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.592.102-1.167.282-1.706V4.962H.957A8.997 8.997 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
+          Google
+        </button>
+        <button class="oauth-btn" type="button">
+          <svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#000" d="M15.05 13.93c-.34.79-.5 1.14-.94 1.84-.61.97-1.46 2.18-2.52 2.19-.94.01-1.18-.61-2.46-.6-1.28.01-1.55.61-2.49.6-1.06-.01-1.87-1.1-2.48-2.07C1.42 13.16 1.24 9.84 2.78 8.07c1.09-1.26 2.81-2 4.42-2 1.65 0 2.69.91 4.05.91 1.32 0 2.13-.91 4.04-.91 1.45 0 2.99.79 4.08 2.16-3.59 1.97-3.01 7.11-4.32 5.7zM12.05 4.27c.7-.9 1.23-2.17 1.04-3.47-1.15.08-2.49.81-3.27 1.77-.71.87-1.29 2.16-1.07 3.41 1.25.04 2.55-.71 3.3-1.71z"/></svg>
+          Apple
+        </button>
+      </div>
+
+      <div class="auth-foot">
+        Already have an account? <button type="button" class="btn-link" onclick="showScreen('login')">Sign in</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ONBOARDING SHELL TEMPLATE - repeated per step
+     ============================================================ -->
+
+<!-- STEP 1: Personal -->
+<section class="screen" id="screen-step1">
   <div class="app-shell">
     <header class="app-header">
       <div class="logo-block">
-        <div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div>
-        <div class="brand-text">
-          <div class="product">MedPal Provider Onboarding</div>
-          <div class="tag">Join MedPal</div>
-        </div>
+        <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
+        <div class="brand-text">MedPal Provider</div>
       </div>
       <div class="actions">
-        <button class="ghost"><span>💬</span> Help</button>
-        <button>Logout</button>
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
       </div>
     </header>
 
-    <div class="step-pills" id="pills-step1">
-      <!-- pills injected by JS -->
-    </div>
+    <div class="step-pills" id="pills-step1" role="tablist"></div>
 
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 1 of 12</div>
-        <div class="step-name">Personal Information</div>
+        <span class="eyebrow">Step 1 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1">Personal Information</h2>
-        <div class="info-banner">Tell us about yourself. This information appears on your provider profile.</div>
+        <h2 class="card-title">Personal information</h2>
+        <p class="card-subtitle">Your name and contact details. This appears on your provider profile.</p>
 
         <div class="field-grid">
           <div class="field">
-            <label>Title <span class="req">*</span></label>
-            <select><option>Dr.</option><option>Mr.</option><option>Ms.</option><option>Prof.</option></select>
+            <label for="p-first">First name <span class="req">*</span></label>
+            <input id="p-first" type="text" value="Sarah" />
           </div>
           <div class="field">
-            <label>Date of Birth <span class="req">*</span></label>
-            <input type="date" value="1978-06-14" />
+            <label for="p-middle">Middle name</label>
+            <input id="p-middle" type="text" placeholder="Optional" />
           </div>
-          <div class="field">
-            <label>First Name <span class="req">*</span></label>
-            <input type="text" value="Sarah" />
+          <div class="field full">
+            <label for="p-last">Last name <span class="req">*</span></label>
+            <input id="p-last" type="text" value="Kennedy" />
           </div>
-          <div class="field">
-            <label>Last Name <span class="req">*</span></label>
-            <input type="text" value="Kennedy" />
-          </div>
-          <div class="field">
-            <label>Email <span class="req">*</span></label>
-            <input type="email" value="dr.kennedy@medpal.com" />
-          </div>
-          <div class="field">
-            <label>Phone <span class="req">*</span></label>
-            <input type="tel" value="+1 (415) 555-0142" />
-          </div>
-          <div class="field">
+          <div class="field full">
             <label>Gender <span class="req">*</span></label>
-            <select><option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option></select>
+            <div class="segmented" role="radiogroup" aria-label="Gender" style="max-width: 320px;">
+              <button type="button" class="selected" role="radio" aria-checked="true">Female</button>
+              <button type="button" role="radio" aria-checked="false">Male</button>
+            </div>
           </div>
           <div class="field">
-            <label>Pronouns</label>
-            <input type="text" value="she/her" />
+            <label for="p-phone-country">Country code <span class="req">*</span></label>
+            <select id="p-phone-country">
+              <option>+1 (US)</option>
+              <option>+1 (CA)</option>
+              <option>+44 (UK)</option>
+              <option>+61 (AU)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="p-phone">Phone <span class="req">*</span></label>
+            <input id="p-phone" type="tel" value="(415) 555-0142" />
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" disabled>Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step2')">Next →</button>
+        <button class="btn btn-secondary" disabled><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step2')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="screen" id="screen-step2">
+<!-- STEP 2: Credentials -->
+<section class="screen" id="screen-step2">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step2"></div>
+    <div class="step-pills" id="pills-step2" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 2 of 12</div>
-        <div class="step-name">Personal Information</div>
+        <span class="eyebrow">Step 2 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1">Credentials</h2>
-        <div class="info-banner">Your degree, license, and NPI determine how patients see your specialty.</div>
+        <h2 class="card-title">Credentials</h2>
+        <p class="card-subtitle">Your title, degree, and practice. This determines how patients see your specialty.</p>
 
         <div class="field-grid">
           <div class="field">
-            <label>Degree <span class="req">*</span></label>
-            <select><option>MD</option><option>DO</option><option>NP</option><option>PA</option><option>LCSW</option><option>PhD</option></select>
+            <label for="c-title">Provider title <span class="req">*</span></label>
+            <select id="c-title">
+              <option>Dr.</option>
+              <option>Mr.</option>
+              <option>Ms.</option>
+              <option>Prof.</option>
+            </select>
           </div>
           <div class="field">
-            <label>Degree Short Name <span class="req">*</span></label>
-            <input type="text" value="MD" />
-          </div>
-          <div class="field">
-            <label>Other Degree (if applicable)</label>
-            <input type="text" placeholder="e.g., FACP" />
-          </div>
-          <div class="field">
-            <label>Medical School <span class="req">*</span></label>
-            <input type="text" value="UCSF School of Medicine" />
-          </div>
-          <div class="field">
-            <label>Graduation Year <span class="req">*</span></label>
-            <input type="number" value="2008" />
-          </div>
-          <div class="field">
-            <label>NPI Number <span class="req">*</span></label>
-            <input type="text" value="1841738492" />
+            <label for="c-degree">Highest degree <span class="req">*</span></label>
+            <select id="c-degree">
+              <option>MD</option>
+              <option>DO</option>
+              <option>NP</option>
+              <option>PA</option>
+              <option>LCSW</option>
+              <option>PhD</option>
+            </select>
           </div>
           <div class="field full">
-            <label>Roles <span class="req">*</span></label>
-            <div class="chip-row">
-              <div class="chip selected">Provider</div>
-              <div class="chip">Advocate</div>
+            <label for="c-degree-other">Other degree</label>
+            <input id="c-degree-other" type="text" placeholder="Optional, e.g., FACP" />
+          </div>
+          <div class="field full">
+            <label for="c-practice">Practice name <span class="req">*</span></label>
+            <input id="c-practice" type="text" placeholder="e.g., Bay Area Internal Medicine" />
+            <span class="hint">Enter your practice name. It must be unique and will be used for search.</span>
+          </div>
+          <div class="field full">
+            <div class="switch-row">
+              <div class="switch-label">
+                <span class="label-strong">Mental health specialist</span>
+                <span class="label-hint">Are you a specialist in mental health or psychiatry, or do you require an extended 40-minute session?</span>
+              </div>
+              <button id="c-mental" class="switch" type="button" aria-pressed="false"></button>
             </div>
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step1')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step3')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step1')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step3')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="screen" id="screen-step3">
+<!-- STEP 3: Mailing Address -->
+<section class="screen" id="screen-step3">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step3"></div>
+    <div class="step-pills" id="pills-step3" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 3 of 12</div>
-        <div class="step-name">Mailing Address</div>
+        <span class="eyebrow">Step 3 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1">Mailing Address</h2>
-        <div class="info-banner">Where official documents and tax forms should be sent. This is your primary practice address.</div>
+        <h2 class="card-title">Mailing address</h2>
+        <p class="card-subtitle">Where we send official documents and tax forms.</p>
 
         <div class="field-grid">
           <div class="field full">
-            <label>Street Address <span class="req">*</span></label>
-            <input type="text" value="2150 Webster Street, Suite 400" placeholder="Start typing for autocomplete..." />
-            <span class="hint">🔍 Powered by Google Places autocomplete</span>
-          </div>
-          <div class="field">
-            <label>City <span class="req">*</span></label>
-            <input type="text" value="San Francisco" />
-          </div>
-          <div class="field">
-            <label>State <span class="req">*</span></label>
-            <select><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
-          </div>
-          <div class="field">
-            <label>ZIP Code <span class="req">*</span></label>
-            <input type="text" value="94115" />
-          </div>
-          <div class="field">
-            <label>Country <span class="req">*</span></label>
-            <input type="text" value="United States" />
+            <label for="a-street">Address line 1 <span class="req">*</span></label>
+            <div class="input-with-icon">
+              <svg class="icon"><use href="#i-pin"/></svg>
+              <input id="a-street" type="text" value="2150 Webster Street" placeholder="Start typing for autocomplete…" />
+            </div>
+            <span class="hint">Powered by Google Places autocomplete.</span>
           </div>
           <div class="field full">
-            <div class="checkbox-row">
-              <input type="checkbox" checked /> Use this as my business address as well
-            </div>
+            <label for="a-street2">Address line 2</label>
+            <input id="a-street2" type="text" value="Suite 400" placeholder="Apt, suite, floor (optional)" />
+          </div>
+          <div class="field">
+            <label for="a-city">City <span class="req">*</span></label>
+            <input id="a-city" type="text" value="San Francisco" />
+          </div>
+          <div class="field">
+            <label for="a-state">State <span class="req">*</span></label>
+            <select id="a-state"><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
+          </div>
+          <div class="field">
+            <label for="a-zip">ZIP code <span class="req">*</span></label>
+            <input id="a-zip" type="text" value="94115" />
+          </div>
+          <div class="field">
+            <label for="a-country">Country</label>
+            <input id="a-country" type="text" value="United States" disabled />
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step2')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step4')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step2')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step4')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 4: ABOUT ME (with Polish bio) ============ -->
-<div class="screen" id="screen-step4">
+<!-- STEP 4: About You -->
+<section class="screen" id="screen-step4">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step4"></div>
+    <div class="step-pills" id="pills-step4" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 4 of 12</div>
-        <div class="step-name">About Me</div>
+        <span class="eyebrow">Step 4 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1" style="margin-bottom: 12px;">About Me</h2>
+        <h2 class="card-title">About you</h2>
+        <p class="card-subtitle">A short bio patients see on your provider profile.</p>
 
-        <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
-          <!-- LEFT: avatar + role -->
+        <div class="about-grid">
           <div>
-            <div style="display: flex; justify-content: center;">
-              <div style="position: relative;">
-                <div style="width: 132px; height: 132px; border-radius: 50%; background: var(--orange-50); border: 4px solid var(--orange-300); display: flex; align-items: center; justify-content: center; font-size: 58px; color: var(--orange-600);">👩‍⚕️</div>
-                <button style="position: absolute; right: -2px; bottom: 4px; width: 36px; height: 36px; border-radius: 50%; background: var(--teal-500); color: #fff; border: 2px solid #fff; cursor: pointer; font-size: 18px; line-height: 1;">+</button>
+            <div class="avatar-wrap">
+              <div class="avatar-frame">
+                <svg class="avatar-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
               </div>
             </div>
-            <div class="field" style="margin-top: 14px;">
+            <div class="avatar-actions">
+              <button type="button"><svg class="icon"><use href="#i-camera"/></svg> Take photo</button>
+              <button type="button"><svg class="icon"><use href="#i-upload"/></svg> Upload</button>
+            </div>
+            <div class="field" style="margin-top: var(--space-4);">
               <label>Role <span class="req">*</span></label>
-              <div class="chip-row" style="justify-content: center;">
-                <div class="chip selected">Provider</div>
-                <div class="chip">Advocate</div>
-                <div class="chip">Both</div>
+              <div class="segmented" role="radiogroup" aria-label="Role">
+                <button type="button" class="selected" role="radio" aria-checked="true">Provider</button>
+                <button type="button" role="radio" aria-checked="false">Advocate</button>
+                <button type="button" role="radio" aria-checked="false">Both</button>
               </div>
             </div>
           </div>
 
-          <!-- RIGHT: bio -->
-          <div class="field full" style="margin: 0;">
-            <label>Short Bio <span class="req">*</span> <span class="muted">(50-500 characters)</span></label>
-            <textarea style="min-height: 168px;">Board-certified internal medicine physician with 16 years of experience. Special interest in cardiovascular risk reduction, preventive medicine, and chronic disease management. Welcoming patients of all backgrounds.</textarea>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
-              <span class="muted">231/500</span>
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <button class="btn btn-ghost btn-sm">Undo</button>
-                <button class="btn btn-teal">Polish ✨</button>
+          <div class="field" style="margin: 0;">
+            <label for="bio">Short bio <span class="req">*</span> <span style="font-weight: var(--fw-medium); color: var(--gray-500);">(50–500 characters)</span></label>
+            <textarea id="bio">Board-certified internal medicine physician with 16 years of experience. Special interest in cardiovascular risk reduction, preventive medicine, and chronic disease management. Welcoming patients of all backgrounds.</textarea>
+            <div class="bio-meta">
+              <span class="char-count">231 / 500</span>
+              <div class="bio-actions">
+                <button class="btn btn-ghost btn-sm" type="button">Undo</button>
+                <button class="btn btn-primary btn-sm" type="button">
+                  <svg class="icon"><use href="#i-sparkles"/></svg> Polish
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step3')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step5')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step3')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step5')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 5: STATE LICENSES (Upload Documents) ============ -->
-<div class="screen" id="screen-step5">
+<!-- STEP 5: State Licenses -->
+<section class="screen" id="screen-step5">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step5"></div>
+    <div class="step-pills" id="pills-step5" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 5 of 12</div>
-        <div class="step-name">Upload Documents</div>
+        <span class="eyebrow">Step 5 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1" style="margin-bottom: 10px;">State Licenses</h2>
-        <div class="info-banner" style="padding: 7px 12px; margin-bottom: 10px;">Add each state you're licensed to practice in. Patients will only see you when they search from a state on your list.</div>
+        <h2 class="card-title">Practice details</h2>
+        <p class="card-subtitle">Your NPI and the states where you're licensed to practice.</p>
 
-        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; background: #fff;">
-          <div class="field-grid cols-4">
-            <div class="field">
-              <label>State <span class="req">*</span></label>
-              <select><option>California</option><option>New York</option></select>
-            </div>
-            <div class="field">
-              <label>License Number <span class="req">*</span></label>
-              <input type="text" value="A87234" />
-            </div>
-            <div class="field">
-              <label>Issue Date <span class="req">*</span></label>
-              <input type="date" value="2009-08-12" />
-            </div>
-            <div class="field">
-              <label>Expiration Date <span class="req">*</span></label>
-              <input type="date" value="2027-08-12" />
-            </div>
-          </div>
+        <div class="field" style="margin-bottom: var(--space-6);">
+          <label for="l-npi">NPI number</label>
+          <input id="l-npi" type="text" value="1841738492" maxlength="10" />
+          <span class="hint">Optional. 10 digits. Used to verify your provider credentials.</span>
+        </div>
 
-          <div class="field-grid" style="margin-top: 10px; align-items: start;">
-            <div class="field">
-              <label>License Address</label>
-              <div class="checkbox-row" style="padding: 7px 10px;">
-                <input type="checkbox" checked /> Same as Form address
+        <label class="section-label" style="margin-bottom: var(--space-3);">State licenses <span class="req">*</span></label>
+
+        <!-- Existing license (collapsed summary view) -->
+        <div class="license-card">
+          <div class="license-row">
+            <div class="license-summary">
+              <svg class="icon icon-lg" style="color: var(--brand-700);"><use href="#i-shield-check"/></svg>
+              <div>
+                <div class="state-tag">California</div>
+                <div class="lic-num">Expires Aug 2027 · 1 work address</div>
               </div>
-              <span class="hint">Auto-populated from your mailing address (state matches).</span>
+              <span class="lic-status"><svg class="icon" style="width:12px;height:12px;"><use href="#i-check"/></svg> Document attached</span>
+            </div>
+            <button class="btn btn-ghost btn-sm" type="button">Edit</button>
+          </div>
+        </div>
+
+        <!-- Expanded "add new" form -->
+        <div class="license-card" style="border-color: var(--brand-300); background: var(--gray-0);">
+          <div class="field-grid">
+            <div class="field">
+              <label for="l-state">State <span class="req">*</span></label>
+              <select id="l-state"><option>New York</option><option>Texas</option><option>Florida</option><option>Washington</option></select>
             </div>
             <div class="field">
-              <label>License Document <span class="req">*</span></label>
-              <div class="upload-box" style="padding: 12px; text-align: left; display: flex; align-items: center; gap: 10px;">
-                <div class="icon" style="font-size: 22px; margin: 0;">📄</div>
-                <div>
-                  <div class="title" style="margin: 0;">CA-license-2025.pdf</div>
-                  <div class="sub">1.2 MB · Click to replace</div>
+              <label for="l-exp">Expiration date <span class="req">*</span></label>
+              <input id="l-exp" type="date" />
+            </div>
+            <div class="field full">
+              <label>License document <span class="req">*</span></label>
+              <div class="upload" style="padding: var(--space-3);">
+                <svg class="upload-icon"><use href="#i-upload"/></svg>
+                <div class="upload-hint">PDF, PNG, JPG · max 10 MB</div>
+                <div class="upload-actions">
+                  <button type="button"><svg class="icon"><use href="#i-upload"/></svg> Choose file</button>
                 </div>
               </div>
             </div>
           </div>
+
+          <div style="margin-top: var(--space-4);">
+            <label class="section-label" style="margin-bottom: var(--space-2);">Work addresses for this state <span class="muted">(up to 3)</span></label>
+            <div class="field" style="margin-bottom: var(--space-2);">
+              <div class="input-with-icon">
+                <svg class="icon"><use href="#i-pin"/></svg>
+                <input type="text" placeholder="Start typing an address…" />
+              </div>
+            </div>
+            <button class="btn-add" type="button">
+              <svg class="icon"><use href="#i-plus"/></svg> Add another address
+            </button>
+          </div>
         </div>
 
-        <button class="btn btn-secondary btn-sm">+ Add another state</button>
+        <button class="btn-add" type="button" style="margin-top: var(--space-3);">
+          <svg class="icon"><use href="#i-plus"/></svg> Add another state
+        </button>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step4')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step6')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step4')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step6')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 6: DIPLOMAS ============ -->
-<div class="screen" id="screen-step6">
+<!-- STEP 6: Diplomas -->
+<section class="screen" id="screen-step6">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step6"></div>
+    <div class="step-pills" id="pills-step6" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 6 of 12</div>
-        <div class="step-name">Upload Documents</div>
+        <span class="eyebrow">Step 6 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1" style="margin-bottom: 12px;">Diplomas &amp; Certifications</h2>
-        <div class="info-banner" style="padding: 7px 12px; margin-bottom: 12px;">Upload your medical school diploma and any board certifications. Patients see these on your profile.</div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div>
-            <label class="label-strong" style="margin-bottom: 6px;">Medical School Diploma <span class="red">*</span></label>
-            <div class="upload-box" style="padding: 12px; text-align: left; display: flex; align-items: center; gap: 10px;">
-              <div class="icon" style="font-size: 22px; margin: 0;">🎓</div>
-              <div>
-                <div class="title" style="margin: 0;">UCSF-MD-diploma.pdf</div>
-                <div class="sub">2.4 MB · Click to replace</div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <label class="label-strong" style="margin-bottom: 6px;">Board Certifications</label>
-            <div class="upload-box" style="padding: 12px; text-align: left; display: flex; align-items: center; gap: 10px;">
-              <div class="icon" style="font-size: 22px; margin: 0;">📜</div>
-              <div>
-                <div class="title" style="margin: 0;">ABIM-Internal-Medicine-2010.pdf</div>
-                <div class="sub">480 KB · Click to replace</div>
-              </div>
-            </div>
-            <button class="btn btn-secondary btn-sm" style="margin-top: 8px;">+ Add another certification</button>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step5')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step7')">Next →</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ SCREEN 7: CERTIFICATE OF INSURANCE ============ -->
-<div class="screen" id="screen-step7">
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
-    </header>
-    <div class="step-pills" id="pills-step7"></div>
-    <div class="card">
-      <div class="card-header">
-        <div class="step-count">Step 7 of 12</div>
-        <div class="step-name">Certificate of Insurance</div>
-      </div>
-      <div class="card-body">
-        <h2 class="h1">Certificate of Insurance</h2>
-        <div class="info-banner">Upload your current professional liability (malpractice) certificate. Must be valid for the full year ahead.</div>
+        <h2 class="card-title">Diplomas &amp; certifications</h2>
+        <p class="card-subtitle">Upload your medical school diploma and any board certifications. These appear on your profile.</p>
 
         <div class="field-grid">
           <div class="field">
-            <label>Carrier <span class="req">*</span></label>
-            <input type="text" value="The Doctors Company" />
-          </div>
-          <div class="field">
-            <label>Policy Number <span class="req">*</span></label>
-            <input type="text" value="TDC-984-2025-0142" />
-          </div>
-          <div class="field">
-            <label>Effective Date <span class="req">*</span></label>
-            <input type="date" value="2026-01-01" />
-          </div>
-          <div class="field">
-            <label>Expiration Date <span class="req">*</span></label>
-            <input type="date" value="2026-12-31" />
-          </div>
-          <div class="field full">
-            <label>Certificate Upload <span class="req">*</span></label>
-            <div class="upload-box">
-              <div class="icon">🛡️</div>
-              <div class="title">TDC-COI-2026.pdf</div>
-              <div class="sub">Uploaded · 1.8 MB · Click to replace</div>
+            <label>Medical school diploma <span class="req">*</span></label>
+            <div class="upload-file">
+              <div class="file-icon"><svg class="icon icon-lg"><use href="#i-graduation-cap"/></svg></div>
+              <div class="file-meta">
+                <div class="file-name">UCSF-MD-diploma.pdf</div>
+                <div class="file-sub">2.4 MB · uploaded just now</div>
+              </div>
+              <button class="file-action" type="button">Replace</button>
             </div>
+          </div>
+          <div class="field">
+            <label>Board certifications</label>
+            <div class="upload-file">
+              <div class="file-icon"><svg class="icon icon-lg"><use href="#i-award"/></svg></div>
+              <div class="file-meta">
+                <div class="file-name">ABIM-Internal-Medicine-2010.pdf</div>
+                <div class="file-sub">480 KB</div>
+              </div>
+              <button class="file-action" type="button">Replace</button>
+            </div>
+            <button class="btn-add" type="button" style="margin-top: var(--space-2);">
+              <svg class="icon"><use href="#i-plus"/></svg> Add certification
+            </button>
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step6')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step8')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step5')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step7')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 8: VERIFICATION VIDEO ============ -->
-<div class="screen" id="screen-step8">
+<!-- STEP 7: Certificate of Insurance -->
+<section class="screen" id="screen-step7">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step8"></div>
+    <div class="step-pills" id="pills-step7" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 8 of 12</div>
-        <div class="step-name">Verification Video</div>
+        <span class="eyebrow">Step 7 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
+      </div>
+      <div class="card-body attestation-shell">
+        <h2 class="card-title">Certificate of Insurance</h2>
+        <p class="card-subtitle">I certify that I hold a valid Certificate of Insurance, as required by my state of licensure.</p>
+
+        <div id="coi-initial" class="attestation-actions">
+          <button class="btn btn-secondary" type="button" onclick="setCoiState('declined')">I hereby decline</button>
+          <button class="btn btn-primary" type="button" onclick="setCoiState('accepted')">Accept</button>
+        </div>
+
+        <div id="coi-accepted" class="attestation-status" style="display: none;">
+          <svg class="icon icon-lg"><use href="#i-check-circle"/></svg>
+          Accepted
+        </div>
+
+        <div id="coi-declined" class="attestation-status" style="display: none; background: var(--danger-50); color: var(--danger-700); border-color: var(--danger-500);">
+          <svg class="icon icon-lg"><use href="#i-x-circle"/></svg>
+          Declined
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step6')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step8')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 8: Verification Video -->
+<section class="screen" id="screen-step8">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
+    </header>
+    <div class="step-pills" id="pills-step8" role="tablist"></div>
+    <div class="card">
+      <div class="card-header">
+        <span class="eyebrow">Step 8 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1" style="margin-bottom: 12px;">Verification Video</h2>
+        <h2 class="card-title">Verification video</h2>
+        <p class="card-subtitle">Hold your driver's license or ID next to your face, state your name, then record a 10-second video.</p>
 
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start;">
-          <!-- LEFT: video preview -->
+        <div class="video-grid">
           <div>
-            <div class="video-box" style="max-width: 100%;">Camera preview will appear here</div>
-            <div style="display: flex; justify-content: center; gap: 8px; margin-top: 10px;">
-              <button class="btn btn-secondary btn-sm">Re-record</button>
-              <button class="btn btn-primary btn-sm">▶ Play recording</button>
+            <div class="video-box">Camera preview</div>
+            <div style="display: flex; justify-content: center; gap: var(--space-2); margin-top: var(--space-3);">
+              <button class="btn btn-secondary btn-sm" type="button">Re-record</button>
+              <button class="btn btn-primary btn-sm" type="button">Play recording</button>
             </div>
           </div>
 
-          <!-- RIGHT: instructions + status -->
           <div>
-            <div class="info-banner" style="padding: 10px 14px; margin-bottom: 12px;">
-              Record a short selfie video (15-30 seconds) holding your government-issued ID next to your face. We use this for identity verification before approving your profile.
+            <div class="banner success">
+              <svg class="icon"><use href="#i-check-circle"/></svg>
+              <div>Video recorded · 22 seconds · 18.4 MB</div>
             </div>
-
-            <div style="padding: 12px 16px; background: #f0fdf4; border-left: 4px solid var(--success); border-radius: 6px; font-size: 13px;">
-              ✓ Video recorded — 22 seconds · 18.4 MB
-            </div>
-
-            <ul style="margin: 14px 0 0; padding-left: 20px; font-size: 13px; color: var(--text-soft); line-height: 1.7;">
+            <div style="font-size: var(--text-md); font-weight: var(--fw-semi); color: var(--gray-900); margin-top: var(--space-3);">Tips for a good recording</div>
+            <ul style="margin: var(--space-2) 0 0; padding-left: var(--space-5); font-size: var(--text-md); color: var(--gray-600); line-height: var(--lh-loose);">
               <li>Good lighting on your face</li>
               <li>ID clearly visible next to your face</li>
               <li>Speak your full name and today's date</li>
@@ -988,123 +2307,135 @@
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step7')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step9')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step7')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step9')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 9: CHARGES INFORMATION ============ -->
-<div class="screen" id="screen-step9">
+<!-- STEP 9: Pricing -->
+<section class="screen" id="screen-step9">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step9"></div>
+    <div class="step-pills" id="pills-step9" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 9 of 12</div>
-        <div class="step-name">Charges Information</div>
+        <span class="eyebrow">Step 9 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1">Charges Information</h2>
-        <div class="info-banner">Set what you charge for each session type. You can update these anytime from the provider portal.</div>
+        <h2 class="card-title">Pricing</h2>
+        <p class="card-subtitle">Set your session rates. You can update these anytime from your provider portal.</p>
 
-        <h3 class="h2">Session rates</h3>
-        <div class="field-grid">
-          <div class="field">
-            <label>Video call (15 min) <span class="req">*</span></label>
-            <input type="text" value="$ 75.00" />
+        <div class="price-section">
+          <div class="section-head">
+            <h3>Telehealth</h3>
           </div>
-          <div class="field">
-            <label>Video call — advocate rate</label>
-            <input type="text" value="$ 50.00" />
-          </div>
-          <div class="field">
-            <label>Voice call (15 min) <span class="req">*</span></label>
-            <input type="text" value="$ 60.00" />
-          </div>
-          <div class="field">
-            <label>Voice call — advocate rate</label>
-            <input type="text" value="$ 40.00" />
-          </div>
-        </div>
-
-        <div class="switch-row">
-          <div>
-            <div class="label-strong">Available for in-person visits</div>
-            <span class="muted">Patients near your office can book a visit.</span>
-          </div>
-          <div class="switch on"></div>
-        </div>
-
-        <div class="field-grid" style="margin-top: 16px;">
-          <div class="field">
-            <label>In-person visit rate <span class="req">*</span></label>
-            <input type="text" value="$ 150.00" />
-          </div>
-          <div class="field">
-            <label>In-person — advocate rate</label>
-            <input type="text" value="$ 100.00" />
-          </div>
-          <div class="field">
-            <label>Travel distance (miles)</label>
-            <input type="number" value="15" />
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step8')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('stepid')">Next →</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ SCREEN 10: IDENTITY DOCUMENTS (Driver's License / State ID) ============ -->
-<div class="screen" id="screen-stepid">
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
-    </header>
-    <div class="step-pills" id="pills-stepid"></div>
-    <div class="card">
-      <div class="card-header">
-        <div class="step-count">Step 10 of 12</div>
-        <div class="step-name">Identity Documents</div>
-      </div>
-      <div class="card-body">
-        <h2 class="h1">Verify Your Identity</h2>
-        <div class="info-banner">Upload a clear photo of the front and back of your driver's license or state-issued ID. We use this only for identity verification — it's never shared.</div>
-
-        <h3 class="h2">Driver's License or State ID</h3>
-        <p class="muted" style="margin: -4px 0 12px;">Snap a photo of the front and back, or upload a file. PNG, JPG, or PDF · max 10 MB each.</p>
-
-        <div class="upload-grid">
-          <!-- FRONT (captured / preview state) -->
-          <div class="upload-card captured" data-side="front">
-            <button type="button" class="upload-clear" title="Remove">×</button>
-          </div>
-
-          <!-- BACK (empty / awaiting input state) -->
-          <div class="upload-card" data-side="back">
-            <div class="upload-icon">📷</div>
-            <div class="upload-title">ID (back)</div>
-            <div class="upload-hint">Photo or file</div>
-            <div class="upload-actions">
-              <button type="button">📷 Camera</button>
-              <button type="button">📁 File</button>
+          <div class="field-grid">
+            <div class="field">
+              <label for="r-video">Video call <span class="req">*</span></label>
+              <input id="r-video" type="text" value="$75.00" />
+            </div>
+            <div class="field">
+              <label for="r-video-adv">Video, advocate rate</label>
+              <input id="r-video-adv" type="text" value="$50.00" />
+            </div>
+            <div class="field">
+              <label for="r-voice">Voice call <span class="req">*</span></label>
+              <input id="r-voice" type="text" value="$60.00" />
+            </div>
+            <div class="field">
+              <label for="r-voice-adv">Voice, advocate rate</label>
+              <input id="r-voice-adv" type="text" value="$40.00" />
             </div>
           </div>
         </div>
 
-        <div class="field-grid">
+        <div class="price-section">
+          <div class="switch-row">
+            <div class="switch-label">
+              <span class="label-strong">In-person visits</span>
+              <span class="label-hint">Patients near your office can book a visit at this rate. Required to collect an emergency contact in the next step.</span>
+            </div>
+            <button id="in-person-switch" class="switch on" type="button" aria-pressed="true"></button>
+          </div>
+          <div class="field-grid" style="margin-top: var(--space-3);">
+            <div class="field">
+              <label for="r-inperson">Per visit <span class="req">*</span></label>
+              <input id="r-inperson" type="text" value="$150.00" />
+            </div>
+            <div class="field">
+              <label for="r-inperson-adv">Advocate rate</label>
+              <input id="r-inperson-adv" type="text" value="$100.00" />
+            </div>
+            <div class="field">
+              <label for="r-travel">Travel distance</label>
+              <div class="slider-row">
+                <input id="r-travel" type="range" min="1" max="100" value="15" oninput="document.getElementById('r-travel-value').textContent = this.value + ' mi'" />
+                <span class="slider-value" id="r-travel-value">15 mi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step8')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('stepid')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 10: ID Documents -->
+<section class="screen" id="screen-stepid">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
+    </header>
+    <div class="step-pills" id="pills-stepid" role="tablist"></div>
+    <div class="card">
+      <div class="card-header">
+        <span class="eyebrow">Step 10 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Identity documents</h2>
+        <p class="card-subtitle">Driver's license or state-issued ID. Used only for identity verification, never shared.</p>
+
+        <div style="font-size: var(--text-md); font-weight: var(--fw-semi); color: var(--gray-900); margin-bottom: var(--space-1);">Driver's license or state ID</div>
+        <p style="font-size: var(--text-sm); color: var(--gray-500); margin: 0 0 var(--space-3);">Snap a photo of the front and back, or upload a file. PNG, JPG, or PDF · max 10 MB each.</p>
+
+        <div class="upload-grid">
+          <div class="upload captured">
+            <span class="captured-badge"><svg class="icon" style="width:12px;height:12px;"><use href="#i-check"/></svg> Captured</span>
+            <button type="button" class="upload-clear" aria-label="Remove"><svg class="icon"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="upload">
+            <svg class="upload-icon"><use href="#i-id-card"/></svg>
+            <div class="upload-title">ID (back)</div>
+            <div class="upload-hint">Photo or file</div>
+            <div class="upload-actions">
+              <button type="button"><svg class="icon"><use href="#i-camera"/></svg> Camera</button>
+              <button type="button"><svg class="icon"><use href="#i-upload"/></svg> File</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-grid" style="margin-top: var(--space-5);">
           <div class="field">
-            <label>Document type <span class="req">*</span></label>
-            <select>
+            <label for="id-type">Document type <span class="req">*</span></label>
+            <select id="id-type">
               <option>Driver's License</option>
               <option>State-Issued ID</option>
               <option>Passport</option>
@@ -1112,226 +2443,290 @@
             </select>
           </div>
           <div class="field">
-            <label>Issuing state <span class="req">*</span></label>
-            <select><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
+            <label for="id-state">Issuing state <span class="req">*</span></label>
+            <select id="id-state"><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
           </div>
           <div class="field">
-            <label>ID number <span class="req">*</span></label>
-            <input type="text" value="D8742193" />
-            <span class="hint">Auto-filled from front photo. You can edit if needed.</span>
+            <label for="id-num">ID number <span class="req">*</span></label>
+            <input id="id-num" type="text" value="D8742193" />
+            <span class="hint">Auto-filled from the front photo. You can edit if needed.</span>
           </div>
           <div class="field">
-            <label>Expiration date <span class="req">*</span></label>
-            <input type="date" value="2029-06-14" />
+            <label for="id-exp">Expiration date <span class="req">*</span></label>
+            <input id="id-exp" type="date" value="2029-06-14" />
           </div>
         </div>
 
-        <div style="margin-top: 12px; padding: 12px 16px; background: #f0fdf4; border-left: 4px solid var(--success); border-radius: 6px; font-size: 13px; color: #166534;">
-          ✓ Front captured · ID number auto-filled · Awaiting back image
+        <div class="banner success" style="margin-top: var(--space-5); margin-bottom: 0;">
+          <svg class="icon"><use href="#i-check-circle"/></svg>
+          <div>Front captured · ID number auto-filled · waiting on back image.</div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step9')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step10')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('step9')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="goNext('stepid')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 11: EMERGENCY CONTACT (in-person only) ============ -->
-<div class="screen" id="screen-step10">
+<!-- STEP 11: Emergency Contact -->
+<section class="screen" id="screen-step10">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step10"></div>
+    <div class="step-pills" id="pills-step10" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 11 of 12</div>
-        <div class="step-name">Emergency Contact</div>
+        <span class="eyebrow">Step 11 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1">Emergency Contact</h2>
-        <div class="info-banner">Only required if you offer in-person visits. We use this to reach someone in case of an emergency during a visit.</div>
+        <h2 class="card-title">Emergency contact</h2>
+        <p class="card-subtitle">Required only if you offer in-person visits. We use this to reach someone in case of an emergency during a visit.</p>
 
         <div class="field-grid">
           <div class="field">
-            <label>Full Name <span class="req">*</span></label>
-            <input type="text" value="Marcus Kennedy" />
+            <label for="ec-first">First name <span class="req">*</span></label>
+            <input id="ec-first" type="text" value="Marcus" />
           </div>
           <div class="field">
-            <label>Relationship <span class="req">*</span></label>
-            <select><option>Spouse / Partner</option><option>Parent</option><option>Sibling</option><option>Friend</option><option>Other</option></select>
+            <label for="ec-last">Last name <span class="req">*</span></label>
+            <input id="ec-last" type="text" value="Kennedy" />
           </div>
           <div class="field">
-            <label>Phone <span class="req">*</span></label>
-            <input type="tel" value="+1 (415) 555-0198" />
+            <label for="ec-country">Country code <span class="req">*</span></label>
+            <select id="ec-country">
+              <option>+1 (US)</option>
+            </select>
           </div>
           <div class="field">
-            <label>Email</label>
-            <input type="email" value="marcus@kennedy.example" />
+            <label for="ec-phone">Phone <span class="req">*</span></label>
+            <input id="ec-phone" type="tel" value="(415) 555-0198" />
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('stepid')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step11')">Next →</button>
+        <button class="btn btn-secondary" onclick="showScreen('stepid')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('step11')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN 12: SELECT SPECIALTY (with new suggestion chips) ============ -->
-<div class="screen" id="screen-step11">
+<!-- STEP 12: Specialty -->
+<section class="screen" id="screen-step11">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
-      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="" /></div><div class="brand-text">MedPal Provider</div></div>
+      <div class="actions">
+        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+      </div>
     </header>
-    <div class="step-pills" id="pills-step11"></div>
+    <div class="step-pills" id="pills-step11" role="tablist"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 12 of 12</div>
-        <div class="step-name">Select Specialty</div>
+        <span class="eyebrow">Step 12 of 12</span>
+        <span class="save-state"><span class="dot"></span> Saved</span>
       </div>
       <div class="card-body">
-        <h2 class="h1">Select Specialty</h2>
+        <h2 class="card-title">Specialty &amp; tags</h2>
+        <p class="card-subtitle">Help patients find you. Pick one or more specialties, then add granular tags.</p>
 
-        <div class="section">
-          <label class="label-strong">Medical Specialties <span class="red">*</span></label>
+        <div style="margin-bottom: var(--space-6);">
+          <label class="section-label">Medical specialties <span class="req">*</span></label>
           <div class="chip-row">
-            <div class="chip">Cardiology</div>
-            <div class="chip">Chiropractic</div>
-            <div class="chip">Critical care</div>
-            <div class="chip">Dentist</div>
-            <div class="chip">Dermatology</div>
-            <div class="chip">Emergency Medicine</div>
-            <div class="chip">Gastroenterology</div>
-            <div class="chip">Gynecology</div>
-            <div class="chip selected">Internal Medicine</div>
-            <div class="chip">Neurology</div>
-            <div class="chip">Neurosurgeon</div>
-            <div class="chip">Nurse</div>
-            <div class="chip">Oncology</div>
-            <div class="chip">Orthopedics</div>
-            <div class="chip">Otolaryngology</div>
-            <div class="chip">Pain management</div>
-            <div class="chip">Pediatrics</div>
-            <div class="chip">Physical Therapy</div>
-            <div class="chip">Psychiatry</div>
-            <div class="chip">Psychologist</div>
-            <div class="chip">Pulmonology</div>
-            <div class="chip">Radiologist</div>
-            <div class="chip">Sports Medicine</div>
-            <div class="chip">Surgery</div>
-            <div class="chip">Urology</div>
-            <div class="chip">Wound care</div>
+            <button class="chip" type="button">Cardiology</button>
+            <button class="chip" type="button">Chiropractic</button>
+            <button class="chip" type="button">Critical care</button>
+            <button class="chip" type="button">Dentist</button>
+            <button class="chip" type="button">Dermatology</button>
+            <button class="chip" type="button">Emergency Medicine</button>
+            <button class="chip" type="button">Gastroenterology</button>
+            <button class="chip" type="button">Gynecology</button>
+            <button class="chip selected" type="button">Internal Medicine</button>
+            <button class="chip" type="button">Neurology</button>
+            <button class="chip" type="button">Neurosurgeon</button>
+            <button class="chip" type="button">Nurse</button>
+            <button class="chip" type="button">Oncology</button>
+            <button class="chip" type="button">Orthopedics</button>
+            <button class="chip" type="button">Otolaryngology</button>
+            <button class="chip" type="button">Pain management</button>
+            <button class="chip" type="button">Pediatrics</button>
+            <button class="chip" type="button">Physical Therapy</button>
+            <button class="chip" type="button">Psychiatry</button>
+            <button class="chip" type="button">Psychologist</button>
+            <button class="chip" type="button">Pulmonology</button>
+            <button class="chip" type="button">Radiologist</button>
+            <button class="chip" type="button">Sports Medicine</button>
+            <button class="chip" type="button">Surgery</button>
+            <button class="chip" type="button">Urology</button>
+            <button class="chip" type="button">Wound care</button>
           </div>
         </div>
 
-        <div class="section">
-          <label class="label-strong">Add Custom Specialty</label>
-          <div class="row">
-            <input type="text" value="injury care" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-strong); border-radius: 6px; font-size: 14px;" />
-            <button class="btn btn-secondary">Send</button>
+        <div style="margin-bottom: var(--space-6);">
+          <label class="section-label">Add custom specialty</label>
+          <div class="send-row">
+            <input class="input" type="text" value="injury care" />
+            <button class="btn btn-secondary" type="button">Validate</button>
           </div>
-          <div class="error-msg" style="margin-top: 8px;">Not a recognized medical specialty. Please try again.</div>
-
-          <div style="margin-top: 14px;">
-            <p style="font-size: 13px; color: var(--text-soft); margin: 0 0 8px;">Did you mean:</p>
+          <div class="field-error" style="margin-top: var(--space-2);">
+            <svg class="icon"><use href="#i-alert-circle"/></svg>
+            Not a recognized medical specialty.
+          </div>
+          <div style="margin-top: var(--space-3);">
+            <p style="font-size: var(--text-sm); color: var(--gray-600); margin: 0 0 var(--space-2);">Did you mean:</p>
             <div class="chip-row">
-              <button class="chip suggestion-chip">Orthopedics</button>
-              <button class="chip suggestion-chip">Sports Medicine</button>
-              <button class="chip suggestion-chip">Trauma Surgery</button>
-              <button class="chip suggestion-chip">Emergency Medicine</button>
-              <button class="chip suggestion-chip">Physical Therapy</button>
+              <button class="chip suggestion" type="button">Orthopedics</button>
+              <button class="chip suggestion" type="button">Sports Medicine</button>
+              <button class="chip suggestion" type="button">Trauma Surgery</button>
+              <button class="chip suggestion" type="button">Emergency Medicine</button>
+              <button class="chip suggestion" type="button">Physical Therapy</button>
             </div>
           </div>
         </div>
 
-        <div class="section">
-          <label class="label-strong">Specialty Tags <span class="muted">(optional)</span></label>
-          <div class="row">
-            <input type="text" value="chest pain" placeholder="Search clinical tags (conditions, symptoms, treatments)" style="flex: 1; padding: 10px 12px; border: 2px solid var(--border-strong); border-radius: 6px; font-size: 14px;" />
-            <button class="btn btn-secondary">Send</button>
+        <div>
+          <label class="section-label">Specialty tags <span class="muted">(optional)</span></label>
+          <div class="send-row">
+            <input class="input" type="text" placeholder="Search clinical tags (conditions, symptoms, treatments)" />
+            <button class="btn btn-secondary" type="button">Search</button>
           </div>
-          <div class="chip-row" style="margin-top: 12px;">
-            <div class="chip selected">Hypertension</div>
-            <div class="chip selected">Coronary artery disease</div>
-            <div class="chip">Cardiac arrhythmias</div>
-            <div class="chip">Heart failure</div>
-            <div class="chip">Lipid management</div>
-            <div class="chip">Anginal pain</div>
-            <div class="chip">Stress testing</div>
-            <div class="chip">EKG interpretation</div>
-            <div class="chip">Echocardiography</div>
-            <div class="chip">Preventive cardiology</div>
+          <div class="chip-row" style="margin-top: var(--space-3);">
+            <button class="chip selected" type="button">Hypertension <svg class="chip-x icon"><use href="#i-x"/></svg></button>
+            <button class="chip selected" type="button">Coronary artery disease <svg class="chip-x icon"><use href="#i-x"/></svg></button>
+            <button class="chip" type="button">Cardiac arrhythmias</button>
+            <button class="chip" type="button">Heart failure</button>
+            <button class="chip" type="button">Lipid management</button>
+            <button class="chip" type="button">Anginal pain</button>
+            <button class="chip" type="button">Stress testing</button>
+            <button class="chip" type="button">EKG interpretation</button>
+            <button class="chip" type="button">Echocardiography</button>
+            <button class="chip" type="button">Preventive cardiology</button>
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step10')">Back</button>
-        <button class="btn btn-primary" onclick="showScreen('done')">Submit Application ✓</button>
+        <button class="btn btn-secondary" onclick="goPrev('step11')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
+        <button class="btn btn-primary" onclick="showScreen('done')">Submit application</button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============ SCREEN DONE: SUBMITTED ============ -->
-<div class="screen" id="screen-done">
+<!-- SUBMITTED -->
+<section class="screen" id="screen-done" aria-labelledby="done-title">
   <div class="success-shell">
     <div class="success-card">
-      <div class="success-icon">✓</div>
-      <h1 style="font-size: 28px; margin: 0 0 12px;">Application Submitted!</h1>
-      <p style="font-size: 16px; color: var(--text-soft); margin: 0 0 24px;">
-        Thanks for applying to join MedPal. Our verification team will review your application within 1–2 business days. You'll receive an email at <strong>dr.kennedy@medpal.com</strong> when there's an update.
-      </p>
+      <div class="success-icon-wrap">
+        <svg class="icon icon-3xl" style="stroke: var(--success-500);"><use href="#i-check-circle"/></svg>
+      </div>
+      <h1 id="done-title">You're all set</h1>
+      <p class="success-sub">Thanks for applying. Our verification team will review your application within 1–2 business days. We'll email <strong>dr.kennedy@medpal.com</strong> when there's an update.</p>
 
-      <div style="background: var(--orange-50); border-radius: 10px; padding: 20px; text-align: left; margin: 0 0 24px;">
-        <div style="font-weight: 600; margin-bottom: 8px;">What happens next</div>
-        <ol style="margin: 0; padding-left: 20px; font-size: 14px; color: var(--text-soft); line-height: 1.7;">
+      <div class="next-list">
+        <div class="next-title">What happens next</div>
+        <ol>
           <li>We verify your license, NPI, and uploaded documents.</li>
-          <li>You'll get a call or email if anything looks unclear.</li>
-          <li>Once approved, you'll get instructions to set up payments via our merchant partner.</li>
+          <li>We'll call or email if anything looks unclear.</li>
+          <li>Once approved, you'll get instructions to connect payments.</li>
           <li>After payments are connected, your profile goes live and patients can find you.</li>
         </ol>
       </div>
 
-      <button class="btn btn-primary" onclick="showScreen('login')">Done</button>
+      <button class="btn btn-primary btn-lg" onclick="showScreen('login')">Back to login</button>
     </div>
   </div>
-</div>
+</section>
 
 <script>
-  // ============ MOCKUP NAV BEHAVIOR ============
-  const STEPS = [
-    { id: 'step1',  name: 'Personal Information' },
-    { id: 'step2',  name: 'Personal Information' },
-    { id: 'step3',  name: 'Mailing Address' },
-    { id: 'step4',  name: 'About Me' },
-    { id: 'step5',  name: 'Upload Documents' },
-    { id: 'step6',  name: 'Upload Documents' },
-    { id: 'step7',  name: 'Certificate of Insurance' },
-    { id: 'step8',  name: 'Verification Video' },
-    { id: 'step9',  name: 'Charges Information' },
-    { id: 'stepid', name: 'Identity Documents' },
-    { id: 'step10', name: 'Emergency Contact' },
-    { id: 'step11', name: 'Select Specialty' },
+  // ============================================================
+  // Mockup nav behavior
+  // ============================================================
+  // `stepid` (Identity Documents) is the only step that does NOT exist in
+  // medpal-onboarding-web today. When porting this mockup to production,
+  // it will need to be added as a new step.
+  // `step10` (Emergency Contact) is conditional on Step 9's in-person toggle.
+  const ALL_STEPS = [
+    { id: 'step1',  name: 'Personal' },
+    { id: 'step2',  name: 'Credentials' },
+    { id: 'step3',  name: 'Address' },
+    { id: 'step4',  name: 'About You' },
+    { id: 'step5',  name: 'Practice details' },
+    { id: 'step6',  name: 'Diplomas' },
+    { id: 'step7',  name: 'Insurance' },
+    { id: 'step8',  name: 'Video' },
+    { id: 'step9',  name: 'Pricing' },
+    { id: 'stepid', name: 'Identity', isNew: true },
+    { id: 'step10', name: 'Emergency', conditional: 'inPerson' },
+    { id: 'step11', name: 'Specialty' },
   ];
+
+  function isInPerson() {
+    const s = document.getElementById('in-person-switch');
+    return !!(s && s.classList.contains('on'));
+  }
+
+  function getActiveSteps() {
+    return ALL_STEPS.filter(s => !s.conditional || (s.conditional === 'inPerson' && isInPerson()));
+  }
+
+  // Back-compat alias for older code paths
+  const STEPS = ALL_STEPS;
+
+  function nextStepId(currentId) {
+    const steps = getActiveSteps();
+    const idx = steps.findIndex(s => s.id === currentId);
+    return idx >= 0 && idx < steps.length - 1 ? steps[idx + 1].id : 'done';
+  }
+
+  function prevStepId(currentId) {
+    const steps = getActiveSteps();
+    const idx = steps.findIndex(s => s.id === currentId);
+    return idx > 0 ? steps[idx - 1].id : null;
+  }
+
+  function goNext(fromId) { showScreen(nextStepId(fromId)); }
+  function goPrev(fromId) { const p = prevStepId(fromId); if (p) showScreen(p); }
+
+  // COI attestation - once chosen, locked (matches live behavior)
+  function setCoiState(state) {
+    document.getElementById('coi-initial').style.display = 'none';
+    document.getElementById('coi-accepted').style.display = state === 'accepted' ? 'inline-flex' : 'none';
+    document.getElementById('coi-declined').style.display = state === 'declined' ? 'inline-flex' : 'none';
+  }
 
   function renderPillsInto(containerId, activeStepId) {
     const el = document.getElementById(containerId);
     if (!el) return;
     el.innerHTML = '';
-    const activeIdx = STEPS.findIndex(s => s.id === activeStepId);
-    STEPS.forEach((s, idx) => {
+    const active = getActiveSteps();
+    const activeIdx = active.findIndex(s => s.id === activeStepId);
+    active.forEach((s, idx) => {
       const pill = document.createElement('button');
       pill.type = 'button';
       pill.className = 'step-pill' + (idx === activeIdx ? ' active' : idx < activeIdx ? ' done' : '');
-      pill.innerHTML = '<span class="step-num">STEP ' + (idx + 1) + '</span><span class="step-name">' + s.name + '</span>';
+      pill.setAttribute('role', 'tab');
+      pill.setAttribute('aria-selected', String(idx === activeIdx));
+      pill.innerHTML =
+        '<span class="step-num">Step ' + (idx + 1) + '</span>' +
+        '<span class="step-name">' + s.name + '</span>';
       pill.addEventListener('click', () => showScreen(s.id));
       el.appendChild(pill);
+    });
+  }
+
+  function rerenderAllPills() {
+    ALL_STEPS.forEach(s => {
+      // active step in each pill container = the screen that container belongs to
+      renderPillsInto('pills-' + s.id, s.id);
     });
   }
 
@@ -1344,20 +2739,49 @@
       b.classList.toggle('active', b.dataset.screen === id);
     });
 
-    // If this is a step screen, render pills with this step active
-    if (id.startsWith('step')) {
+    if (STEPS.some(s => s.id === id)) {
       renderPillsInto('pills-' + id, id);
     }
 
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
-  // Wire up the mockup nav buttons
+  // Wire up mockup nav
   document.querySelectorAll('#mockup-nav button').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
-  // Pre-render pills for all step screens so they're correct when revealed
+  // Wire up switches
+  document.querySelectorAll('.switch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      const on = sw.classList.toggle('on');
+      sw.setAttribute('aria-pressed', String(on));
+      if (sw.id === 'in-person-switch') rerenderAllPills();
+    });
+  });
+
+  // Wire up chip selection (multi-select)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('selected');
+    });
+  });
+
+  // Wire up segmented controls (single-select)
+  document.querySelectorAll('.segmented').forEach(group => {
+    group.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('button').forEach(b => {
+          b.classList.remove('selected');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('selected');
+        btn.setAttribute('aria-checked', 'true');
+      });
+    });
+  });
+
+  // Pre-render pills for all step screens
   STEPS.forEach(s => renderPillsInto('pills-' + s.id, s.id));
 </script>
 
