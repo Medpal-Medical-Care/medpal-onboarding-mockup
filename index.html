@@ -40,6 +40,13 @@
       --radius-lg: 16px;
     }
     * { box-sizing: border-box; }
+    html {
+      /* Reserve scrollbar gutter so screens with different content
+         heights don't shift the layout horizontally when the scrollbar
+         appears/disappears. */
+      scrollbar-gutter: stable;
+      overflow-y: scroll; /* fallback for browsers without scrollbar-gutter */
+    }
     html, body {
       margin: 0; padding: 0; min-height: 100vh;
       background: var(--orange-bg);
@@ -266,7 +273,93 @@
     .red { color: var(--danger); }
     .small { font-size: 12px; }
 
-    /* Upload box */
+    /* === ID upload (front/back) — matches nybsj-intake-mockup pattern === */
+    .upload-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 520px) { .upload-grid { grid-template-columns: 1fr; } }
+    .upload-card {
+      position: relative;
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      background: var(--surface);
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .upload-card:hover { border-color: var(--orange-500); background: #fff; }
+    .upload-card .upload-icon {
+      font-size: 24px; line-height: 1; color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .upload-card .upload-title {
+      font-size: 14px; font-weight: 600; color: var(--text);
+      margin-bottom: 2px;
+    }
+    .upload-card .upload-hint {
+      font-size: 12px; color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .upload-actions { display: flex; gap: 8px; justify-content: center; }
+    .upload-actions button {
+      font-size: 12px; padding: 7px 14px;
+      border: 1px solid var(--border-strong); border-radius: 6px;
+      background: #fff; color: var(--text); cursor: pointer; font-family: inherit;
+      font-weight: 500;
+    }
+    .upload-actions button:hover {
+      background: var(--orange-50); border-color: var(--orange-500); color: var(--orange-600);
+    }
+    .upload-card.has-preview {
+      padding: 0; border-style: solid; border-color: var(--orange-500); background: #fff;
+      overflow: hidden;
+    }
+    .upload-card.has-preview .upload-icon,
+    .upload-card.has-preview .upload-title,
+    .upload-card.has-preview .upload-hint,
+    .upload-card.has-preview .upload-actions { display: none; }
+    .upload-card.has-preview .upload-preview {
+      display: block; position: relative;
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .upload-card.has-preview .upload-preview img {
+      width: 100%; height: auto; max-height: 220px; object-fit: cover; display: block;
+    }
+    .upload-clear {
+      position: absolute; top: 8px; right: 8px;
+      width: 28px; height: 28px;
+      background: rgba(0,0,0,0.7); color: #fff;
+      border: none; border-radius: 50%;
+      cursor: pointer; font-size: 18px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* simulated "captured" state mockup (no JS interactivity) */
+    .upload-card.captured {
+      padding: 0; border-style: solid; border-color: var(--orange-500); background: #fff;
+      min-height: 168px;
+    }
+    .upload-card.captured .upload-icon,
+    .upload-card.captured .upload-title,
+    .upload-card.captured .upload-hint,
+    .upload-card.captured .upload-actions { display: none; }
+    .upload-card.captured::before {
+      content: "";
+      display: block;
+      width: 100%; height: 168px;
+      background: linear-gradient(135deg, #d4d4d8 0%, #a1a1aa 100%);
+    }
+    .upload-card.captured::after {
+      content: "Captured ✓";
+      position: absolute; left: 12px; bottom: 12px;
+      background: rgba(0,0,0,0.7); color: #fff;
+      padding: 4px 10px; border-radius: 4px;
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* Upload box (existing single-file pattern) */
     .upload-box {
       border: 2px dashed var(--border-strong); border-radius: 8px;
       padding: 28px 20px; text-align: center; background: var(--surface);
@@ -352,9 +445,10 @@
   <button data-screen="step7">7. Cert. of Insurance</button>
   <button data-screen="step8">8. Verification Video</button>
   <button data-screen="step9">9. Charges</button>
-  <button data-screen="step10">10. Emergency Contact</button>
-  <button data-screen="step11">11. Specialty</button>
-  <button data-screen="done">12. Submitted</button>
+  <button data-screen="stepid">10. ID Documents</button>
+  <button data-screen="step10">11. Emergency Contact</button>
+  <button data-screen="step11">12. Specialty</button>
+  <button data-screen="done">13. Submitted</button>
 </nav>
 
 <!-- ============ SCREEN 0: LOGIN ============ -->
@@ -407,7 +501,7 @@
 
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 1 of 11</div>
+        <div class="step-count">Step 1 of 12</div>
         <div class="step-name">Personal Information</div>
       </div>
       <div class="card-body">
@@ -466,7 +560,7 @@
     <div class="step-pills" id="pills-step2"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 2 of 11</div>
+        <div class="step-count">Step 2 of 12</div>
         <div class="step-name">Personal Information</div>
       </div>
       <div class="card-body">
@@ -524,7 +618,7 @@
     <div class="step-pills" id="pills-step3"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 3 of 11</div>
+        <div class="step-count">Step 3 of 12</div>
         <div class="step-name">Mailing Address</div>
       </div>
       <div class="card-body">
@@ -578,7 +672,7 @@
     <div class="step-pills" id="pills-step4"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 4 of 11</div>
+        <div class="step-count">Step 4 of 12</div>
         <div class="step-name">About Me</div>
       </div>
       <div class="card-body">
@@ -630,7 +724,7 @@
     <div class="step-pills" id="pills-step5"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 5 of 11</div>
+        <div class="step-count">Step 5 of 12</div>
         <div class="step-name">Upload Documents</div>
       </div>
       <div class="card-body">
@@ -692,7 +786,7 @@
     <div class="step-pills" id="pills-step6"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 6 of 11</div>
+        <div class="step-count">Step 6 of 12</div>
         <div class="step-name">Upload Documents</div>
       </div>
       <div class="card-body">
@@ -736,7 +830,7 @@
     <div class="step-pills" id="pills-step7"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 7 of 11</div>
+        <div class="step-count">Step 7 of 12</div>
         <div class="step-name">Certificate of Insurance</div>
       </div>
       <div class="card-body">
@@ -788,7 +882,7 @@
     <div class="step-pills" id="pills-step8"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 8 of 11</div>
+        <div class="step-count">Step 8 of 12</div>
         <div class="step-name">Verification Video</div>
       </div>
       <div class="card-body">
@@ -824,7 +918,7 @@
     <div class="step-pills" id="pills-step9"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 9 of 11</div>
+        <div class="step-count">Step 9 of 12</div>
         <div class="step-name">Charges Information</div>
       </div>
       <div class="card-body">
@@ -876,13 +970,88 @@
       </div>
       <div class="card-footer">
         <button class="btn btn-secondary" onclick="showScreen('step8')">Back</button>
+        <button class="btn btn-primary" onclick="showScreen('stepid')">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 10: IDENTITY DOCUMENTS (Driver's License / State ID) ============ -->
+<div class="screen" id="screen-stepid">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
+    </header>
+    <div class="step-pills" id="pills-stepid"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="step-count">Step 10 of 12</div>
+        <div class="step-name">Identity Documents</div>
+      </div>
+      <div class="card-body">
+        <h2 class="h1">Verify Your Identity</h2>
+        <div class="info-banner">Upload a clear photo of the front and back of your driver's license or state-issued ID. We use this only for identity verification — it's never shared.</div>
+
+        <h3 class="h2">Driver's License or State ID</h3>
+        <p class="muted" style="margin: -4px 0 12px;">Snap a photo of the front and back, or upload a file. PNG, JPG, or PDF · max 10 MB each.</p>
+
+        <div class="upload-grid">
+          <!-- FRONT (captured / preview state) -->
+          <div class="upload-card captured" data-side="front">
+            <button type="button" class="upload-clear" title="Remove">×</button>
+          </div>
+
+          <!-- BACK (empty / awaiting input state) -->
+          <div class="upload-card" data-side="back">
+            <div class="upload-icon">📷</div>
+            <div class="upload-title">ID (back)</div>
+            <div class="upload-hint">Photo or file</div>
+            <div class="upload-actions">
+              <button type="button">📷 Camera</button>
+              <button type="button">📁 File</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Document type <span class="req">*</span></label>
+            <select>
+              <option>Driver's License</option>
+              <option>State-Issued ID</option>
+              <option>Passport</option>
+              <option>Military ID</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Issuing state <span class="req">*</span></label>
+            <select><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
+          </div>
+          <div class="field">
+            <label>ID number <span class="req">*</span></label>
+            <input type="text" value="D8742193" />
+            <span class="hint">Auto-filled from front photo. You can edit if needed.</span>
+          </div>
+          <div class="field">
+            <label>Expiration date <span class="req">*</span></label>
+            <input type="date" value="2029-06-14" />
+          </div>
+        </div>
+
+        <div style="margin-top: 12px; padding: 12px 16px; background: #f0fdf4; border-left: 4px solid var(--success); border-radius: 6px; font-size: 13px; color: #166534;">
+          ✓ Front captured · ID number auto-filled · Awaiting back image
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-secondary" onclick="showScreen('step9')">Back</button>
         <button class="btn btn-primary" onclick="showScreen('step10')">Next →</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============ SCREEN 10: EMERGENCY CONTACT (in-person only) ============ -->
+<!-- ============ SCREEN 11: EMERGENCY CONTACT (in-person only) ============ -->
 <div class="screen" id="screen-step10">
   <div class="app-shell">
     <header class="app-header">
@@ -892,7 +1061,7 @@
     <div class="step-pills" id="pills-step10"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 10 of 11</div>
+        <div class="step-count">Step 11 of 12</div>
         <div class="step-name">Emergency Contact</div>
       </div>
       <div class="card-body">
@@ -919,14 +1088,14 @@
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step9')">Back</button>
+        <button class="btn btn-secondary" onclick="showScreen('stepid')">Back</button>
         <button class="btn btn-primary" onclick="showScreen('step11')">Next →</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============ SCREEN 11: SELECT SPECIALTY (with new suggestion chips) ============ -->
+<!-- ============ SCREEN 12: SELECT SPECIALTY (with new suggestion chips) ============ -->
 <div class="screen" id="screen-step11">
   <div class="app-shell">
     <header class="app-header">
@@ -936,7 +1105,7 @@
     <div class="step-pills" id="pills-step11"></div>
     <div class="card">
       <div class="card-header">
-        <div class="step-count">Step 11 of 11</div>
+        <div class="step-count">Step 12 of 12</div>
         <div class="step-name">Select Specialty</div>
       </div>
       <div class="card-body">
@@ -1059,6 +1228,7 @@
     { id: 'step7',  name: 'Certificate of Insurance' },
     { id: 'step8',  name: 'Verification Video' },
     { id: 'step9',  name: 'Charges Information' },
+    { id: 'stepid', name: 'Identity Documents' },
     { id: 'step10', name: 'Emergency Contact' },
     { id: 'step11', name: 'Select Specialty' },
   ];
