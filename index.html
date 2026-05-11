@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedPal Provider Onboarding (Mockup)</title>
   <link rel="icon" href="https://medpal.app/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Health-tech pairing: Plus Jakarta Sans (modern geometric headings, conveys
+       trust + warmth) + Inter (neutral, highly readable body — same family the
+       live medpal-onboarding-web uses via next/font/google). -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --orange-start: #EE8A45;
@@ -38,8 +44,12 @@
       margin: 0; padding: 0; min-height: 100vh;
       background: var(--orange-bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 14px; line-height: 1.5;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-feature-settings: "cv11", "ss01", "ss03"; /* Inter stylistic sets — better numerals + lowercase L */
+      font-size: 15px; line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
     /* Mockup nav */
@@ -74,11 +84,15 @@
       width: 56px; height: 56px;
       background: rgba(255,255,255,0.18); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
+      overflow: hidden;
+    }
+    .app-header .logo img {
+      width: 72%; height: 72%; object-fit: contain;
+      filter: brightness(0) invert(1); /* render the dark-on-white icon as white-on-orange */
     }
     .app-header .brand-text { color: #fff; }
-    .app-header .brand-text .product { font-size: 18px; font-weight: 700; }
-    .app-header .brand-text .tag { font-size: 12px; opacity: 0.85; }
+    .app-header .brand-text .product { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+    .app-header .brand-text .tag { font-size: 12px; opacity: 0.9; font-weight: 500; }
     .app-header .actions { display: flex; gap: 8px; align-items: center; }
     .app-header button {
       background: #fff; color: var(--orange-600);
@@ -101,9 +115,14 @@
       border-radius: 8px; text-align: center;
       font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
       line-height: 1.25;
+      border: none;
       border-top: 2px solid rgba(255,255,255,0.4);
-      transition: background 0.15s;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s, transform 0.05s;
     }
+    .step-pill:hover { background: rgba(255,255,255,0.32); }
+    .step-pill:active { transform: scale(0.97); }
+    .step-pill:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
     .step-pill.active {
       background: #fff; color: var(--orange-600);
       border-top-color: #fff;
@@ -222,9 +241,17 @@
     }
     .chip.suggestion-chip:hover { background: var(--orange-50); }
 
-    /* Misc */
-    .h1 { font-size: 24px; font-weight: 700; text-align: center; margin: 0 0 24px; color: var(--text); }
-    .h2 { font-size: 18px; font-weight: 700; margin: 0 0 12px; color: var(--text); }
+    /* Display headings use Plus Jakarta Sans (geometric + warm — health-tech feel) */
+    h1, h2, h3, h4, .h1, .h2, .h3, .display {
+      font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      letter-spacing: -0.01em;
+    }
+    .h1 { font-size: 26px; font-weight: 700; text-align: center; margin: 0 0 28px; color: var(--text); letter-spacing: -0.015em; }
+    .h2 { font-size: 19px; font-weight: 700; margin: 0 0 14px; color: var(--text); }
+    /* Buttons + chrome strings stay in the display family for personality */
+    .btn, .app-header .brand-text .product, .card-header .step-name, .step-pill {
+      font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
     .section { margin-bottom: 28px; }
     .info-banner {
       background: var(--orange-50); border-left: 4px solid var(--orange-500);
@@ -278,7 +305,7 @@
       box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
       padding: 32px;
     }
-    .login-card h1 { font-size: 22px; margin: 0 0 4px; }
+    .login-card h1 { font-family: "Plus Jakarta Sans", "Inter", sans-serif; font-size: 24px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.015em; }
     .login-card .sub { color: var(--text-muted); margin: 0 0 24px; font-size: 14px; }
     .login-card .forgot { font-size: 12px; color: var(--orange-600); text-decoration: none; }
 
@@ -292,6 +319,10 @@
       background: #fff; border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg); width: 100%; max-width: 540px;
       padding: 48px 32px; text-align: center;
+    }
+    .success-card h1 {
+      font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+      letter-spacing: -0.02em;
     }
     .success-icon {
       width: 80px; height: 80px; margin: 0 auto 24px;
@@ -358,7 +389,7 @@
   <div class="app-shell">
     <header class="app-header">
       <div class="logo-block">
-        <div class="logo">🏥</div>
+        <div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div>
         <div class="brand-text">
           <div class="product">MedPal Provider Onboarding</div>
           <div class="tag">Join MedPal</div>
@@ -429,7 +460,7 @@
 <div class="screen" id="screen-step2">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step2"></div>
@@ -487,7 +518,7 @@
 <div class="screen" id="screen-step3">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step3"></div>
@@ -541,7 +572,7 @@
 <div class="screen" id="screen-step4">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step4"></div>
@@ -593,7 +624,7 @@
 <div class="screen" id="screen-step5">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step5"></div>
@@ -655,7 +686,7 @@
 <div class="screen" id="screen-step6">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step6"></div>
@@ -699,7 +730,7 @@
 <div class="screen" id="screen-step7">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step7"></div>
@@ -751,7 +782,7 @@
 <div class="screen" id="screen-step8">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step8"></div>
@@ -787,7 +818,7 @@
 <div class="screen" id="screen-step9">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step9"></div>
@@ -855,7 +886,7 @@
 <div class="screen" id="screen-step10">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step10"></div>
@@ -899,7 +930,7 @@
 <div class="screen" id="screen-step11">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo-block"><div class="logo">🏥</div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
+      <div class="logo-block"><div class="logo"><img src="provider-app-icon.png" alt="MedPal Provider" /></div><div class="brand-text"><div class="product">MedPal Provider Onboarding</div><div class="tag">Join MedPal</div></div></div>
       <div class="actions"><button class="ghost">💬 Help</button><button>Logout</button></div>
     </header>
     <div class="step-pills" id="pills-step11"></div>
@@ -1038,9 +1069,11 @@
     el.innerHTML = '';
     const activeIdx = STEPS.findIndex(s => s.id === activeStepId);
     STEPS.forEach((s, idx) => {
-      const pill = document.createElement('div');
+      const pill = document.createElement('button');
+      pill.type = 'button';
       pill.className = 'step-pill' + (idx === activeIdx ? ' active' : idx < activeIdx ? ' done' : '');
       pill.innerHTML = '<span class="step-num">STEP ' + (idx + 1) + '</span><span class="step-name">' + s.name + '</span>';
+      pill.addEventListener('click', () => showScreen(s.id));
       el.appendChild(pill);
     });
   }
