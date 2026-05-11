@@ -88,14 +88,13 @@
     }
     .app-header .logo-block { display: flex; align-items: center; gap: 12px; }
     .app-header .logo {
-      width: 56px; height: 56px;
-      background: rgba(255,255,255,0.18); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
+      /* No background, no rounded container — render the wordmark
+         directly on the orange gradient just like the live site. */
     }
     .app-header .logo img {
-      width: 72%; height: 72%; object-fit: contain;
-      filter: brightness(0) invert(1); /* render the dark-on-white icon as white-on-orange */
+      height: 64px; width: auto; object-fit: contain;
+      filter: brightness(0) invert(1); /* white-on-orange */
     }
     .app-header .brand-text { color: #fff; }
     .app-header .brand-text .product { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
