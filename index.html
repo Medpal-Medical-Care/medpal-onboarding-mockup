@@ -1654,10 +1654,12 @@
     .brand-lockup.auth-lockup .brand-mark  {
       width: 68px;
       height: 68px;
-      /* translateX nudges the mark left; translateY drops it ~4px
-         so its top edge meets the cap top of the "M" rather than
-         the line-box top (Fraunces has ~4-5px leading above caps). */
-      transform: translate(-8px, 4px);
+      /* translateX nudges the mark left; translateY drops it ~10px
+         so the mark's VISIBLE top (the PNG has ~3px transparent
+         padding on top) sits at the cap top of the "M" rather
+         than the line-box top (Fraunces leading + glyph offset
+         total ≈ 10px above the cap line). */
+      transform: translate(-8px, 10px);
       filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
     }
     .brand-lockup.auth-lockup .brand-stack {
