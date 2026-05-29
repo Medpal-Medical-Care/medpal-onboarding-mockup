@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedPal Provider Onboarding (Mockup)</title>
-  <link rel="icon" href="https://medpal.app/favicon.ico" />
+  <link rel="icon" type="image/png" href="medpal-icon-mark-white.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     /* ============================================================
        1. TOKENS
@@ -53,8 +53,12 @@
       --info-700:    #1D4ED8;
 
       /* Type */
-      --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      --font-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      /* Display: Fraunces (editorial serif, 500/600/700 static cuts to match dev's
+         next/font config). Body: Outfit (warm geometric sans). Same pairing as
+         medpal-onboarding-web's app/layout.tsx. */
+      --font-display: "Fraunces", "IBM Plex Serif", Georgia, serif;
+      --font-body:    "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
       --text-xs:   11px;
       --text-sm:   12px;
       --text-base: 13px;
@@ -124,7 +128,7 @@
       background: var(--brand-gradient);
       color: var(--gray-900);
       font-family: var(--font-body);
-      font-feature-settings: "cv11", "ss01", "ss03";
+      font-feature-settings: "kern", "liga", "calt";
       font-size: var(--text-md);
       line-height: var(--lh-normal);
       -webkit-font-smoothing: antialiased;
@@ -138,7 +142,10 @@
 
     h1, h2, h3, h4 {
       font-family: var(--font-display);
-      letter-spacing: var(--tracking-tight);
+      /* Fraunces is editorial/serif — a tighter tracking is too inky.
+         Use a near-zero tracking with the font's natural optical-size
+         feel. Body remains Outfit. */
+      letter-spacing: -0.005em;
       margin: 0;
     }
 
@@ -168,42 +175,88 @@
     /* ============================================================
        3. MOCKUP NAV (dev chrome - not part of real app)
        ============================================================ */
+    /* Free-floating screen picker. NEVER REMOVE. Lives in the
+       top-right corner of every mockup page, collapses to a single
+       chip when not in use, and expands on click to show the full
+       screen list. State is persisted in localStorage so it stays
+       collapsed/expanded across reloads. */
     #mockup-nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(15,23,42,0.92);
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 10000;
+      max-width: 320px;
+      background: rgba(15, 23, 42, 0.94);
       color: var(--gray-0);
-      padding: var(--space-2) var(--space-4);
-      display: flex; flex-wrap: wrap; align-items: center;
-      gap: var(--space-1);
+      padding: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
       font-size: var(--text-sm);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 14px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 14px 40px -16px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: max-width var(--dur-base) var(--ease-out),
+                  padding var(--dur-base) var(--ease-out);
+    }
+    #mockup-nav.collapsed {
+      max-width: 64px;
+      padding: 8px;
+      overflow: hidden;
+    }
+    /* The collapse / expand handle — always visible, always first. */
+    #mockup-nav .mn-toggle {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--gray-0);
+      font: 700 11px/1 var(--font-body);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--dur-fast) var(--ease-out);
+    }
+    #mockup-nav .mn-toggle:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    #mockup-nav.collapsed .label,
+    #mockup-nav.collapsed button[data-screen] {
+      display: none;
     }
     #mockup-nav .label {
       opacity: 0.55;
-      margin-right: var(--space-2);
+      margin: 0 4px 0 6px;
       font-weight: var(--fw-medium);
       text-transform: uppercase;
       letter-spacing: var(--tracking-wide);
-      font-size: var(--text-xs);
+      font-size: 10px;
     }
-    #mockup-nav button {
+    #mockup-nav button[data-screen] {
       background: transparent;
       color: var(--gray-0);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: var(--r-sm);
-      padding: 3px var(--space-2);
-      font-size: var(--text-xs);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 11px;
       font-weight: var(--fw-medium);
       cursor: pointer;
       transition: background var(--dur-fast) var(--ease-out),
                   border-color var(--dur-fast) var(--ease-out);
     }
-    #mockup-nav button:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.30);
+    #mockup-nav button[data-screen]:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.30);
     }
-    #mockup-nav button.active {
+    #mockup-nav button[data-screen].active {
       background: var(--brand-500);
       border-color: var(--brand-500);
     }
@@ -214,61 +267,166 @@
     .app-shell {
       max-width: 1400px;
       margin: 0 auto;
-      padding: var(--space-2) var(--space-6) var(--space-4);
+      padding: var(--space-6) var(--space-6) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      /* No min-height — body's orange gradient already paints the
+         full viewport. Forcing 100vh pushed the footer below the
+         fold whenever the localhost screen-picker (~63px) or any
+         future page chrome added height. Footer sits naturally
+         under the card (which is what the user sees in the live
+         app where there's no screen-picker overhead). */
+    }
+    /* Global onboarding footer — © MedPal · Privacy · Terms.
+       margin-top: auto pins the footer to the bottom of the
+       viewport on short steps and lets it follow the card on
+       tall steps. Subtle white-on-orange so it doesn't compete
+       with the card or rail. */
+    .app-footer {
+      margin-top: auto;
+      padding: var(--space-5) 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font: 500 12px/1 var(--font-body);
+      color: rgba(255, 255, 255, 0.72);
+    }
+    .app-footer a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      transition: color var(--dur-fast) var(--ease-out);
+    }
+    .app-footer a:hover { color: #fff; }
+    .app-footer .sep { color: rgba(255, 255, 255, 0.40); }
+
+    /* 3px brand-gradient strip pinned to the very top of every screen
+       (auth + onboarding). Fixed so it sits above all screen content. */
+    .brand-rail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-600), var(--brand-700));
+      z-index: 50;
+      pointer-events: none;
     }
 
+    /* App bar — MedPal for Providers lockup (left), action pills (right).
+       Matches redesign-mockup.html aesthetic. */
     .app-header {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      display: flex;
       align-items: center;
-      padding: var(--space-2) 0 var(--space-3);
+      justify-content: space-between;
+      padding: 14px 0 10px;
       gap: var(--space-4);
     }
-    .app-header .logo {
-      justify-self: start;
-      display: flex;
+    /* Class-level brand lockup (used in both .app-header and
+       .auth-hero so the styling is shared). Static element — not a
+       link — so no underline, no hover, no pointer. */
+    .brand-lockup {
+      display: inline-flex;
       align-items: center;
+      gap: 2px;
+      text-decoration: none;
+      color: inherit;
+      cursor: default;
+      user-select: none;
     }
-    .app-header .logo img {
+    .brand-mark {
+      width: 40px;
       height: 40px;
-      width: auto;
+      display: block;
       object-fit: contain;
-      filter: brightness(0) invert(1);
     }
-    .app-header .brand-text {
-      justify-self: center;
-      color: var(--gray-0);
+    .brand-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      line-height: 1;
+    }
+    .brand-text {
       font-family: var(--font-display);
-      font-size: var(--text-lg);
-      font-weight: var(--fw-bold);
+      font-weight: 600;
+      font-size: 20px;
       letter-spacing: -0.01em;
+      color: var(--gray-0);
+      line-height: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      white-space: nowrap;
+    }
+    .brand-text .light {
+      color: rgba(255,255,255,0.82);
+      font-weight: 400;
+      font-style: italic;
+    }
+    .brand-tag {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      /* Tagline is solid white at rest; a saturated warm-gold shine
+         travels across at a slow ambient tempo. Baseline is pure
+         opaque white, so the tagline never looks dim — the shimmer
+         is purely an additive glint. */
+      background: linear-gradient(
+        100deg,
+        rgb(255, 255, 255) 0%,
+        rgb(255, 255, 255) 38%,
+        rgb(214, 232, 255) 50%,    /* cool ice-white glint (not yellow) */
+        rgb(255, 255, 255) 62%,
+        rgb(255, 255, 255) 100%
+      );
+      background-size: 300% 100%;
+      background-position: 140% 0;
+      -webkit-background-clip: text;
+              background-clip: text;
+      -webkit-text-fill-color: transparent;
+              color: transparent;
+      /* 18s cycle — the sweep itself takes ~4.5s, the rest is held
+         at full white so the glint stays a deliberate moment. */
+      animation: tagline-shimmer 18s ease-in-out infinite;
+    }
+    @keyframes tagline-shimmer {
+      0%, 35%   { background-position: 140% 0; }
+      55%       { background-position: -40% 0; }
+      78%, 100% { background-position: 140% 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .brand-tag { animation: none; }
     }
     .app-header .actions {
-      justify-self: end;
       display: flex;
-      gap: var(--space-2);
+      gap: 8px;
       align-items: center;
     }
 
-    /* Header button - ghost on gradient */
+    /* Header button — ghost pill on gradient (redesign style). */
     .header-btn {
       display: inline-flex;
       align-items: center;
-      gap: var(--space-2);
-      background: transparent;
+      gap: 6px;
+      background: rgba(255,255,255,0.10);
       color: var(--gray-0);
-      border: 1px solid rgba(255,255,255,0.30);
-      border-radius: var(--r-md);
-      padding: 7px var(--space-3);
-      font-size: var(--text-base);
-      font-weight: var(--fw-semi);
+      border: 1.5px solid rgba(255,255,255,0.55);
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
       cursor: pointer;
+      backdrop-filter: blur(6px);
       transition: background var(--dur-fast) var(--ease-out),
                   border-color var(--dur-fast) var(--ease-out);
     }
     .header-btn:hover {
-      background: rgba(255,255,255,0.10);
-      border-color: rgba(255,255,255,0.50);
+      background: rgba(255,255,255,0.20);
+      border-color: rgba(255,255,255,0.85);
     }
     .header-btn:focus-visible {
       outline: none;
@@ -276,7 +434,7 @@
     }
     .header-btn.icon-only {
       padding: 7px;
-      width: 32px; height: 32px;
+      width: 36px; height: 36px;
       justify-content: center;
     }
 
@@ -358,9 +516,174 @@
         2px 0 6px rgba(0,0,0,0.04);
       z-index: 3;
     }
+    /* Active pill gets a 3px brand-gradient strip at the top edge.
+       The `content: ''` is required for ::before to render. */
+    .step-pill.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--brand-gradient);
+      border-radius: 8px 8px 0 0;
+    }
     .step-pill.active .step-num {
       color: var(--gray-500);
       opacity: 0.85;
+    }
+
+    /* ============================================================
+       5b. PROGRESS RAIL (status-aware flat indicator, matches
+       redesign-mockup.html — appbar then thin line then labels row.)
+       ============================================================ */
+    .progress-rail {
+      width: 100%;
+      padding: 10px 0 22px;       /* matches redesign-mockup rail-wrap */
+      position: relative;
+      z-index: 2;
+    }
+    .rail-track {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    /* The segment is a button with a 28px tall hit target; only the
+       middle 4-8px is visually drawn, so click targets are generous
+       (above WCAG 24x24 recommendation) even though the rail itself
+       still reads as a hairline. */
+    .rail-seg {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+      height: 28px;                 /* hit target */
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .rail-seg::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 4px;                  /* visual line */
+      border-radius: 999px;
+      background: rgba(255,255,255,0.28);
+      transition:
+        height 180ms var(--ease-out),
+        background 180ms var(--ease-out),
+        box-shadow 180ms var(--ease-out);
+    }
+    .rail-seg:hover { transform: translateY(-1px); }
+    .rail-seg:hover::before { background: rgba(255,255,255,0.45); }
+    .rail-seg:focus-visible {
+      outline: none;
+    }
+    .rail-seg:focus-visible::before {
+      box-shadow: 0 0 0 2px var(--gray-0);
+    }
+    .rail-seg:disabled { opacity: 0.6; cursor: not-allowed; }
+    .rail-seg.is-done::before {
+      background: #10B981;          /* success-500 — approved */
+    }
+    .rail-seg.is-done:hover::before { filter: brightness(1.1); }
+    .rail-seg.is-warn::before {
+      background: #F59E0B;          /* warning-500 — missing */
+    }
+    .rail-seg.is-warn:hover::before { filter: brightness(1.1); }
+    /* Amber alert badge floats above the warn segment. */
+    .rail-seg.is-warn::after {
+      content: "!";
+      position: absolute;
+      top: -3px; left: 50%;
+      transform: translateX(-50%);
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: #F59E0B;
+      color: #fff;
+      font: 700 10px/15px var(--font-body);
+      text-align: center;
+      border: 2px solid rgba(255,255,255,0.92);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+    }
+    .rail-seg.is-active::before {
+      height: 8px;
+      background: var(--gray-0);
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,0.55),
+        0 6px 16px -4px rgba(0,0,0,0.22);
+    }
+    /* Warm shimmer overlay on the active segment's drawn line. */
+    .rail-seg.is-active {
+      overflow: visible;
+    }
+    .rail-seg.is-active > .rail-shimmer {
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 8px;
+      border-radius: 999px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .rail-seg.is-active > .rail-shimmer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(238,138,69,0.48), transparent);
+      animation: rail-shimmer 2.8s linear infinite;
+    }
+    @keyframes rail-shimmer {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(100%); }
+    }
+
+    /* Step label (left) + legend (right) on the same row. */
+    .rail-labels {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: 16px;
+      gap: 16px;
+    }
+    .rail-step {
+      font: 500 11px/1 var(--font-body);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+    }
+    .rail-step strong {
+      color: var(--gray-0);
+      font-weight: 700;
+    }
+    .rail-legend {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font: 500 11px/1 var(--font-body);
+      color: rgba(255,255,255,0.82);
+    }
+    .rail-legend > span {
+      display: inline-flex;
+      align-items: center;
+    }
+    .rail-legend .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .rail-legend .dot-done   { background: #10B981; }
+    .rail-legend .dot-active { background: var(--gray-0); }
+    .rail-legend .dot-warn   { background: #F59E0B; }
+    .rail-legend .dot-todo   {
+      background: rgba(255,255,255,0.30);
+      border: 1px solid rgba(255,255,255,0.50);
+      box-sizing: border-box;
     }
 
     /* ============================================================
@@ -629,6 +952,56 @@
     .field.full   { grid-column: 1 / -1; }
     .field.span2  { grid-column: span 2; }
 
+    /* Live password-strength checklist (mirrors iOS PasswordValidationView).
+       Each rule lights up green once the input satisfies its regex. */
+    .pw-rules {
+      list-style: none;
+      padding: 0;
+      margin: 6px 0 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      column-gap: var(--space-4);
+      row-gap: 4px;
+    }
+    @media (min-width: 480px) {
+      .pw-rules { grid-template-columns: 1fr 1fr; }
+    }
+    .pw-rules li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--text-sm);
+      color: var(--gray-500);
+      line-height: 1.3;
+      transition: color var(--dur-base) var(--ease-out);
+    }
+    .pw-rules li .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gray-0);
+      border: 1.5px solid var(--gray-300);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background var(--dur-base) var(--ease-out),
+                  border-color var(--dur-base) var(--ease-out);
+    }
+    .pw-rules li.satisfied { color: var(--success-700); }
+    .pw-rules li.satisfied .dot {
+      background: var(--success-500);
+      border-color: var(--success-500);
+    }
+    .pw-rules li.satisfied .dot::after {
+      content: '';
+      width: 4px;
+      height: 7px;
+      border: solid var(--gray-0);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translateY(-1px);
+    }
+
     .field label {
       font-size: var(--text-base);
       font-weight: var(--fw-semi);
@@ -712,7 +1085,7 @@
       box-shadow: var(--ring-danger);
     }
     .field textarea {
-      resize: vertical;
+      resize: none;
       min-height: 120px;
       line-height: var(--lh-snug);
     }
@@ -751,7 +1124,10 @@
       color: var(--gray-400);
       pointer-events: none;
     }
-    .input-with-icon > input {
+    .input-with-icon > input,
+    .field .input-with-icon > input[type="text"],
+    .field .input-with-icon > input[type="email"],
+    .field .input-with-icon > input[type="tel"] {
       padding-left: 36px;
     }
 
@@ -994,6 +1370,27 @@
       justify-content: center;
       color: var(--brand-700);
       position: relative;
+      /* When this slot is a <button> (doc-preview-trigger) we keep
+         the visual identical to the old <div> but allow hover/focus
+         to read as interactive. */
+      width: 100%;
+      border: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+      transition: filter var(--dur-fast) var(--ease-out);
+    }
+    .upload-file .file-preview.doc-preview-trigger:hover .doc-thumb {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+    .upload-file .file-preview.doc-preview-trigger:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 2px var(--brand-500);
+    }
+    .upload-file .file-preview .doc-thumb {
+      transition: transform var(--dur-fast) var(--ease-out),
+                  box-shadow var(--dur-fast) var(--ease-out);
     }
     .upload-file .file-preview .doc-thumb {
       width: 132px;
@@ -1064,20 +1461,34 @@
       background: var(--gray-0);
       min-height: 168px;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .upload.captured .upload-icon,
-    .upload.captured .upload-title,
-    .upload.captured .upload-hint,
+    .upload.captured > .upload-hint,
     .upload.captured .upload-actions { display: none; }
-    .upload.captured::before {
-      content: "";
+    .upload.captured .captured-preview {
       display: block;
-      width: 100%; height: 168px;
+      width: 100%;
+      height: 110px;
       background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-400) 100%);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: filter var(--dur-fast) var(--ease-out);
+    }
+    .upload.captured button.captured-preview:hover { filter: brightness(1.05); }
+    .upload.captured button.captured-preview:focus-visible {
+      outline: 2px solid var(--brand-500);
+      outline-offset: -2px;
+    }
+    .upload.captured .upload-title {
+      padding: 0 var(--space-3);
+      margin-top: var(--space-2);
     }
     .upload.captured .captured-badge {
       position: absolute;
-      left: var(--space-3); bottom: var(--space-3);
+      left: var(--space-3); top: var(--space-3);
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(15,23,42,0.78);
       color: var(--gray-0);
@@ -1118,7 +1529,12 @@
       position: relative;
       box-shadow: var(--shadow-md);
     }
+    /* Decorative ::after red dot is suppressed — the FUNCTIONAL
+       countdown-ring record button now lives inside the .video-box
+       (one button, not two). Kept here behind display:none so the
+       cosmetic rule can be re-enabled if needed without re-authoring. */
     .video-box::after {
+      display: none;
       content: "";
       position: absolute;
       bottom: var(--space-4);
@@ -1132,59 +1548,143 @@
 
     /* ============================================================
        14. AUTH SHELL (login + signup)
+       Mirrors components/login-form.tsx on develop. The brand wordmark
+       lives ABOVE the white card on the warm gradient, and the card has
+       a 3px brand-gradient accent strip at the top edge.
        ============================================================ */
     .auth-shell {
+      position: relative;
       min-height: calc(100vh - 40px);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: var(--space-6) var(--space-4);
     }
+    .auth-corner-logo {
+      position: absolute;
+      top: var(--space-5);
+      left: 56px;
+      width: 168px;
+      height: 140px;
+      overflow: hidden;
+      z-index: 5;
+    }
+    .auth-corner-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .auth-hero-icon {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .auth-hero-icon img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .auth-stage {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    /* Hero above the card: small ringed logo icon + wordmark h1 + tagline.
+       Page-level h1 (the form's "Sign in" is h2 inside the card). */
+    .auth-hero {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 52px;
+      margin-bottom: calc(var(--space-6) + 10px);
+      /* optical nudges that don't affect the card's vertical position
+         (transforms don't reflow surrounding elements) */
+      transform: translate(-10px, 16px);
+    }
+    .auth-hero-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+    .auth-hero .auth-wordmark {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: var(--fw-bold);
+      color: var(--gray-0);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+    }
+    @media (min-width: 768px) {
+      .auth-hero .auth-wordmark { font-size: 44px; }
+    }
+    .auth-hero .auth-tagline {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
+      margin: 0;
+      letter-spacing: 0;
+    }
+    @media (min-width: 768px) {
+      .auth-hero .auth-tagline { font-size: 20px; }
+    }
+    /* On auth screens the WHOLE lockup (icon + text) is centered as a
+       single unit. Icon sits inline-flex to the left of the wordmark
+       with a small negative tuck so the wordmark hugs the mark. */
+    .brand-lockup.auth-lockup {
+      margin: 0 auto;
+      gap: 0;
+      /* Top-align the mark with the wordmark cap height (the M of
+         "MedPal"). center-aligned read off-balance — see Omer's
+         direction 2026-05-29 PM. */
+      align-items: flex-start;
+    }
+    .brand-lockup.auth-lockup .brand-mark  {
+      width: 68px;
+      height: 68px;
+      /* translateX nudges the mark left; translateY drops it ~4px
+         so its top edge meets the cap top of the "M" rather than
+         the line-box top (Fraunces has ~4-5px leading above caps). */
+      transform: translate(-8px, 4px);
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+    }
+    .brand-lockup.auth-lockup .brand-stack {
+      gap: 5px;
+      margin-left: -1px;     /* shift the wordmark 5px toward the mark */
+    }
+    .brand-lockup.auth-lockup .brand-text  { font-size: 28px; }
+    .brand-lockup.auth-lockup .brand-tag   { font-size: 19px; }
     .auth-card {
+      position: relative;
       background: var(--gray-0);
-      border-radius: var(--r-lg);
+      border-radius: var(--r-xl);
       box-shadow: var(--shadow-lg);
       width: 100%;
       max-width: 440px;
       padding: var(--space-8);
+      border: 1px solid rgba(255,255,255,0.40);
+      overflow: hidden;
     }
-    .auth-card .auth-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-3);
-      margin-bottom: var(--space-5);
-    }
-    .auth-card .auth-logo-badge {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--r-lg);
-      background: var(--brand-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow-sm), 0 0 0 1px rgba(255,255,255,0.4) inset;
-    }
-    .auth-card .auth-logo-badge img {
-      height: 32px;
-      width: auto;
-      object-fit: contain;
-      filter: brightness(0) invert(1);
-    }
-    .auth-card .auth-brand .wordmark {
+    .auth-card h2 {
       font-family: var(--font-display);
-      font-size: var(--text-md);
-      font-weight: var(--fw-semi);
-      color: var(--gray-500);
-      letter-spacing: var(--tracking-wide);
-      text-transform: uppercase;
-    }
-    .auth-card h1 {
       font-size: var(--text-3xl);
-      font-weight: var(--fw-bold);
+      font-weight: var(--fw-semi);
       margin: 0 0 var(--space-2);
       color: var(--gray-900);
       text-align: center;
+      letter-spacing: -0.005em;
     }
     .auth-card .auth-sub {
       color: var(--gray-600);
@@ -1271,54 +1771,34 @@
     }
     .oauth-btn svg { width: 18px; height: 18px; }
 
-    /* App Store / Google Play badges */
+    /* App Store / Google Play badges. Dev's StoreBadges component
+       constrains both badges to width: 93px (height auto so the
+       different intrinsic aspect ratios resolve to a matched visual
+       height around 31px). Reproduced here with compact buttons that
+       paint the badge inline. Grouped tightly with a small gap. */
     .store-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       gap: var(--space-3);
     }
     .store-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      background: var(--gray-900);
-      color: var(--gray-0);
-      border: 1px solid var(--gray-900);
-      border-radius: var(--r-md);
-      padding: 8px var(--space-4);
       text-decoration: none;
-      font-family: var(--font-display);
       cursor: pointer;
-      transition:
-        background var(--dur-fast) var(--ease-out),
-        transform var(--dur-fast) var(--ease-out);
+      transition: transform var(--dur-fast) var(--ease-out),
+                  opacity var(--dur-fast) var(--ease-out);
     }
-    .store-btn:hover {
-      background: var(--gray-800);
-      text-decoration: none;
-    }
+    .store-btn:hover { opacity: 0.88; text-decoration: none; }
     .store-btn:active { transform: scale(0.98); }
-    .store-btn svg {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
-      flex-shrink: 0;
-    }
-    .store-btn .store-label small {
-      display: block;
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      opacity: 0.85;
-      font-weight: var(--fw-medium);
-      line-height: 1.1;
-    }
-    .store-btn .store-label strong {
-      display: block;
-      font-size: var(--text-md);
-      font-weight: var(--fw-bold);
-      line-height: 1.15;
+    .store-btn img { height: 44px; width: auto; display: block; }
+    .auth-stores-tagline {
+      text-align: center;
+      font-size: var(--text-xs);
+      color: var(--gray-500);
+      margin: 0 0 var(--space-2);
     }
 
     /* ============================================================
@@ -1327,9 +1807,15 @@
     .success-shell {
       min-height: calc(100vh - 40px);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: var(--space-6) var(--space-4);
+      /* No flex `gap` — the .auth-hero inside carries its own
+         margin-bottom: calc(var(--space-6) + 10px), which is the
+         same lockup-to-card distance as on /login + /signup +
+         /forgot. Adding a gap here would override that and make
+         the spacing inconsistent across auth + submitted screens. */
     }
     .success-card {
       background: var(--gray-0);
@@ -1415,6 +1901,12 @@
         color var(--dur-base) var(--ease-out),
         box-shadow var(--dur-base) var(--ease-out);
       white-space: nowrap;
+      /* Center the label inside the pill — was reading
+         left-of-center on the active (orange) state. */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     .segmented button:hover { color: var(--gray-900); }
     .segmented button:focus-visible {
@@ -1446,6 +1938,20 @@
       border-radius: 50%;
       background: var(--brand-50);
       border: 3px solid var(--brand-200);
+      /* Tap to preview — works for both <div> and <button>. */
+      padding: 0;
+      cursor: pointer;
+      transition: transform var(--dur-fast) var(--ease-out),
+                  box-shadow var(--dur-fast) var(--ease-out);
+    }
+    button.avatar-frame.avatar-preview-trigger:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px -8px rgba(235, 90, 61, 0.35);
+    }
+    button.avatar-frame.avatar-preview-trigger:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(238, 138, 69, 0.28);
+    }
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1685,6 +2191,376 @@
     }
 
     /* ============================================================
+       16b. MOBILE PROGRESS BAR (compact alternative to step pills)
+       Replaces the wide pills row on narrow viewports. Shows
+       "Step N · {name}" + "(N/Y)" counter + thin progress bar with
+       brand-gradient fill over a gray-200 track. Hidden on desktop.
+       ============================================================ */
+    .mobile-progress {
+      display: none;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.40);
+      border-radius: var(--r-md) var(--r-md) 0 0;
+      padding: 10px var(--space-4) 10px;
+      margin-bottom: 0;
+    }
+    .mobile-progress .mp-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-bottom: 8px;
+    }
+    .mobile-progress .mp-name {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      line-height: 1.2;
+      letter-spacing: -0.005em;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mobile-progress .mp-count {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--gray-500);
+      font-weight: var(--fw-semi);
+      flex-shrink: 0;
+    }
+    .mobile-progress .mp-track {
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: var(--r-pill);
+      overflow: hidden;
+    }
+    .mobile-progress .mp-fill {
+      height: 100%;
+      background: var(--brand-gradient);
+      border-radius: var(--r-pill);
+      transition: width var(--dur-slow) var(--ease-out);
+    }
+
+    /* ============================================================
+       16c. MODAL (state picker, disclaimer, required-docs)
+       Each modal has a 3px brand-gradient ::before accent at the top
+       edge. Backdrop is dim slate with a soft blur. Desktop = centered
+       card; mobile = bottom sheet (slide-up).
+       ============================================================ */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15,23,42,0.55);
+      backdrop-filter: blur(2px);
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+      animation: fadeIn var(--dur-base) var(--ease-out);
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal {
+      position: relative;
+      background: var(--gray-0);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 560px;
+      max-height: calc(100vh - var(--space-8));
+      overflow-y: auto;
+      animation: modalIn var(--dur-base) var(--ease-out);
+    }
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--brand-gradient);
+      border-radius: var(--r-xl) var(--r-xl) 0 0;
+      z-index: 1;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5) var(--space-6) var(--space-3);
+      gap: var(--space-3);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: var(--fw-semi);
+      color: var(--gray-900);
+      margin: 0;
+      letter-spacing: -0.005em;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      width: 32px; height: 32px;
+      border-radius: var(--r-sm);
+      color: var(--gray-500);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .modal-close:hover { background: var(--gray-100); color: var(--gray-900); }
+    .modal-body {
+      padding: var(--space-4) var(--space-6) var(--space-5);
+    }
+    .modal-footer {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      background: var(--gray-50);
+      border-radius: 0 0 var(--r-xl) var(--r-xl);
+    }
+    /* Disclaimer modal allows internal scroll without clipping the
+       "I Agree" button on short viewports — overflow-y: auto. */
+    .modal.modal-disclaimer .modal-body {
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    /* State picker modal: search + scrollable list */
+    .state-search-row {
+      position: relative;
+      margin-bottom: var(--space-3);
+    }
+    .state-search-row input {
+      width: 100%;
+      padding: 10px var(--space-3) 10px 36px;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--r-md);
+      font-family: var(--font-body);
+      font-size: var(--text-md);
+      background: var(--gray-0);
+      color: var(--gray-900);
+    }
+    .state-search-row input:focus {
+      outline: none;
+      border-color: var(--brand-500);
+      box-shadow: var(--ring-brand);
+    }
+    .state-search-row .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+    .state-list {
+      max-height: 360px;
+      overflow-y: auto;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-md);
+    }
+    .state-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      width: 100%;
+      padding: 10px var(--space-4);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--gray-100);
+      text-align: left;
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out);
+      font-family: var(--font-body);
+      font-size: var(--text-md);
+      color: var(--gray-900);
+    }
+    .state-row:last-child { border-bottom: none; }
+    .state-row:hover { background: var(--gray-50); }
+    .state-row.selected {
+      background: var(--brand-50);
+      color: var(--brand-700);
+      font-weight: var(--fw-semi);
+    }
+    .state-row .state-abbrev {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: var(--fw-bold);
+      color: var(--gray-500);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    /* State trigger button (mimics a select input) */
+    .state-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding: 9px var(--space-3);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--r-md);
+      background: var(--gray-0);
+      color: var(--gray-900);
+      font-family: var(--font-body);
+      font-size: var(--text-md);
+      font-weight: var(--fw-medium);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color var(--dur-fast) var(--ease-out);
+    }
+    .state-trigger:hover { border-color: var(--gray-400); }
+    .state-trigger:focus-visible {
+      outline: none;
+      border-color: var(--brand-500);
+      box-shadow: var(--ring-brand);
+    }
+    .state-trigger.placeholder { color: var(--gray-400); }
+    .state-trigger .state-trigger-caret {
+      color: var(--gray-400);
+    }
+
+    /* ============================================================
+       16d. PHOTO BUTTONS (About Me + Identity Documents)
+       56x56 compact squares with stacked icon + tiny uppercase label.
+       Warm brand-50 fill at 40% opacity, brand-200 border, brand-700
+       glyph. Replaces the wide "Take photo / Upload" text buttons.
+       ============================================================ */
+    .photo-btn-row {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .photo-btn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      width: 56px;
+      height: 56px;
+      padding: 6px 4px;
+      background: rgba(255,244,237,0.4);
+      border: 1.5px solid var(--brand-200);
+      border-radius: 10px;
+      color: var(--brand-700);
+      cursor: pointer;
+      transition:
+        background var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        transform var(--dur-fast) var(--ease-out);
+      font-family: var(--font-display);
+    }
+    .photo-btn:hover {
+      background: var(--brand-100);
+      border-color: var(--brand-300);
+    }
+    .photo-btn:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-brand);
+    }
+    .photo-btn:active { transform: scale(0.97); }
+    .photo-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+    .photo-btn .photo-btn-label {
+      font-size: 8px;
+      font-weight: var(--fw-semi);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    /* Verification video countdown ring */
+    .video-record-shell {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .countdown-ring {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .countdown-ring svg.ring-svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+      width: 96px;
+      height: 96px;
+    }
+    .countdown-ring .ring-track {
+      stroke: var(--gray-200);
+      fill: none;
+      stroke-width: 5;
+    }
+    .countdown-ring .ring-progress {
+      stroke: url(#countdown-gradient);
+      fill: none;
+      stroke-width: 5;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .record-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--danger-500);
+      border: 4px solid var(--gray-0);
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+    .record-btn:hover { transform: scale(1.05); }
+    .countdown-number {
+      position: absolute;
+      /* Floats just above the ring inside the dark video preview;
+         white text + soft shadow so it stays legible on any video
+         frame or against the surrounding gray-50 backplate. */
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: var(--fw-bold);
+      color: var(--gray-0);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+      letter-spacing: 0.02em;
+    }
+
+    /* Save indicator — animated "Saving..." / "Saved" state */
+    .save-state.saving .dot {
+      background: var(--warning-500);
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ============================================================
        17. SCREENS visibility
        ============================================================ */
     .screen { display: none; animation: fadeIn var(--dur-base) var(--ease-out); }
@@ -1708,15 +2584,444 @@
       .video-grid { grid-template-columns: 1fr; }
       .upload-grid { grid-template-columns: 1fr; }
       .oauth-row { grid-template-columns: 1fr; }
-      .step-pills {
-        overflow-x: auto;
-        scrollbar-width: none;
+
+      /* Hide the step-pill / progress-rail row on mobile in favor of the compact bar. */
+      .step-pills,
+      .progress-rail { display: none; }
+      .mobile-progress { display: block; }
+
+      /* Edge-to-edge card: no border-radius, no shadow on mobile. */
+      .app-shell {
+        padding: var(--space-2) 0 0;
       }
-      .step-pills::-webkit-scrollbar { display: none; }
-      .step-pill { min-width: 88px; flex: 0 0 auto; }
-      .card-body, .card-footer, .card-header { padding-left: var(--space-4); padding-right: var(--space-4); }
-      .auth-card { padding: var(--space-6); }
+      .card {
+        box-shadow: none;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+      .card-body, .card-footer, .card-header {
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
+      }
+      .card-body { min-height: auto; }
+
+      /* Card footer: column-reverse so Back sits under Continue; both full-width. */
+      .card-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: var(--space-2);
+      }
+      .card-footer .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* App header gets edge padding back since app-shell loses it. */
+      .app-header {
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
+      }
       .app-header .brand-text { display: none; }
+
+      .auth-card { padding: var(--space-6); }
+    }
+
+    /* ============================================================
+       18b. CARD v2 (ported from medpal-onboarding-web/redesign-mockup.html)
+       ============================================================
+       New onboarding-card aesthetic: full-rounded card, serif eyebrow
+       + Fraunces page title with italic accent, slate trust-ribbon,
+       small-caps field labels with red required dot, soft slate
+       inputs with brand focus glow, 2-col form grid, ghost Back +
+       primary Continue actions footer.
+
+       Scoped to `.card.v2` so the existing 11 steps that still use
+       the original `.card` keep rendering unchanged. After Step 1
+       is signed off, the same v2 markup will be ported step-by-step. */
+    .card.v2 {
+      background: var(--gray-0);
+      border: 1px solid var(--gray-100);
+      border-radius: 20px;
+      box-shadow:
+        0 1px 0  rgba(15, 26, 46, 0.04),
+        0 24px 60px -28px rgba(15, 26, 46, 0.20);
+      overflow: hidden;
+    }
+    .card.v2 .card-head {
+      padding: 26px 44px 6px;
+      background: transparent;
+      border-bottom: none;
+      display: block;
+    }
+    .card.v2 .eyebrow {
+      font: 500 11px/1 var(--font-body);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brand-700);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .card.v2 h1.page-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--gray-900);
+      margin: 0 0 6px;
+      font-variation-settings: "opsz" 96, "SOFT" 50;
+    }
+    .card.v2 h1.page-title em {
+      font-style: italic;
+      color: var(--brand-600);
+      font-weight: 400;
+    }
+    .card.v2 .page-sub {
+      font: 400 14.5px/1.5 var(--font-body);
+      color: var(--gray-500);
+      margin: 0;
+      max-width: 58ch;
+    }
+    .card.v2 .trust {
+      margin: 14px 44px 0;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border-radius: 12px;
+      font: 400 12px/1.4 var(--font-body);
+    }
+    .card.v2 .trust svg {
+      flex: 0 0 16px;
+      color: var(--success-500);
+      width: 16px;
+      height: 16px;
+    }
+    .card.v2 .trust strong {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+    .card.v2 .trust .sep {
+      color: var(--gray-400);
+      margin: 0 6px;
+    }
+    .card.v2 .form {
+      padding: 22px 44px 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 24px;
+    }
+    .card.v2 .form .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .card.v2 .form .field.full {
+      grid-column: 1 / -1;
+    }
+    .card.v2 .form label.lbl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: 500 11px/1 var(--font-body);
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+    }
+    .card.v2 .form label.lbl .req {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--danger-500);
+    }
+    .card.v2 .form label.lbl .opt {
+      color: var(--gray-400);
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 12px;
+    }
+    .card.v2 .form .v2-input,
+    .card.v2 .form .v2-select {
+      font: 500 15px/1 var(--font-body);
+      color: var(--gray-900);
+      padding: 13px 15px;
+      background: var(--gray-0);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      box-shadow: 0 1px 0 rgba(15, 26, 46, 0.03);
+      transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out);
+    }
+    .card.v2 .form .v2-input:hover {
+      border-color: var(--gray-400);
+    }
+    .card.v2 .form .v2-input:focus,
+    .card.v2 .form .v2-input.is-focused {
+      outline: none;
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 4px rgba(238, 138, 69, 0.18);
+    }
+    .card.v2 .form .v2-input.is-error {
+      border-color: var(--danger-500);
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+    }
+    .card.v2 .form .help {
+      font: 400 12.5px/1.45 var(--font-body);
+      color: var(--gray-500);
+    }
+    .card.v2 .form .help.err {
+      color: var(--danger-700);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .card.v2 .form .help.err svg {
+      flex: 0 0 14px;
+      margin-top: 2px;
+      color: var(--danger-500);
+      width: 14px;
+      height: 14px;
+    }
+    .card.v2 .form .radio-group {
+      display: flex;
+      gap: 10px;
+    }
+    .card.v2 .form .radio {
+      flex: 0 1 auto;
+      min-width: 180px;
+      max-width: 240px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 15px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      background: var(--gray-0);
+      font: 500 14px/1 var(--font-body);
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all .15s var(--ease-out);
+    }
+    .card.v2 .form .radio:hover {
+      border-color: var(--gray-400);
+    }
+    .card.v2 .form .radio.checked {
+      border-color: var(--brand-500);
+      background: var(--brand-50);
+      color: var(--gray-900);
+      box-shadow: 0 0 0 4px rgba(238, 138, 69, 0.10);
+    }
+    .card.v2 .form .radio .dot-outer {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gray-300);
+      display: grid;
+      place-items: center;
+      background: var(--gray-0);
+      flex: 0 0 18px;
+    }
+    .card.v2 .form .radio.checked .dot-outer {
+      border-color: var(--brand-600);
+    }
+    .card.v2 .form .radio .dot-inner {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: transparent;
+    }
+    .card.v2 .form .radio.checked .dot-inner {
+      background: var(--brand-600);
+    }
+    .card.v2 .form .phone-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 10px;
+    }
+    .card.v2 .form .v2-select {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding-right: 12px;
+    }
+    .card.v2 .form .v2-select svg.flag {
+      width: 22px;
+      height: 16px;
+      flex: 0 0 22px;
+    }
+    .card.v2 .form .v2-select .caret {
+      margin-left: auto;
+      color: var(--gray-400);
+    }
+    /* Consistent card height across all v2 onboarding steps. Tall
+       steps (5 / 8 / 10 / 12) grow naturally past this floor; short
+       steps (1 / 3 / 10-emergency) pad up to it. The card-body's
+       v1 min-height: 480px is neutralized so we can drive the floor
+       at the card level instead. */
+    .card.v2 {
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card.v2 .card-head { flex: 0 0 auto; }
+    .card.v2 .card-body,
+    .card.v2 .form     { flex: 1 1 auto; min-height: 0; }
+    .card.v2 .actions  { flex: 0 0 auto; }
+    .card.v2 .actions {
+      padding: 18px 44px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--gray-100);
+      background: linear-gradient(180deg, transparent, rgba(252, 248, 243, 0.6));
+    }
+    .card.v2 .actions .v2-btn {
+      border: 0;
+      font: 600 14px/1 var(--font-body);
+      letter-spacing: 0.01em;
+      border-radius: 12px;
+      padding: 13px 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition:
+        transform .12s var(--ease-out),
+        box-shadow .18s var(--ease-out),
+        background .18s var(--ease-out);
+    }
+    .card.v2 .actions .v2-btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--gray-200);
+      color: var(--gray-700);
+    }
+    .card.v2 .actions .v2-btn-ghost:hover {
+      border-color: var(--gray-400);
+      color: var(--gray-900);
+    }
+    .card.v2 .actions .v2-btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.25) inset,
+        0 10px 24px -10px rgba(235, 90, 61, 0.65);
+    }
+    .card.v2 .actions .v2-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.25) inset,
+        0 14px 28px -10px rgba(235, 90, 61, 0.7);
+    }
+    @media (max-width: 720px) {
+      .card.v2 .card-head { padding: 22px 20px 2px; }
+      .card.v2 .trust     { margin: 12px 20px 0; padding: 8px 12px; font-size: 11.5px; }
+      .card.v2 .form      { grid-template-columns: 1fr; padding: 18px 20px 24px; gap: 14px; }
+      .card.v2 .actions   { padding: 16px 20px 20px; }
+      .card.v2 h1.page-title { font-size: 24px; }
+      .card.v2 .page-sub { font-size: 13.5px; }
+    }
+
+    /* v2 modifier — compact card. Used on tall steps (5 / 8 / 10 / 12)
+       so the whole panel can fit a 900px-tall viewport without
+       vertical scroll. Tightens vertical paddings + spacing without
+       touching grid/columns or breaking the visual language. */
+    .card.v2.compact .card-head {
+      padding: 18px 44px 4px;
+    }
+    .card.v2.compact h1.page-title {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    .card.v2.compact .page-sub {
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .card.v2.compact .trust {
+      margin-top: 10px;
+      padding: 7px 12px;
+      font-size: 11.5px;
+    }
+    .card.v2.compact .form {
+      padding: 14px 44px 14px;
+      gap: 12px 24px;
+    }
+    .card.v2.compact .card-body {
+      padding: 14px 44px 14px;
+    }
+    .card.v2.compact .actions {
+      padding: 12px 44px 14px;
+    }
+    /* Cap the live video preview so Step 8 fits a typical viewport.
+       Aspect ratio is preserved; only the max height changes. */
+    .card.v2.compact .video-box {
+      max-height: 360px;
+    }
+    /* Tighten the ID upload tiles + inter-section margins so Step 10
+       (Identity documents) fits a 900px viewport. */
+    .card.v2.compact .upload {
+      padding: var(--space-3);
+    }
+    .card.v2.compact .upload.captured .captured-preview {
+      height: 72px;
+    }
+    .card.v2.compact .upload .upload-icon {
+      width: 26px;
+      height: 26px;
+    }
+    .card.v2.compact .upload-grid + .field-grid {
+      margin-top: var(--space-3) !important;
+    }
+    .card.v2.compact .field-grid + .banner {
+      margin-top: var(--space-3) !important;
+    }
+    .card.v2.compact .photo-btn-row {
+      gap: 8px;
+    }
+    .card.v2.compact .video-record-shell {
+      margin-top: var(--space-3) !important;
+    }
+    /* "Tap the red button…" caption centers under the video-box.
+       width:100% on a block paragraph guarantees the text-align rule
+       resolves against the column edges (rather than shrink-wrapping
+       and reading slightly left-of-center). */
+    .card.v2.compact #video-record-area > p {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      text-align: center;
+    }
+    @media (max-width: 720px) {
+      .card.v2.compact .card-head,
+      .card.v2.compact .card-body,
+      .card.v2.compact .form,
+      .card.v2.compact .actions { padding-left: 20px; padding-right: 20px; }
+    }
+
+    /* v2 modifier — attestation card (Step 7 / Certificate of Insurance).
+       Centers the head copy AND the action buttons in the card-body so
+       the whole panel reads as a single centered decision point: "I
+       certify… " on top, action chips below. The buttons inherit the
+       existing .attestation-actions flex-center layout. */
+    .card.v2.attestation .card-head {
+      text-align: center;
+      padding: 32px 44px 6px;
+    }
+    .card.v2.attestation .card-head .page-title,
+    .card.v2.attestation .card-head .page-sub {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card.v2.attestation .card-head .page-sub {
+      max-width: 580px;
+    }
+    .card.v2.attestation .card-body.attestation-shell {
+      padding: var(--space-8) var(--space-6) var(--space-10);
+      min-height: 0;
     }
 
     /* ============================================================
@@ -1733,6 +3038,8 @@
   </style>
 </head>
 <body>
+
+<div class="brand-rail" aria-hidden="true"></div>
 
 <!-- ============================================================
      LUCIDE SVG SPRITE (subset)
@@ -1872,9 +3179,11 @@
      MOCKUP NAV (dev chrome only)
      ============================================================ -->
 <nav id="mockup-nav" aria-label="Mockup screen picker">
+  <button type="button" class="mn-toggle" aria-label="Toggle mockup screen picker" onclick="toggleMockupNav()">≡</button>
   <span class="label">Screen</span>
   <button data-screen="login" class="active">Login</button>
   <button data-screen="signup">Signup</button>
+  <button data-screen="forgot">Forgot</button>
   <button data-screen="step1">1 · Personal</button>
   <button data-screen="step2">2 · Credentials</button>
   <button data-screen="step3">3 · Address</button>
@@ -1892,46 +3201,58 @@
 
 <!-- ============================================================
      SCREEN: LOGIN
+     Matches components/login-form.tsx on develop: wordmark hero above
+     the card, white card with brand-gradient accent strip at the top
+     edge, store badges grouped tightly below the form. Continue button
+     advances the mockup to step 1.
      ============================================================ -->
 <section class="screen active" id="screen-login" aria-labelledby="login-title">
   <div class="auth-shell">
-    <div class="auth-card">
-      <div class="auth-brand">
-        <span class="auth-logo-badge"><img src="provider-app-icon.png" alt="" /></span>
-        <span class="wordmark">MedPal Provider</span>
-      </div>
-
-      <h1 id="login-title">Welcome back</h1>
-      <p class="auth-sub">Sign in to manage your provider account.</p>
-
-      <div class="auth-stack">
-        <div class="field">
-          <label for="login-email">Email</label>
-          <input id="login-email" type="email" value="dr.kennedy@medpal.com" autocomplete="email" />
-        </div>
-        <div class="field">
-          <label for="login-pass">Password</label>
-          <input id="login-pass" type="password" value="••••••••••" autocomplete="current-password" />
-          <div class="forgot-row"><a href="#" onclick="event.preventDefault()">Forgot password?</a></div>
+    <div class="auth-stage">
+      <div class="auth-hero">
+        <div class="brand-lockup auth-lockup" aria-labelledby="login-title">
+          <img class="brand-mark" src="medpal-icon-mark-white.png" alt="" />
+          <div class="brand-stack">
+            <span id="login-title" class="brand-text">MedPal <span class="light">for Providers</span></span>
+            <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+          </div>
         </div>
       </div>
 
-      <button class="btn btn-primary btn-lg" onclick="showScreen('step1')">Sign in</button>
+      <div class="auth-card">
+        <h2>Sign in to continue</h2>
+        <div class="auth-rule" aria-hidden="true"></div>
+        <p class="auth-sub">Sign in to manage your provider account.</p>
 
-      <div class="oauth-divider">or get the app</div>
-      <div class="store-row">
-        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Download on the App Store">
-          <svg aria-hidden="true"><use href="#i-apple-store"/></svg>
-          <span class="store-label"><small>Download on the</small><strong>App Store</strong></span>
-        </a>
-        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Get it on Google Play">
-          <svg aria-hidden="true"><use href="#i-google-play"/></svg>
-          <span class="store-label"><small>Get it on</small><strong>Google Play</strong></span>
-        </a>
-      </div>
+        <div class="auth-stack">
+          <div class="field">
+            <label for="login-email">Email</label>
+            <input id="login-email" type="email" value="dr.kennedy@medpal.com" autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="login-pass">Password</label>
+            <input id="login-pass" type="password" value="••••••••••" autocomplete="current-password" />
+            <div class="forgot-row"><a href="#" onclick="event.preventDefault()">Forgot password?</a></div>
+          </div>
+        </div>
 
-      <div class="auth-foot">
-        Don't have an account? <button type="button" class="btn-link" onclick="showScreen('signup')">Create one</button>
+        <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="showScreen('step1')">Continue</button>
+
+        <div style="margin-top: var(--space-5);">
+          <p class="auth-stores-tagline">Get the MedPal Provider app</p>
+          <div class="store-row">
+            <a class="store-btn" href="https://apps.apple.com/us/app/medpal-provider/id6473058285" target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" />
+            </a>
+            <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Get it on Google Play">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" />
+            </a>
+          </div>
+        </div>
+
+        <div class="auth-foot">
+          Don't have an account? <button type="button" class="btn-link" onclick="showScreen('signup')">Create one</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1942,49 +3263,106 @@
      ============================================================ -->
 <section class="screen" id="screen-signup" aria-labelledby="signup-title">
   <div class="auth-shell">
-    <div class="auth-card">
-      <div class="auth-brand">
-        <span class="auth-logo-badge"><img src="provider-app-icon.png" alt="" /></span>
-        <span class="wordmark">MedPal Provider</span>
-      </div>
-
-      <h1 id="signup-title">Create your account</h1>
-      <p class="auth-sub">Start your application to join MedPal as a provider.</p>
-
-      <div class="auth-stack">
-        <div class="field">
-          <label for="signup-email">Work email</label>
-          <input id="signup-email" type="email" autocomplete="email" placeholder="you@practice.com" />
-          <span class="hint">We'll send a verification link to this address.</span>
-        </div>
-        <div class="field">
-          <label for="signup-pass">Password</label>
-          <input id="signup-pass" type="password" autocomplete="new-password" placeholder="At least 10 characters" />
-        </div>
-        <div class="field">
-          <label for="signup-pass2">Confirm password</label>
-          <input id="signup-pass2" type="password" autocomplete="new-password" placeholder="Repeat password" />
+    <div class="auth-stage">
+      <div class="auth-hero">
+        <div class="brand-lockup auth-lockup" aria-labelledby="signup-title">
+          <img class="brand-mark" src="medpal-icon-mark-white.png" alt="" />
+          <div class="brand-stack">
+            <span id="signup-title" class="brand-text">MedPal <span class="light">for Providers</span></span>
+            <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+          </div>
         </div>
       </div>
 
-      <button class="btn btn-primary btn-lg" onclick="showScreen('step1')">Create account</button>
+      <div class="auth-card">
+        <h2>Create your account</h2>
+        <div class="auth-rule" aria-hidden="true"></div>
+        <p class="auth-sub">Start your application to join MedPal as a provider.</p>
 
-      <p class="legal">By continuing you agree to MedPal's <a href="#" onclick="event.preventDefault()">Terms</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>.</p>
+        <div class="auth-stack">
+          <div class="field">
+            <label for="signup-email">Work email</label>
+            <input id="signup-email" type="email" autocomplete="email" placeholder="you@practice.com" />
+            <span class="hint">We'll send a verification link to this address.</span>
+          </div>
+          <div class="field">
+            <label for="signup-pass">Password</label>
+            <input id="signup-pass" type="password" autocomplete="new-password" placeholder="Choose a password" aria-describedby="pw-rules" />
+            <ul class="pw-rules" id="pw-rules" aria-live="polite">
+              <li data-rule="length"><span class="dot" aria-hidden="true"></span>At least 8 characters</li>
+              <li data-rule="lower"><span class="dot" aria-hidden="true"></span>One lowercase letter</li>
+              <li data-rule="upper"><span class="dot" aria-hidden="true"></span>One uppercase letter</li>
+              <li data-rule="number"><span class="dot" aria-hidden="true"></span>One number</li>
+              <li data-rule="special"><span class="dot" aria-hidden="true"></span>One special character ($@!%*?&amp;#)</li>
+            </ul>
+          </div>
+          <div class="field">
+            <label for="signup-pass2">Confirm password</label>
+            <input id="signup-pass2" type="password" autocomplete="new-password" placeholder="Repeat password" />
+          </div>
+        </div>
 
-      <div class="oauth-divider">or get the app</div>
-      <div class="store-row">
-        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Download on the App Store">
-          <svg aria-hidden="true"><use href="#i-apple-store"/></svg>
-          <span class="store-label"><small>Download on the</small><strong>App Store</strong></span>
-        </a>
-        <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Get it on Google Play">
-          <svg aria-hidden="true"><use href="#i-google-play"/></svg>
-          <span class="store-label"><small>Get it on</small><strong>Google Play</strong></span>
-        </a>
+        <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="showScreen('step1')">Create account</button>
+
+        <p class="legal">By continuing you agree to MedPal's <a href="https://legal.medpal.com/legal/provider-terms" target="_blank" rel="noopener noreferrer">Terms</a> and <a href="https://legal.medpal.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</p>
+
+        <div style="margin-top: var(--space-5);">
+          <p class="auth-stores-tagline">Get the MedPal Provider app</p>
+          <div class="store-row">
+            <a class="store-btn" href="https://apps.apple.com/us/app/medpal-provider/id6473058285" target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" />
+            </a>
+            <a class="store-btn" href="#" onclick="event.preventDefault()" aria-label="Get it on Google Play">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" />
+            </a>
+          </div>
+        </div>
+
+        <div class="auth-foot">
+          Already have an account? <button type="button" class="btn-link" onclick="showScreen('login')">Sign in</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN: FORGOT PASSWORD
+     Mirrors /forgot-password in the live app (components/
+     forgot-password-form.tsx). Same auth-shell + hero brand
+     lockup as login + signup; the card just swaps the form for
+     a single email field + send-reset-link CTA.
+     ============================================================ -->
+<section class="screen" id="screen-forgot" aria-labelledby="forgot-title">
+  <div class="auth-shell">
+    <div class="auth-stage">
+      <div class="auth-hero">
+        <div class="brand-lockup auth-lockup" aria-labelledby="forgot-title">
+          <img class="brand-mark" src="medpal-icon-mark-white.png" alt="" />
+          <div class="brand-stack">
+            <span id="forgot-title" class="brand-text">MedPal <span class="light">for Providers</span></span>
+            <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+          </div>
+        </div>
       </div>
 
-      <div class="auth-foot">
-        Already have an account? <button type="button" class="btn-link" onclick="showScreen('login')">Sign in</button>
+      <div class="auth-card">
+        <h2>Reset password</h2>
+        <div class="auth-rule" aria-hidden="true"></div>
+        <p class="auth-sub">Enter your email address to receive a password reset link.</p>
+
+        <div class="auth-stack">
+          <div class="field">
+            <label for="forgot-email">Email</label>
+            <input id="forgot-email" type="email" placeholder="you@practice.com" autocomplete="email" />
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="showScreen('login')">Send reset link</button>
+
+        <div class="auth-foot">
+          <button type="button" class="btn-link" onclick="showScreen('login')">← Back to sign in</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1998,65 +3376,103 @@
 <section class="screen" id="screen-step1">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
 
     <div class="step-pills" id="pills-step1" role="tablist"></div>
 
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 1 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <!-- v2 card aesthetic ported from
+         medpal-onboarding-web/redesign-mockup.html (Omer's design).
+         The other 11 steps still render with the original .card
+         classes; they'll be ported in a follow-up pass once this
+         step is signed off. -->
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Let's start with <em>who you are</em>.</h1>
+        <p class="page-sub">A few details so patients and our verification team can identify you. We never share this with anyone outside the verification process.</p>
       </div>
-      <div class="card-body">
-        <h2 class="card-title">Personal information</h2>
-        <p class="card-subtitle">Your name and contact details. This appears on your provider profile.</p>
 
-        <div class="field-grid">
-          <div class="field">
-            <label for="p-first">First name <span class="req">*</span></label>
-            <input id="p-first" type="text" value="Sarah" />
-          </div>
-          <div class="field">
-            <label for="p-middle">Middle name</label>
-            <input id="p-middle" type="text" placeholder="Optional" />
-          </div>
-          <div class="field full">
-            <label for="p-last">Last name <span class="req">*</span></label>
-            <input id="p-last" type="text" value="Kennedy" />
-          </div>
-          <div class="field full">
-            <label>Gender <span class="req">*</span></label>
-            <div class="segmented" role="radiogroup" aria-label="Gender" style="max-width: 320px;">
-              <button type="button" class="selected" role="radio" aria-checked="true">Female</button>
-              <button type="button" role="radio" aria-checked="false">Male</button>
-            </div>
-          </div>
-          <div class="field">
-            <label>Country code <span class="req">*</span></label>
-            <div class="locked-country" aria-label="Country code +1 (US)">
-              <svg class="flag" aria-hidden="true"><use href="#i-flag-us"/></svg>
-              +1
-            </div>
-            <span class="hint">US numbers only.</span>
-          </div>
-          <div class="field">
-            <label for="p-phone">Phone <span class="req">*</span></label>
-            <input id="p-phone" type="tel" value="(415) 555-0142" />
+      <div class="trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span><strong>Encrypted &amp; HIPAA-grade.</strong><span class="sep">·</span>Used only for credential verification<span class="sep">·</span>Never sold or shared.</span>
+      </div>
+
+      <form class="form" onsubmit="event.preventDefault()">
+        <div class="field">
+          <label class="lbl" for="p-first"><span class="req"></span> First name</label>
+          <input class="v2-input" id="p-first" type="text" value="Samuel" />
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="p-middle">Middle name <span class="opt">(optional)</span></label>
+          <input class="v2-input is-error" id="p-middle" type="text" value="R" />
+          <div class="help err">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span>Use 2 – 30 characters. Letters, spaces, hyphens and apostrophes (e.g.&nbsp;O'Brien, Smith-Jones).</span>
           </div>
         </div>
+
+        <div class="field full">
+          <label class="lbl" for="p-last"><span class="req"></span> Last name</label>
+          <input class="v2-input" id="p-last" type="text" value="Smith" />
+        </div>
+
+        <div class="field full">
+          <label class="lbl"><span class="req"></span> Gender</label>
+          <div class="radio-group" role="radiogroup" aria-label="Gender">
+            <label class="radio checked">
+              <span class="dot-outer"><span class="dot-inner"></span></span>
+              Female
+            </label>
+            <label class="radio">
+              <span class="dot-outer"><span class="dot-inner"></span></span>
+              Male
+            </label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label class="lbl" for="p-phone"><span class="req"></span> Phone</label>
+          <div class="phone-row">
+            <div class="v2-select" aria-label="Country code +1 (US)">
+              <svg class="flag" aria-hidden="true"><use href="#i-flag-us"/></svg>
+              +1
+              <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <input class="v2-input is-focused" id="p-phone" type="tel" value="(648) 484-8457" />
+          </div>
+          <div class="help">US numbers only. We may text a verification code.</div>
+        </div>
+      </form>
+
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back
+        </button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step2')">
+          Continue
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" disabled><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step2')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
-      </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2064,23 +3480,26 @@
 <section class="screen" id="screen-step2">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step2" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 2 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Credentials</h1>
+        <p class="page-sub">Your title, degree, and practice. This determines how patients see your specialty.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Credentials</h2>
-        <p class="card-subtitle">Your title, degree, and practice. This determines how patients see your specialty.</p>
 
         <div class="field-grid">
           <div class="field">
@@ -2123,11 +3542,17 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step1')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step3')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step1')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step3')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2135,23 +3560,26 @@
 <section class="screen" id="screen-step3">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step3" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 3 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Mailing address</h1>
+        <p class="page-sub">Where we send official documents and tax forms.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Mailing address</h2>
-        <p class="card-subtitle">Where we send official documents and tax forms.</p>
 
         <div class="field-grid">
           <div class="field full">
@@ -2184,11 +3612,17 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step2')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step4')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step2')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step4')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2196,37 +3630,50 @@
 <section class="screen" id="screen-step4">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step4" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 4 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">About you</h1>
+        <p class="page-sub">A short bio patients see on your provider profile.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">About you</h2>
-        <p class="card-subtitle">A short bio patients see on your provider profile.</p>
 
         <div class="about-grid">
           <div>
             <div class="avatar-wrap">
-              <div class="avatar-frame">
+              <!-- Tap the avatar to preview the uploaded profile
+                   photo. In the live app this opens a larger image
+                   viewer; the mockup shows a placeholder via the
+                   shared doc-preview modal. -->
+              <button type="button" class="avatar-frame avatar-preview-trigger" onclick="openDocPreview('Profile photo', '#i-user')" aria-label="Preview profile photo">
                 <svg class="avatar-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-              </div>
+              </button>
             </div>
-            <div class="avatar-actions">
-              <button type="button"><svg class="icon"><use href="#i-camera"/></svg> Take photo</button>
-              <button type="button"><svg class="icon"><use href="#i-upload"/></svg> Upload</button>
+            <div class="avatar-actions photo-btn-row">
+              <button type="button" class="photo-btn" aria-label="Take photo with camera">
+                <svg class="icon"><use href="#i-camera"/></svg>
+                <span class="photo-btn-label">Camera</span>
+              </button>
+              <button type="button" class="photo-btn" aria-label="Upload photo">
+                <svg class="icon"><use href="#i-upload"/></svg>
+                <span class="photo-btn-label">Upload</span>
+              </button>
             </div>
             <div class="field" style="margin-top: var(--space-4);">
               <label>Role <span class="req">*</span></label>
@@ -2253,11 +3700,17 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step3')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step5')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step3')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step5')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2265,23 +3718,31 @@
 <section class="screen" id="screen-step5">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step5" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 5 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Practice details</h1>
+        <p class="page-sub">Your NPI and the states where you're licensed to practice.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Practice details</h2>
-        <p class="card-subtitle">Your NPI and the states where you're licensed to practice.</p>
+
+        <!-- "Not sure what you need? · View list" banner removed:
+             the required-documents list will be surfaced earlier in
+             the onboarding (Step 1 trust ribbon area) so it doesn't
+             need a slot inside the State licenses card. -->
 
         <div class="field" style="margin-bottom: var(--space-6);">
           <label for="l-npi">NPI number</label>
@@ -2306,12 +3767,19 @@
           </div>
         </div>
 
-        <!-- Expanded "add new" form -->
-        <div class="license-card" style="border-color: var(--brand-300); background: var(--gray-0);">
+        <!-- Expanded "add new" form. Hidden on the v2 mockup
+             demo so Step 5 fits without scrolling; the live app
+             reveals this when "Add another state" is clicked. -->
+        <div class="license-card" style="border-color: var(--brand-300); background: var(--gray-0); display: none;">
           <div class="field-grid">
             <div class="field">
-              <label for="l-state">State <span class="req">*</span></label>
-              <select id="l-state"><option>New York</option><option>Texas</option><option>Florida</option><option>Washington</option></select>
+              <label>State <span class="req">*</span></label>
+              <button type="button" class="state-trigger placeholder" id="l-state-trigger" onclick="openStateModal('l-state')" aria-haspopup="dialog">
+                <span class="state-trigger-text">Select state</span>
+                <svg class="state-trigger-caret icon" style="width: 16px; height: 16px;">
+                  <use href="#i-arrow-right"/>
+                </svg>
+              </button>
             </div>
             <div class="field">
               <label for="l-exp">Expiration date <span class="req">*</span></label>
@@ -2349,11 +3817,17 @@
           Add another state
         </button>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step4')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step6')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step4')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step6')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2361,31 +3835,34 @@
 <section class="screen" id="screen-step6">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step6" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 6 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Diplomas</h1>
+        <p class="page-sub">Upload your medical school diploma and any board certifications. These appear on your profile.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Diplomas</h2>
-        <p class="card-subtitle">Upload your medical school diploma and any board certifications. These appear on your profile.</p>
 
         <label class="section-label" style="margin-bottom: var(--space-3);">Documents <span class="req">*</span> <span class="muted">(2 of 100)</span></label>
 
         <div class="field-grid">
           <div class="upload-file">
-            <div class="file-preview">
+            <button class="file-preview doc-preview-trigger" type="button" onclick="openDocPreview('UCSF-MD-diploma.pdf', '#i-graduation-cap')" aria-label="Preview UCSF-MD-diploma.pdf">
               <div class="doc-thumb"><svg class="icon"><use href="#i-graduation-cap"/></svg></div>
-            </div>
+            </button>
             <div class="file-meta-row">
               <div class="file-icon"><svg class="icon"><use href="#i-file-text"/></svg></div>
               <div class="file-meta">
@@ -2396,9 +3873,9 @@
             </div>
           </div>
           <div class="upload-file">
-            <div class="file-preview">
+            <button class="file-preview doc-preview-trigger" type="button" onclick="openDocPreview('ABIM-Internal-Medicine-2010.pdf', '#i-award')" aria-label="Preview ABIM-Internal-Medicine-2010.pdf">
               <div class="doc-thumb"><svg class="icon"><use href="#i-award"/></svg></div>
-            </div>
+            </button>
             <div class="file-meta-row">
               <div class="file-icon"><svg class="icon"><use href="#i-file-text"/></svg></div>
               <div class="file-meta">
@@ -2418,11 +3895,17 @@
           <span class="hint">PDF, JPG, PNG, DOC, DOCX. Max 5 MB each. Up to 100 files.</span>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step5')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step7')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step5')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step7')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2430,25 +3913,29 @@
 <section class="screen" id="screen-step7">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step7" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 7 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact attestation">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Certificate of Insurance</h1>
+        <p class="page-sub">I certify that I hold a valid Certificate of Insurance, as required by my state of licensure.</p>
       </div>
       <div class="card-body attestation-shell">
-        <h2 class="card-title">Certificate of Insurance</h2>
-        <p class="card-subtitle">I certify that I hold a valid Certificate of Insurance, as required by my state of licensure.</p>
 
         <div id="coi-initial" class="attestation-actions">
+          <button class="btn btn-ghost" type="button" onclick="openDisclaimerModal()">View acknowledgment</button>
           <button class="btn btn-secondary" type="button" onclick="setCoiState('declined')">I hereby decline</button>
           <button class="btn btn-primary" type="button" onclick="setCoiState('accepted')">Accept</button>
         </div>
@@ -2463,11 +3950,17 @@
           Declined
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step6')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step8')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step6')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step8')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2475,52 +3968,98 @@
 <section class="screen" id="screen-step8">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step8" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 8 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Verification video</h1>
+        <p class="page-sub">Read the following sentence aloud while looking at the camera: "I am [Name], joining MedPal as a verified provider."</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Verification video</h2>
-        <p class="card-subtitle">Hold your driver's license or ID next to your face, state your name, then record a 10-second video.</p>
+
+        <!-- Hidden gradient definition for the countdown ring -->
+        <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+          <defs>
+            <linearGradient id="countdown-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#EE8A45"/>
+              <stop offset="100%" stop-color="#EB5A3D"/>
+            </linearGradient>
+          </defs>
+        </svg>
 
         <div class="video-grid">
-          <div>
-            <div class="video-box">Camera preview</div>
+          <div id="video-record-area">
+            <!-- Single record control: countdown ring sits inside
+                 the camera preview, centered at the bottom. No
+                 secondary button below — the preview itself owns the
+                 recording affordance. -->
+            <div class="video-box" style="position: relative;">
+              Camera preview
+              <div class="countdown-ring" style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);">
+                <svg class="ring-svg" viewBox="0 0 96 96" aria-hidden="true">
+                  <circle class="ring-track" cx="48" cy="48" r="42"/>
+                  <circle class="ring-progress" cx="48" cy="48" r="42" stroke-dasharray="263.89" stroke-dashoffset="263.89"/>
+                </svg>
+                <button class="record-btn" type="button" onclick="startVideoCountdown()" aria-label="Start recording"></button>
+                <!-- Countdown number removed at rest; the ring itself
+                     animates and conveys progress while recording.
+                     Re-add the .countdown-number <span> here if the
+                     numeric timer is wanted on a future iteration. -->
+              </div>
+            </div>
+            <p style="font-size: var(--text-sm); color: var(--gray-500); text-align: center; margin: var(--space-3) auto 0; display: block; width: 100%;">Tap the red button to start a 10-second recording.</p>
+          </div>
+
+          <!-- Post-capture state. Hidden until countdown completes.
+               Video should NOT auto-play after capture. -->
+          <div id="video-after-capture" style="display: none;">
+            <div class="video-box" style="position: relative;">
+              Captured (paused)
+              <span style="position: absolute; bottom: 10px; right: 12px; background: rgba(15,23,42,0.78); color: var(--gray-0); padding: 3px 8px; border-radius: var(--r-sm); font-size: var(--text-xs); font-weight: var(--fw-semi);">0:10</span>
+            </div>
             <div style="display: flex; justify-content: center; gap: var(--space-2); margin-top: var(--space-3);">
-              <button class="btn btn-secondary btn-sm" type="button">Re-record</button>
-              <button class="btn btn-primary btn-sm" type="button">Play recording</button>
+              <button class="btn btn-secondary btn-sm" type="button" onclick="resetVideoRecord()">Re-record</button>
+              <button class="btn btn-primary btn-sm" type="button">Looks good</button>
             </div>
           </div>
 
           <div>
-            <div class="banner success">
-              <svg class="icon"><use href="#i-check-circle"/></svg>
-              <div>Video recorded · 10 seconds · 8.2 MB</div>
+            <div class="banner info" style="background: var(--info-50); color: var(--info-700); border-color: var(--info-500);">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <div>10-second clip · stored only for identity verification.</div>
             </div>
             <div style="font-size: var(--text-md); font-weight: var(--fw-semi); color: var(--gray-900); margin-top: var(--space-3);">Tips for a good recording</div>
             <ul style="margin: var(--space-2) 0 0; padding-left: var(--space-5); font-size: var(--text-md); color: var(--gray-600); line-height: var(--lh-loose);">
               <li>Good lighting on your face</li>
-              <li>ID clearly visible next to your face</li>
-              <li>Speak your full name and today's date</li>
+              <li>Look directly at the camera</li>
+              <li>Read the sentence above clearly</li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step7')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step9')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step7')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step9')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2528,23 +4067,26 @@
 <section class="screen" id="screen-step9">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step9" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 9 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Pricing</h1>
+        <p class="page-sub">Set your session rates. You can update these anytime from your provider portal.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Pricing</h2>
-        <p class="card-subtitle">Set your session rates. You can update these anytime from your provider portal.</p>
 
         <div class="price-section">
           <div class="section-head">
@@ -2597,11 +4139,17 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step8')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('stepid')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step8')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('stepid')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2609,39 +4157,65 @@
 <section class="screen" id="screen-stepid">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-stepid" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 10 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Identity documents</h1>
+        <p class="page-sub">Driver's license or state-issued ID. Snap the front and back, or upload a file. Used only for identity verification, never shared.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Identity documents</h2>
-        <p class="card-subtitle">Driver's license or state-issued ID. Used only for identity verification, never shared.</p>
 
-        <div style="font-size: var(--text-md); font-weight: var(--fw-semi); color: var(--gray-900); margin-bottom: var(--space-1);">Driver's license or state ID</div>
-        <p style="font-size: var(--text-sm); color: var(--gray-500); margin: 0 0 var(--space-3);">Snap a photo of the front and back, or upload a file. PNG, JPG, or PDF · max 10 MB each.</p>
+        <!-- The "Driver's license or state ID" heading + paragraph
+             have been folded into the card-head's page-title +
+             page-sub for the v2 mockup so the screen fits without
+             scroll. Keep them present (display:none) so the live
+             port has the exact copy when it re-enables them. -->
+        <div style="display: none; font-size: var(--text-md); font-weight: var(--fw-semi); color: var(--gray-900); margin-bottom: var(--space-1);">Driver's license or state ID</div>
+        <p style="display: none; font-size: var(--text-sm); color: var(--gray-500); margin: 0 0 var(--space-3);">Snap a photo of the front and back, or upload a file. PNG, JPG, or PDF · max 10 MB each.</p>
 
         <div class="upload-grid">
           <div class="upload captured">
+            <button type="button" class="captured-preview" onclick="openDocPreview('ID (front)', '#i-id-card')" aria-label="Preview ID (front)"></button>
             <span class="captured-badge"><svg class="icon" style="width:12px;height:12px;"><use href="#i-check"/></svg> Captured</span>
             <button type="button" class="upload-clear" aria-label="Remove"><svg class="icon"><use href="#i-x"/></svg></button>
+            <div class="upload-title">ID (front)</div>
+            <div class="photo-btn-row" style="margin: var(--space-2) auto var(--space-3);">
+              <button type="button" class="photo-btn" aria-label="Re-take front photo with camera">
+                <svg class="icon"><use href="#i-camera"/></svg>
+                <span class="photo-btn-label">Camera</span>
+              </button>
+              <button type="button" class="photo-btn" aria-label="Re-upload front photo">
+                <svg class="icon"><use href="#i-upload"/></svg>
+                <span class="photo-btn-label">Upload</span>
+              </button>
+            </div>
           </div>
           <div class="upload">
             <svg class="upload-icon"><use href="#i-id-card"/></svg>
             <div class="upload-title">ID (back)</div>
             <div class="upload-hint">Photo or file</div>
-            <div class="upload-actions">
-              <button type="button"><svg class="icon"><use href="#i-camera"/></svg> Camera</button>
-              <button type="button"><svg class="icon"><use href="#i-upload"/></svg> File</button>
+            <div class="photo-btn-row" style="margin-top: var(--space-2);">
+              <button type="button" class="photo-btn" aria-label="Take back photo with camera">
+                <svg class="icon"><use href="#i-camera"/></svg>
+                <span class="photo-btn-label">Camera</span>
+              </button>
+              <button type="button" class="photo-btn" aria-label="Upload back photo">
+                <svg class="icon"><use href="#i-upload"/></svg>
+                <span class="photo-btn-label">Upload</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2657,8 +4231,13 @@
             </select>
           </div>
           <div class="field">
-            <label for="id-state">Issuing state <span class="req">*</span></label>
-            <select id="id-state"><option>California</option><option>New York</option><option>Texas</option><option>Florida</option></select>
+            <label>Issuing state <span class="req">*</span></label>
+            <button type="button" class="state-trigger" onclick="openStateModal('id-state')" id="id-state-trigger" aria-haspopup="dialog">
+              <span class="state-trigger-text">Select state</span>
+              <svg class="state-trigger-caret icon" style="width: 16px; height: 16px;">
+                <use href="#i-arrow-right"/>
+              </svg>
+            </button>
           </div>
           <div class="field">
             <label for="id-num">ID number <span class="req">*</span></label>
@@ -2676,11 +4255,17 @@
           <div>Front captured · ID number auto-filled · waiting on back image.</div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('step9')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="goNext('stepid')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('step9')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="goNext('stepid')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2688,23 +4273,26 @@
 <section class="screen" id="screen-step10">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step10" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 11 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Emergency contact</h1>
+        <p class="page-sub">Required only if you offer in-person visits. We use this to reach someone in case of an emergency during a visit.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Emergency contact</h2>
-        <p class="card-subtitle">Required only if you offer in-person visits. We use this to reach someone in case of an emergency during a visit.</p>
 
         <div class="field-grid">
           <div class="field">
@@ -2728,11 +4316,17 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="showScreen('stepid')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('step11')">Continue <svg class="icon"><use href="#i-arrow-right"/></svg></button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="showScreen('stepid')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('step11')">Continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
@@ -2740,23 +4334,26 @@
 <section class="screen" id="screen-step11">
   <div class="app-shell">
     <header class="app-header">
-      <div class="logo"><img src="provider-app-icon.png" alt="" /></div>
-      <div class="brand-text">MedPal Provider</div>
+      <div class="brand-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="MedPal" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
       <div class="actions">
-        <button class="header-btn icon-only" aria-label="Help"><svg class="icon"><use href="#i-help"/></svg></button>
-        <button class="header-btn"><svg class="icon"><use href="#i-logout"/></svg> Log out</button>
+        <button class="header-btn">Help</button>
+        <button class="header-btn">Save &amp; exit</button>
       </div>
     </header>
     <div class="step-pills" id="pills-step11" role="tablist"></div>
-    <div class="card">
-      <div class="card-header">
-        <span class="eyebrow">Step 12 of 12</span>
-        <span class="required-hint"><span class="req">*</span> indicates a required field</span>
-        <span class="save-state"><span class="dot"></span> Saved</span>
+    <article class="card v2 compact">
+      <div class="card-head">
+        <div class="eyebrow">Provider onboarding</div>
+        <h1 class="page-title">Specialty &amp; tags</h1>
+        <p class="page-sub">Help patients find you. Pick one or more specialties, then add granular tags.</p>
       </div>
       <div class="card-body">
-        <h2 class="card-title">Specialty &amp; tags</h2>
-        <p class="card-subtitle">Help patients find you. Pick one or more specialties, then add granular tags.</p>
 
         <div style="margin-bottom: var(--space-6);">
           <label class="section-label">Medical specialties <span class="req">*</span></label>
@@ -2832,17 +4429,34 @@
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-secondary" onclick="goPrev('step11')"><svg class="icon"><use href="#i-arrow-left"/></svg> Back</button>
-        <button class="btn btn-primary" onclick="showScreen('done')">Submit application</button>
+      <div class="actions">
+        <button class="v2-btn v2-btn-ghost" onclick="goPrev('step11')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+        <button class="v2-btn v2-btn-primary" onclick="showScreen('done')">Submit application</button>
       </div>
-    </div>
+    </article>
+    <footer class="app-footer">
+      <span>© 2026 MedPal, LLC. All Rights Reserved.</span>
+      <span class="sep">·</span>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+    </footer>
   </div>
 </section>
 
 <!-- SUBMITTED -->
 <section class="screen" id="screen-done" aria-labelledby="done-title">
   <div class="success-shell">
+    <!-- Same MedPal-for-Providers hero lockup as /login + /signup +
+         /forgot. Anchors the brand above the "You're all set" card. -->
+    <div class="auth-hero">
+      <div class="brand-lockup auth-lockup" aria-label="MedPal for Providers — Medical Care. Anytime. Anywhere.">
+        <img class="brand-mark" src="medpal-icon-mark-white.png" alt="" />
+        <div class="brand-stack">
+          <span class="brand-text">MedPal <span class="light">for Providers</span></span>
+          <span class="brand-tag">Medical Care. Anytime. Anywhere.</span>
+        </div>
+      </div>
+    </div>
     <div class="success-card">
       <div class="success-icon-wrap">
         <svg class="icon icon-3xl" style="stroke: var(--success-500);"><use href="#i-check-circle"/></svg>
@@ -2860,10 +4474,119 @@
         </ol>
       </div>
 
-      <button class="btn btn-primary btn-lg" onclick="showScreen('login')">Back to login</button>
     </div>
   </div>
 </section>
+
+<!-- ============================================================
+     STATE PICKER MODAL (shared, opened from Step 5 and Step 10)
+     Replaces the legacy 50-pill grid / dropdown with a modal sheet:
+     search input + scrollable list of all 56 entries (50 states + DC +
+     5 territories). Brand-gradient accent strip at the top edge.
+     ============================================================ -->
+<div class="modal-backdrop" id="state-modal-backdrop" role="presentation" onclick="onStateBackdrop(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="state-modal-title">
+    <div class="modal-header">
+      <h3 class="modal-title" id="state-modal-title">Select a state</h3>
+      <button type="button" class="modal-close" onclick="closeStateModal()" aria-label="Close">
+        <svg class="icon"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="state-search-row">
+        <svg class="search-icon icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="state-search" placeholder="Search states and territories" oninput="filterStateList(this.value)" />
+      </div>
+      <div class="state-list" id="state-list" role="listbox"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DISCLAIMER MODAL (e.g. shown before agreeing to T&C)
+     overflow-y: auto on body so the "I Agree" footer button is never
+     clipped on short viewports.
+     ============================================================ -->
+<!-- ============================================================
+     DOCUMENT PREVIEW MODAL (used by Step 6 diploma thumbnails)
+     ============================================================ -->
+<div class="modal-backdrop" id="doc-preview-backdrop" role="presentation" onclick="onDocPreviewBackdrop(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="doc-preview-title" style="max-width: 560px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="doc-preview-title">Document preview</h3>
+      <button type="button" class="modal-close" onclick="closeDocPreview()" aria-label="Close">
+        <svg class="icon"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; align-items: center; gap: var(--space-4); padding: var(--space-6);">
+      <div id="doc-preview-stage" style="width: 220px; height: 280px; border-radius: 12px; background: var(--brand-50); border: 1px solid var(--brand-200); display: flex; align-items: center; justify-content: center;">
+        <svg id="doc-preview-icon" class="icon" style="width: 84px; height: 84px; color: var(--brand-700);"><use href="#i-graduation-cap"/></svg>
+      </div>
+      <p id="doc-preview-caption" style="font-family: var(--font-body); font-size: var(--text-md); color: var(--gray-700); margin: 0; text-align: center;">filename.pdf</p>
+      <p style="font-size: var(--text-sm); color: var(--gray-500); margin: 0; text-align: center; max-width: 380px;">In the live app this opens the actual PDF/image preview. The mockup shows a placeholder.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="disclaimer-modal-backdrop" role="presentation" onclick="onDisclaimerBackdrop(event)">
+  <div class="modal modal-disclaimer" role="dialog" aria-modal="true" aria-labelledby="disclaimer-modal-title">
+    <div class="modal-header">
+      <h3 class="modal-title" id="disclaimer-modal-title">Provider acknowledgment</h3>
+      <button type="button" class="modal-close" onclick="closeDisclaimerModal()" aria-label="Close">
+        <svg class="icon"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: var(--text-md); color: var(--gray-700); line-height: var(--lh-loose); margin: 0 0 var(--space-3);">
+        By continuing, you confirm that all information submitted is true and accurate to the best of your knowledge. MedPal verifies your license, NPI, and supporting documents before activating your profile.
+      </p>
+      <p style="font-size: var(--text-md); color: var(--gray-700); line-height: var(--lh-loose); margin: 0 0 var(--space-3);">
+        You agree to maintain a current Certificate of Insurance for the states where you practice and to update your credentials as they change. Misrepresentation may result in suspension or removal from the platform.
+      </p>
+      <p style="font-size: var(--text-md); color: var(--gray-700); line-height: var(--lh-loose); margin: 0;">
+        MedPal handles your documents in accordance with our Privacy Policy and applicable healthcare data regulations. You can revoke consent at any time from your provider portal.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeDisclaimerModal()">Cancel</button>
+      <button type="button" class="btn btn-primary" onclick="closeDisclaimerModal()">I Agree</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     REQUIRED DOCUMENTS MODAL (opened from a button on Upload Documents)
+     ============================================================ -->
+<div class="modal-backdrop" id="required-docs-modal-backdrop" role="presentation" onclick="onRequiredDocsBackdrop(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="required-docs-modal-title">
+    <div class="modal-header">
+      <h3 class="modal-title" id="required-docs-modal-title">Required documents</h3>
+      <button type="button" class="modal-close" onclick="closeRequiredDocsModal()" aria-label="Close">
+        <svg class="icon"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: var(--text-md); color: var(--gray-600); margin: 0 0 var(--space-4);">
+        Before you continue, please make sure you have the following ready to upload.
+      </p>
+      <ul style="margin: 0; padding-left: var(--space-5); font-size: var(--text-md); color: var(--gray-800); line-height: var(--lh-loose);">
+        <li>NPI number (10 digits)</li>
+        <li>Active state medical license for each state where you practice</li>
+        <li>Medical school diploma (PDF, JPG, or PNG)</li>
+        <li>Any board certifications you'd like to display</li>
+        <li>Certificate of Insurance attestation</li>
+        <li>Government-issued photo ID (front and back)</li>
+        <li>10-second verification video</li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" onclick="closeRequiredDocsModal()">Got it</button>
+    </div>
+  </div>
+</div>
 
 <script>
   // ============================================================
@@ -2931,22 +4654,102 @@
   function renderPillsInto(containerId, activeStepId) {
     const el = document.getElementById(containerId);
     if (!el) return;
+    // Switch the container into "rail" presentation. The original
+    // class was `step-pills` (legacy folder-tab nav); the new rail
+    // CSS targets `.progress-rail` + `.rail-track` + `.rail-seg`.
+    el.className = 'progress-rail';
     el.innerHTML = '';
     const active = getActiveSteps();
     const activeIdx = active.findIndex(s => s.id === activeStepId);
+    // Optional ?warn=2,5 query param flips those 1-indexed steps into
+    // the warn (amber + ! badge) state for demo purposes — lets us
+    // eyeball the missing-data look without touching the data layer.
+    const warnSet = (() => {
+      const m = location.search.match(/[?&]warn=([^&]+)/);
+      if (!m) return new Set();
+      return new Set(decodeURIComponent(m[1]).split(',').map(n => parseInt(n, 10) - 1));
+    })();
+    const track = document.createElement('div');
+    track.className = 'rail-track';
     active.forEach((s, idx) => {
-      const pill = document.createElement('button');
-      pill.type = 'button';
-      pill.className = 'step-pill' + (idx === activeIdx ? ' active' : idx < activeIdx ? ' done' : '');
-      pill.setAttribute('role', 'tab');
-      pill.setAttribute('aria-selected', String(idx === activeIdx));
-      pill.innerHTML =
-        '<span class="step-num">Step ' + (idx + 1) + '</span>' +
-        '<span class="step-name">' + s.name + '</span>';
-      pill.addEventListener('click', () => showScreen(s.id));
-      el.appendChild(pill);
+      const seg = document.createElement('button');
+      seg.type = 'button';
+      let state = 'is-todo';
+      if (idx === activeIdx) state = 'is-active';
+      else if (warnSet.has(idx)) state = 'is-warn';
+      else if (idx < activeIdx) state = 'is-done';
+      seg.className = 'rail-seg ' + state;
+      seg.setAttribute('role', 'tab');
+      seg.setAttribute('aria-selected', String(idx === activeIdx));
+      seg.setAttribute('aria-label', 'Step ' + (idx + 1) + ' · ' + s.name);
+      if (state === 'is-active') {
+        const shim = document.createElement('span');
+        shim.className = 'rail-shimmer';
+        shim.setAttribute('aria-hidden', 'true');
+        seg.appendChild(shim);
+      }
+      seg.addEventListener('click', () => showScreen(s.id));
+      track.appendChild(seg);
     });
+    el.appendChild(track);
+    // Step label (left) + legend (right) on one row, matching
+    // redesign-mockup.html .rail-labels.
+    const labels = document.createElement('div');
+    labels.className = 'rail-labels';
+    const currentName = active[activeIdx] ? active[activeIdx].name : '';
+    labels.innerHTML =
+      '<div class="rail-step"><strong>Step ' + (activeIdx + 1) + '</strong>' +
+        ' &nbsp;of&nbsp; ' + active.length + ' &nbsp;·&nbsp; ' + currentName.toUpperCase() + '</div>' +
+      '<div class="rail-legend">' +
+        '<span><span class="dot dot-done" aria-hidden="true"></span>Approved</span>' +
+        '<span><span class="dot dot-active" aria-hidden="true"></span>Current</span>' +
+        '<span><span class="dot dot-warn" aria-hidden="true"></span>Missing</span>' +
+        '<span><span class="dot dot-todo" aria-hidden="true"></span>Not started</span>' +
+      '</div>';
+    el.appendChild(labels);
+
+    // Mirror the same progress info into a compact mobile bar. Hidden on
+    // desktop via CSS; shown on viewports <= 768px. Injected as a sibling
+    // immediately after the step-pills container so DOM order is sane.
+    const mpId = containerId.replace(/^pills-/, 'mp-');
+    let mp = document.getElementById(mpId);
+    if (!mp) {
+      mp = document.createElement('div');
+      mp.id = mpId;
+      mp.className = 'mobile-progress';
+      el.parentNode.insertBefore(mp, el.nextSibling);
+    }
+    const pct = active.length ? Math.round(((activeIdx + 1) / active.length) * 100) : 0;
+    mp.innerHTML =
+      '<div class="mp-top">' +
+        '<span class="mp-name">Step ' + (activeIdx + 1) + ' · ' + currentName + '</span>' +
+        '<span class="mp-count">(' + (activeIdx + 1) + '/' + active.length + ')</span>' +
+      '</div>' +
+      '<div class="mp-track"><div class="mp-fill" style="width: ' + pct + '%;"></div></div>';
   }
+
+  // ============================================================
+  // Floating mockup-nav toggle. State persisted in localStorage so
+  // the picker remembers whether you had it collapsed across
+  // reloads. NEVER REMOVE this nav from the mockup.
+  // ============================================================
+  function toggleMockupNav() {
+    var n = document.getElementById('mockup-nav');
+    if (!n) return;
+    n.classList.toggle('collapsed');
+    try {
+      localStorage.setItem('mockup-nav-collapsed',
+        n.classList.contains('collapsed') ? '1' : '0');
+    } catch (e) { /* localStorage may be blocked in private mode */ }
+  }
+  (function initMockupNav() {
+    try {
+      if (localStorage.getItem('mockup-nav-collapsed') === '1') {
+        var n = document.getElementById('mockup-nav');
+        if (n) n.classList.add('collapsed');
+      }
+    } catch (e) { /* see above */ }
+  })();
 
   function rerenderAllPills() {
     ALL_STEPS.forEach(s => {
@@ -3008,6 +4811,282 @@
 
   // Pre-render pills for all step screens
   STEPS.forEach(s => renderPillsInto('pills-' + s.id, s.id));
+
+  // ============================================================
+  // State picker modal (shared across Step 5 + Step 10)
+  // 56 entries: 50 states + DC + 5 US territories.
+  // ============================================================
+  const US_STATES = [
+    { name: 'Alabama', abbrev: 'AL' },
+    { name: 'Alaska', abbrev: 'AK' },
+    { name: 'Arizona', abbrev: 'AZ' },
+    { name: 'Arkansas', abbrev: 'AR' },
+    { name: 'California', abbrev: 'CA' },
+    { name: 'Colorado', abbrev: 'CO' },
+    { name: 'Connecticut', abbrev: 'CT' },
+    { name: 'Delaware', abbrev: 'DE' },
+    { name: 'Florida', abbrev: 'FL' },
+    { name: 'Georgia', abbrev: 'GA' },
+    { name: 'Hawaii', abbrev: 'HI' },
+    { name: 'Idaho', abbrev: 'ID' },
+    { name: 'Illinois', abbrev: 'IL' },
+    { name: 'Indiana', abbrev: 'IN' },
+    { name: 'Iowa', abbrev: 'IA' },
+    { name: 'Kansas', abbrev: 'KS' },
+    { name: 'Kentucky', abbrev: 'KY' },
+    { name: 'Louisiana', abbrev: 'LA' },
+    { name: 'Maine', abbrev: 'ME' },
+    { name: 'Maryland', abbrev: 'MD' },
+    { name: 'Massachusetts', abbrev: 'MA' },
+    { name: 'Michigan', abbrev: 'MI' },
+    { name: 'Minnesota', abbrev: 'MN' },
+    { name: 'Mississippi', abbrev: 'MS' },
+    { name: 'Missouri', abbrev: 'MO' },
+    { name: 'Montana', abbrev: 'MT' },
+    { name: 'Nebraska', abbrev: 'NE' },
+    { name: 'Nevada', abbrev: 'NV' },
+    { name: 'New Hampshire', abbrev: 'NH' },
+    { name: 'New Jersey', abbrev: 'NJ' },
+    { name: 'New Mexico', abbrev: 'NM' },
+    { name: 'New York', abbrev: 'NY' },
+    { name: 'North Carolina', abbrev: 'NC' },
+    { name: 'North Dakota', abbrev: 'ND' },
+    { name: 'Ohio', abbrev: 'OH' },
+    { name: 'Oklahoma', abbrev: 'OK' },
+    { name: 'Oregon', abbrev: 'OR' },
+    { name: 'Pennsylvania', abbrev: 'PA' },
+    { name: 'Rhode Island', abbrev: 'RI' },
+    { name: 'South Carolina', abbrev: 'SC' },
+    { name: 'South Dakota', abbrev: 'SD' },
+    { name: 'Tennessee', abbrev: 'TN' },
+    { name: 'Texas', abbrev: 'TX' },
+    { name: 'Utah', abbrev: 'UT' },
+    { name: 'Vermont', abbrev: 'VT' },
+    { name: 'Virginia', abbrev: 'VA' },
+    { name: 'Washington', abbrev: 'WA' },
+    { name: 'West Virginia', abbrev: 'WV' },
+    { name: 'Wisconsin', abbrev: 'WI' },
+    { name: 'Wyoming', abbrev: 'WY' },
+    { name: 'District of Columbia', abbrev: 'DC' },
+    { name: 'Puerto Rico', abbrev: 'PR' },
+    { name: 'US Virgin Islands', abbrev: 'VI' },
+    { name: 'Guam', abbrev: 'GU' },
+    { name: 'American Samoa', abbrev: 'AS' },
+    { name: 'Northern Mariana Islands', abbrev: 'MP' },
+  ];
+
+  // Selected state per trigger field id.
+  const stateSelections = {};
+  let stateModalTriggerId = null;
+
+  function renderStateList(filter) {
+    const list = document.getElementById('state-list');
+    if (!list) return;
+    const q = (filter || '').trim().toLowerCase();
+    const selected = stateModalTriggerId ? stateSelections[stateModalTriggerId] : null;
+    list.innerHTML = '';
+    US_STATES
+      .filter(s => !q || s.name.toLowerCase().includes(q) || s.abbrev.toLowerCase().includes(q))
+      .forEach(s => {
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.className = 'state-row' + (selected === s.abbrev ? ' selected' : '');
+        row.setAttribute('role', 'option');
+        row.setAttribute('aria-selected', String(selected === s.abbrev));
+        row.innerHTML =
+          '<span>' + s.name + '</span>' +
+          '<span class="state-abbrev">' + s.abbrev + '</span>';
+        row.addEventListener('click', () => selectState(s));
+        list.appendChild(row);
+      });
+  }
+
+  function filterStateList(value) {
+    renderStateList(value);
+  }
+
+  function openStateModal(triggerFieldId) {
+    stateModalTriggerId = triggerFieldId;
+    const backdrop = document.getElementById('state-modal-backdrop');
+    backdrop.classList.add('open');
+    const search = document.getElementById('state-search');
+    if (search) { search.value = ''; setTimeout(() => search.focus(), 50); }
+    renderStateList('');
+  }
+
+  function closeStateModal() {
+    const backdrop = document.getElementById('state-modal-backdrop');
+    backdrop.classList.remove('open');
+    stateModalTriggerId = null;
+  }
+
+  function onStateBackdrop(e) {
+    if (e.target === e.currentTarget) closeStateModal();
+  }
+
+  function selectState(stateObj) {
+    if (!stateModalTriggerId) return;
+    stateSelections[stateModalTriggerId] = stateObj.abbrev;
+    const trigger = document.getElementById(stateModalTriggerId + '-trigger');
+    if (trigger) {
+      const text = trigger.querySelector('.state-trigger-text');
+      if (text) text.textContent = stateObj.name;
+      trigger.classList.remove('placeholder');
+    }
+    closeStateModal();
+  }
+
+  // ============================================================
+  // Document preview modal (Step 6 diplomas)
+  // ============================================================
+  function openDocPreview(filename, iconHref) {
+    document.getElementById('doc-preview-caption').textContent = filename;
+    document.getElementById('doc-preview-icon').querySelector('use')
+      .setAttribute('href', iconHref);
+    document.getElementById('doc-preview-backdrop').classList.add('open');
+  }
+  function closeDocPreview() {
+    document.getElementById('doc-preview-backdrop').classList.remove('open');
+  }
+  function onDocPreviewBackdrop(e) {
+    if (e.target === e.currentTarget) closeDocPreview();
+  }
+
+  // ============================================================
+  // Disclaimer + Required Docs modals
+  // ============================================================
+  function openDisclaimerModal() {
+    document.getElementById('disclaimer-modal-backdrop').classList.add('open');
+  }
+  function closeDisclaimerModal() {
+    document.getElementById('disclaimer-modal-backdrop').classList.remove('open');
+  }
+  function onDisclaimerBackdrop(e) {
+    if (e.target === e.currentTarget) closeDisclaimerModal();
+  }
+
+  function openRequiredDocsModal() {
+    document.getElementById('required-docs-modal-backdrop').classList.add('open');
+  }
+  function closeRequiredDocsModal() {
+    document.getElementById('required-docs-modal-backdrop').classList.remove('open');
+  }
+  function onRequiredDocsBackdrop(e) {
+    if (e.target === e.currentTarget) closeRequiredDocsModal();
+  }
+
+  // Esc closes any open modal.
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeStateModal();
+      closeDisclaimerModal();
+      closeRequiredDocsModal();
+    }
+  });
+
+  // ============================================================
+  // Auto-save indicator demo for Specialty step.
+  // Toggling a chip flashes "Saving..." then settles to "Saved" after
+  // a 1.5s debounce, mirroring the live debounced auto-save.
+  // ============================================================
+  function flashSavingOnSpecialty() {
+    const save = document.querySelector('#screen-step11 .save-state');
+    if (!save) return;
+    save.classList.add('saving');
+    save.innerHTML = '<span class="dot"></span> Saving...';
+    clearTimeout(flashSavingOnSpecialty._t);
+    flashSavingOnSpecialty._t = setTimeout(() => {
+      save.classList.remove('saving');
+      save.innerHTML = '<span class="dot"></span> Saved';
+    }, 1500);
+  }
+  document.querySelectorAll('#screen-step11 .chip').forEach(chip => {
+    chip.addEventListener('click', flashSavingOnSpecialty);
+  });
+
+  // ============================================================
+  // Verification Video — 10s countdown ring around record button.
+  // ============================================================
+  function startVideoCountdown() {
+    const ring = document.querySelector('#screen-step8 .ring-progress');
+    const num = document.querySelector('#screen-step8 .countdown-number');
+    if (!ring || !num) return;
+    const circumference = 2 * Math.PI * 42;
+    ring.style.strokeDasharray = String(circumference);
+    ring.style.strokeDashoffset = String(circumference);
+    let remaining = 10;
+    num.textContent = remaining + 's';
+    const t = setInterval(() => {
+      remaining -= 1;
+      num.textContent = Math.max(0, remaining) + 's';
+      const elapsed = 10 - remaining;
+      ring.style.strokeDashoffset = String(circumference * (1 - elapsed / 10));
+      if (remaining <= 0) {
+        clearInterval(t);
+        num.textContent = 'Done';
+        const previewWrap = document.getElementById('video-after-capture');
+        const recordWrap = document.getElementById('video-record-area');
+        if (previewWrap && recordWrap) {
+          previewWrap.style.display = '';
+          recordWrap.style.display = 'none';
+        }
+      }
+    }, 1000);
+  }
+  function resetVideoRecord() {
+    const previewWrap = document.getElementById('video-after-capture');
+    const recordWrap = document.getElementById('video-record-area');
+    const ring = document.querySelector('#screen-step8 .ring-progress');
+    const num = document.querySelector('#screen-step8 .countdown-number');
+    if (previewWrap && recordWrap) {
+      previewWrap.style.display = 'none';
+      recordWrap.style.display = '';
+    }
+    if (ring) {
+      const circumference = 2 * Math.PI * 42;
+      ring.style.strokeDasharray = String(circumference);
+      ring.style.strokeDashoffset = String(circumference);
+    }
+    if (num) num.textContent = '10s';
+  }
+</script>
+
+<script>
+  // Live password-rule checklist on signup (mirrors iOS PasswordValidationView).
+  (function() {
+    const input = document.getElementById('signup-pass');
+    const list = document.getElementById('pw-rules');
+    if (!input || !list) return;
+    const tests = {
+      length:  v => v.length >= 8,
+      lower:   v => /[a-z]/.test(v),
+      upper:   v => /[A-Z]/.test(v),
+      number:  v => /\d/.test(v),
+      special: v => /[$@!%*?&#]/.test(v),
+    };
+    input.addEventListener('input', function() {
+      const v = input.value;
+      Object.keys(tests).forEach(function(rule) {
+        const li = list.querySelector('li[data-rule="' + rule + '"]');
+        if (li) li.classList.toggle('satisfied', tests[rule](v));
+      });
+    });
+  })();
+
+  // Mockup auto-reload: poll the HTML's Last-Modified header every 1.5s
+  // and reload when it changes. Keeps the browser in sync with edits
+  // applied while the user iterates with the agent.
+  (function() {
+    let lastMod = null;
+    setInterval(async function() {
+      try {
+        const r = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
+        const m = r.headers.get('last-modified');
+        if (lastMod && m && lastMod !== m) location.reload();
+        if (m) lastMod = m;
+      } catch (e) { /* ignore transient fetch errors */ }
+    }, 1500);
+  })();
 </script>
 
 </body>
